@@ -1,87 +1,111 @@
 <!DOCTYPE html>
 <html lang="th">
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>สุขใจ 🌿</title>
-    <link rel="stylesheet" href="style.css">
-  </head>
-  <body>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+  <title>สุขใจ 🌿</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
     <header>
-      <div class="logo">สุขใจ 🌿</div>
-      <div class="hamburger" onclick="toggleMenu()">☰</div>
-      <nav id="menu" class="hidden">
-        <a href="#" onclick="showPage('home')">หน้าแรก</a>
-        <a href="#" onclick="showPage('guide')">คำแนะนำการใช้งาน</a>
-        <a href="#" onclick="loadArticles()">บทความความรู้</a>
-        <a href="#" onclick="showPage('about')">เกี่ยวกับ</a>
-      </nav>
-    </header>
+    <div class="logo">สุขใจ 🌿</div>
+    <div class="hamburger" onclick="toggleMenu()">☰</div>
+    <nav id="menu" class="hidden">
+      <a href="#" onclick="showPage('home')">หน้าแรก</a>
+      <a href="#" onclick="showPage('guide')">คำแนะนำการใช้งาน</a>
+      <a href="#" onclick="loadArticles()">บทความความรู้</a>
+      <a href="#" onclick="showPage('about')">เกี่ยวกับ</a>
+    </nav>
+  </header>
+
     <section id="home" class="active">
-      <h1>สุขใจ 🌿</h1>
-      <p class="intro">       สวัสดีค่ะ/ครับ 👋         นี่คือพื้นที่เล็ก ๆ สำหรับดูแลใจของคุณ         โปรดอ่านคำแนะนำก่อนเริ่มทำการทดสอบ     </p>
-      <div class="guide-box">
-        <h2>คำแนะนำการใช้งานเบื้องต้น</h2>
-        <p>- เลือกแบบทดสอบที่ต้องการ</p>
-        <p>- ตอบตามความรู้สึกจริงในช่วง 2 สัปดาห์ที่ผ่านมา</p>
-        <p>- ผลลัพธ์เป็นเพียงการคัดกรองเบื้องต้น ไม่ใช่การวินิจฉัย</p>
-      </div>
-      <button class="btn" onclick="showPage('testMenu')">เริ่มทำการทดสอบ</button>
-    </section>
+    <h1>สุขใจ 🌿</h1>
+    <p class="intro">
+      สวัสดีค่ะ/ครับ 👋  
+      นี่คือพื้นที่เล็ก ๆ สำหรับดูแลใจของคุณ  
+      โปรดอ่านคำแนะนำก่อนเริ่มทำการทดสอบ
+    </p>
+    <div class="guide-box">
+      <h2>คำแนะนำการใช้งานเบื้องต้น</h2>
+      <p>- เลือกแบบทดสอบที่ต้องการ</p>
+      <p>- ตอบตามความรู้สึกจริงในช่วง 2 สัปดาห์ที่ผ่านมา</p>
+      <p>- ผลลัพธ์เป็นเพียงการคัดกรองเบื้องต้น ไม่ใช่การวินิจฉัย</p>
+    </div>
+    <button class="btn" onclick="showPage('testMenu')">เริ่มทำการทดสอบ</button>
+  </section>
+  
     <section id="guide">
-      <h1>คำแนะนำการใช้งาน</h1>
-      <div class="guide-box">
-        <p>รายละเอียดเพิ่มเติมของคำแนะนำการใช้งานจะถูกแสดงที่นี่</p>
-        <p>เมื่อคุณคลิกที่ "คำแนะนำการใช้งาน" ในเมนู</p>
-      </div>
-      <button class="btn" onclick="showPage('home')">กลับไปหน้าแรก</button>
-    </section>
+    <h1>คำแนะนำการใช้งาน</h1>
+    <div class="guide-box">
+      <p>รายละเอียดเพิ่มเติมของคำแนะนำการใช้งานจะถูกแสดงที่นี่</p>
+      <p>เมื่อคุณคลิกที่ "คำแนะนำการใช้งาน" ในเมนู</p>
+    </div>
+    <button class="btn" onclick="showPage('home')">กลับไปหน้าแรก</button>
+  </section>
+
     <section id="testMenu">
-      <h1>เลือกแบบทดสอบ</h1>
-      <div class="test-item">
-        <h2>PHQ‑9</h2>
-        <p>แบบสอบถามคัดกรองภาวะซึมเศร้า 9 ข้อ</p>
-        <button class="btn" onclick="startScreening('PHQ9')">เริ่ม PHQ‑9</button>
-      </div>
-      <div class="test-item">
-        <h2>WHO‑5</h2>
-        <p>แบบสอบถามความสุข 5 ข้อ</p>
-        <button class="btn" onclick="startScreening('WHO5')">เริ่ม WHO‑5</button>
-      </div>
-      <div class="test-item">
-        <h2>ST‑5</h2>
-        <p>แบบสอบถามความเครียด 5 ข้อ</p>
-        <button class="btn" onclick="startScreening('ST5')">เริ่ม ST‑5</button>
-      </div>
-      <button class="btn" onclick="showPage('home')">กลับไปหน้าแรก</button>
-    </section>
+    <h1>เลือกแบบทดสอบ</h1>
+    <div class="test-item">
+      <h2>PHQ‑9</h2>
+      <p>แบบสอบถามคัดกรองภาวะซึมเศร้า 9 ข้อ (เริ่มจาก 2 คำถาม)</p>
+            <button class="btn" onclick="startPreScreening('PHQ2')">เริ่ม PHQ‑9</button>
+    </div>
+    <div class="test-item">
+      <h2>WHO‑5</h2>
+      <p>แบบสอบถามความสุข 5 ข้อ</p>
+      <button class="btn" onclick="startScreening('WHO5')">เริ่ม WHO‑5</button>
+    </div>
+    <div class="test-item">
+      <h2>ST‑5</h2>
+      <p>แบบสอบถามความเครียด 5 ข้อ</p>
+      <button class="btn" onclick="startScreening('ST5')">เริ่ม ST‑5</button>
+    </div>
+    <button class="btn" onclick="showPage('home')">กลับไปหน้าแรก</button>
+  </section>
+
     <section id="articles">
-      <h1>บทความความรู้ด้านสุขภาพจิต</h1>
-      <ul id="articleList"></ul>
-      <button class="btn" onclick="showPage('home')">กลับไปหน้าแรก</button>
-    </section>
+    <h1>บทความความรู้ด้านสุขภาพจิต</h1>
+    <ul id="articleList"></ul>
+    <button class="btn" onclick="showPage('home')">กลับไปหน้าแรก</button>
+  </section>
+
     <section id="about">
-      <h1>เกี่ยวกับ</h1>
-      <p>ข้อมูลอ้างอิงจากกรมสุขภาพจิต และองค์การอนามัยโลก</p>
-      <p>ไม่มีการเก็บข้อมูลส่วนตัวของผู้ใช้</p>
-      <button class="btn" onclick="showPage('home')">กลับไปหน้าแรก</button>
-    </section>
+    <h1>เกี่ยวกับ</h1>
+    <p>ข้อมูลอ้างอิงจากกรมสุขภาพจิต และองค์การอนามัยโลก</p>
+    <p>ไม่มีการเก็บข้อมูลส่วนตัวของผู้ใช้</p>
+    <button class="btn" onclick="showPage('home')">กลับไปหน้าแรก</button>
+  </section>
+  
+    <section id="screening2Q">
+    <h2 id="questionTitle2Q"></h2> 
+    <p id="questionNumber2Q"></p>
+    <p id="questionText2Q"></p>
+    <form id="questionForm2Q"></form>
+    <div class="navigation-buttons">
+      <button class="btn" onclick="nextQuestion2Q()">ต่อไป</button>
+    </div>
+  </section>
+
+
     <section id="screening">
-      <h2 id="questionTitle"></h2>
-      <p id="questionNumber"></p>
-      <p id="questionText"></p>
-      <form id="questionForm"></form>
-      <div class="navigation-buttons"></div>
-    </section>
+    <h2 id="questionTitle"></h2>
+    <p id="questionNumber"></p>
+    <p id="questionText"></p>
+    <form id="questionForm"></form>
+    <div class="navigation-buttons">
+          </div>
+  </section>
+
     <section id="result">
-      <h1>ผลการประเมิน</h1>
-      <div id="scoreSummary"></div>
-      <div id="scoreTable"></div>
-      <p id="recommendation"></p>
-      <button class="btn" onclick="showPage('home')">กลับไปหน้าแรก</button>
-      <button class="btn print-btn" onclick="window.print()">พิมพ์ผลลัพธ์</button>
-    </section>
+    <h1>ผลการประเมิน</h1>
+    <div id="scoreSummary"></div>
+    <div id="scoreTable"></div>
+    <p id="recommendation"></p>
+    <button class="btn" onclick="showPage('home')">กลับไปหน้าแรก</button>
+    <button class="btn print-btn" onclick="window.print()">พิมพ์ผลลัพธ์</button>
+  </section>
+
     <script src="questions.js"></script>
-    <script src="app.js"></script>
-  </body>
+  <script src="app.js"></script>
+</body>
 </html>

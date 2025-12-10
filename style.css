@@ -139,7 +139,7 @@ h2 {
 }
 
 /* Screening Page - Choice Styling */
-#questionForm {
+#questionForm, #questionForm2Q { /* เพิ่ม #questionForm2Q */
     display: flex;
     flex-direction: column;
     max-width: 500px;
