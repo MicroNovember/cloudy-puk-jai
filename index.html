@@ -5,120 +5,144 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>สุขใจ 🌿 พื้นที่ปลอดภัยของคุณ</title>
     <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Mitr:wght@300&family=Prompt:wght@300;400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;600&display=swap" rel="stylesheet">
 </head>
-<body>
+<body class="earth-tone">
     <header>
-        <div class="logo">สุขใจ 🌿</div>
+        <div class="logo" onclick="showPage('home')">สุขใจ 🌿</div>
         <div class="hamburger" onclick="toggleMenu()">☰</div>
         <nav id="menu" class="hidden">
-            <a href="#" onclick="showPage('home')">หน้าหลัก</a>
-            <a href="#" onclick="showPage('testMenu')">แบบทดสอบ</a>
-            <a href="#" onclick="loadArticles()">บทความ</a>
+            <a href="#" onclick="showPage('home')">🏠 หน้าหลัก</a>
+            <a href="#" onclick="showPage('guide')">📖 วิธีใช้งาน</a>
+            <a href="#" onclick="showPage('testMenu')">📝 เลือกแบบทดสอบ</a>
+            <a href="#" onclick="loadArticles()">📚 บทความ</a>
+            <a href="#" onclick="showPage('history')">📜 ประวัติบันทึกใจ</a>
         </nav>
     </header>
 
-    <section id="home" class="active">
-        <div class="hero">
-            <div id="quoteContainer" class="glass-card fade-in">
-                <p id="quoteText">"กำลังโหลดพลังใจ..."</p>
-                <small id="quoteAuthor"></small>
+    <main class="container">
+        <section id="home" class="active">
+            <div class="greeting-header">
+                <h2 id="greetingText">สวัสดีตอนเช้า ✨</h2>
+                <p>วันนี้เป็นวันที่ดีนะ มาดูแลใจกันเถอะ</p>
             </div>
 
-            <div class="music-player-card glass-card">
-    <div id="musicStatus" class="music-info">🎵 เลือกเพลงเพื่อเริ่มต้น</div>
-    
-    <div class="player-controls">
-        <audio id="bgMusic" preload="auto"></audio>
-        
-        <div class="progress-container">
-            <span id="currentTime">0:00</span>
-            <input type="range" id="seekSlider" value="0" max="100">
-            <span id="durationTime">0:00</span>
-        </div>
-
-        <div class="main-btns">
-            <button onclick="prevTrack()" class="ctrl-btn">⏮</button>
-            <button onclick="toggleMusic()" id="playPauseBtn" class="ctrl-btn play-main">▶</button>
-            <button onclick="nextTrack()" class="ctrl-btn">⏭</button>
-        </div>
-
-        <div class="volume-container">
-            <span>🔈</span>
-            <input type="range" id="volumeSlider" min="0" max="1" step="0.1" value="0.5">
-            <span>🔊</span>
-        </div>
-    </div>
 
 
-</div>
-
-            <div class="journal glass-card">
-                <h3>บันทึกใจประจำวัน 📝</h3>
-                <textarea id="dailyNote" placeholder="วันนี้รู้สึกอย่างไร... ระบายออกมาได้นะ"></textarea>
-                <button class="btn-main" onclick="saveNote()">บันทึกความรู้สึก</button>
-                
-                <div class="history-section">
-                    <h4>ประวัติบันทึกของคุณ 📖</h4>
-                    <div id="notesList" class="notes-list">
-                        </div>
+            <div class="glass-card">
+                <h3>ตอนนี้คุณรู้สึกอย่างไร?</h3>
+                <div class="mood-selector">
+                    <div class="mood-item" onclick="selectMood('มีความสุข', '😆')"><span>😆</span><br>สุข</div>
+                    <div class="mood-item" onclick="selectMood('โอเค', '😐')"><span>😐</span><br>โอเค</div>
+                    <div class="mood-item" onclick="selectMood('เครียด', '😠')"><span>😠</span><br>เครียด</div>
+                    <div class="mood-item" onclick="selectMood('เศร้า', '😫')"><span>😫</span><br>เศร้า</div>
+                </div>
+                <div id="noteSection" class="hidden">
+                    <p id="selectedMoodText"></p>
+                    <textarea id="moodNote" placeholder="ระบายความในใจออกมาได้เลย..."></textarea>
+                    <button class="btn-main" onclick="saveMoodAndNote()">บันทึกไว้ในความทรงจำ</button>
                 </div>
             </div>
 
-            <button class="btn-main large" onclick="showPage('testMenu')">เริ่มตรวจเช็กใจ 📋</button>
-        </div>
-    </section>
 
-    <section id="testMenu">
-        <h2>เลือกแบบประเมิน</h2>
-        <div class="card-grid">
-            <div class="test-card glass-card" onclick="startPreScreening('PHQ2')">
-                <span class="icon">🔍</span>
-                <h3>ภาวะซึมเศร้า</h3>
-                <p>คัดกรองเบื้องต้น (2Q + PHQ-9)</p>
-            </div>
-            <div class="test-card glass-card" onclick="startScreening('WHO5')">
-                <span class="icon">😊</span>
-                <h3>ดัชนีความสุข</h3>
-                <p>แบบวัดความสุข (WHO-5)</p>
-            </div>
-            <div class="test-card glass-card" onclick="startScreening('ST5')">
-                <span class="icon">🌪️</span>
-                <h3>ระดับความเครียด</h3>
-                <p>แบบประเมินความเครียด (ST-5)</p>
-            </div>
-        </div>
-        <button class="pill-btn" onclick="showPage('home')">ย้อนกลับ</button>
-    </section>
 
-    <section id="screening">
-        <h2 id="qTitle"></h2>
-        <div class="glass-card">
-            <p id="qNumber"></p>
-            <p id="qText" class="question-text"></p>
-            <div id="qOptions" class="options-container"></div>
-            <div class="nav-btns">
-                <button id="prevBtn" class="pill-btn" onclick="prevQuestion()">ย้อนกลับ</button>
-                <button id="nextBtn" class="btn-main" onclick="nextQuestion()">ถัดไป</button>
+
+            <h3>ประเมินสุขภาพใจ</h3>
+            <div class="assessment-grid">
+                <div class="assess-item" onclick="startScreening('ST5')">
+                    <div class="circle-icon">⚡</div><span>เครียด</span>
+                </div>
+                <div class="assess-item" onclick="startPreScreening('PHQ2')">
+                    <div class="circle-icon">💧</div><span>เศร้า</span>
+                </div>
+                <div class="assess-item" onclick="startScreening('BURNOUT')">
+                    <div class="circle-icon">🔥</div><span>หมดไฟ</span>
+                </div>
             </div>
-        </div>
-    </section>
 
-    <section id="result">
-        <h2>ผลการประเมินของคุณ</h2>
-        <div id="resultBox" class="glass-card">
-            <h3 id="resLevel"></h3>
-            <p id="resScore"></p>
-            <p id="resAdvice" class="advice-box"></p>
-        </div>
-        <button class="btn-main" onclick="showPage('home')">กลับหน้าหลัก</button>
-    </section>
 
-    <section id="articles">
-        <h2>บทความดูแลใจ 🌿</h2>
-        <div id="articleList" class="article-grid"></div>
-        <button class="pill-btn" onclick="showPage('home')">ย้อนกลับ</button>
-    </section>
+
+
+                        <div class="glass-card music-banner">
+                <div class="music-info">
+                    <h3 style="margin-top:0;">ให้ท่วงทำนองช่วยโอบกอดคุณนะ..</h3>
+                    <p id="musicStatus">"ลองกดฟังเพลงผ่อนคลายสักนิดไหม?"</p>
+                </div>
+                <audio id="bgMusic"></audio>
+                <div class="player-controls">
+                    <button onclick="prevTrack()" class="ctrl-btn">⏮</button>
+                    <button onclick="toggleMusic()" id="playPauseBtn" class="ctrl-btn play-main">▶</button>
+                    <button onclick="nextTrack()" class="ctrl-btn">⏭</button>
+                </div>
+            </div>
+            
+        </section>
+
+        <section id="testMenu">
+            <h2>แบบทดสอบทั้งหมด 🌿</h2>
+            
+            <div class="glass-card test-card" onclick="startPreScreening('PHQ2')">
+                <div class="test-icon">😊</div>
+                <div class="test-info">
+                    <h3>ภาวะซึมเศร้า</h3>
+                    <p>คัดกรองเบื้องต้น (2Q + PHQ-9)</p>
+                </div>
+            </div>
+
+            <div class="glass-card test-card" onclick="startScreening('WHO5')">
+                <div class="test-icon">🌈</div>
+                <div class="test-info">
+                    <h3>ดัชนีความสุข</h3>
+                    <p>แบบวัดความสุข (WHO-5)</p>
+                </div>
+            </div>
+
+            <div class="glass-card test-card" onclick="startScreening('ST5')">
+                <div class="test-icon">🌪️</div>
+                <div class="test-info">
+                    <h3>ระดับความเครียด</h3>
+                    <p>แบบประเมินความเครียด (ST-5)</p>
+                </div>
+            </div>
+
+            <button class="btn-main" onclick="showPage('home')">กลับหน้าหลัก</button>
+        </section>
+
+        <section id="screening">
+            <h2 id="qTitle"></h2>
+            <div class="glass-card">
+                <p id="qNumber"></p>
+                <h3 id="qText" style="margin: 20px 0;"></h3>
+                <div id="qOptions"></div>
+            </div>
+        </section>
+
+        <section id="result">
+            <div class="glass-card result-box">
+                <h2 id="resLevel"></h2>
+                <p id="resScore"></p>
+                <div id="resAdvice" class="advice-box"></div>
+                <button class="btn-main" onclick="showPage('home')">กลับหน้าหลัก</button>
+            </div>
+        </section>
+
+        <section id="history">
+            <h2>ประวัติบันทึกใจ 📜</h2>
+            <div id="historyList"></div>
+            <button class="btn-main" onclick="showPage('home')">กลับหน้าหลัก</button>
+        </section>
+
+        <section id="guide">
+            <h2>คู่มือการใช้งาน 📖</h2>
+            <div class="glass-card">
+                <p>1. หน้าหลัก: บันทึกอารมณ์และประเมินแบบด่วน</p>
+                <p>2. ฟังเพลง: กดเล่นเพลงเพื่อความผ่อนคลาย</p>
+                <p>3. เมนู: เข้าถึงแบบทดสอบฉบับเต็มและประวัติย้อนหลัง</p>
+                <button class="btn-main" onclick="showPage('home')">รับทราบ</button>
+            </div>
+        </section>
+
+    </main>
 
     <script src="questions.js"></script>
     <script src="app.js"></script>

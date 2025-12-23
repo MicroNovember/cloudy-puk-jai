@@ -284,3 +284,78 @@ textarea {
 .track-item { padding: 8px 12px; cursor: pointer; border-radius: 8px; margin-bottom: 5px; font-size: 0.9rem; background: rgba(255,255,255,0.3); display: flex; justify-content: space-between; }
 .track-item:hover { background: var(--primary); color: white; }
 .track-item.active { background: var(--primary-dark); color: white; }
+
+
+/* พื้นฐาน */
+body { background-color: #f0f7ff; color: #333; font-family: 'Kanit', sans-serif; }
+.hidden { display: none; }
+
+/* Greeting */
+.greeting-header { margin: 20px 0; }
+
+/* Podcast Banner */
+.podcast-banner {
+    background: linear-gradient(135deg, #4A90E2 0%, #50E3C2 100%);
+    border-radius: 20px;
+    padding: 20px;
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+}
+.play-now-btn {
+    background: #357ABD;
+    color: white;
+    border: none;
+    padding: 8px 20px;
+    border-radius: 20px;
+    margin-top: 10px;
+    cursor: pointer;
+}
+
+/* Mood Card */
+.mood-card { padding: 20px; border-radius: 25px; background: white; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+.mood-selector { display: flex; justify-content: space-between; margin-bottom: 15px; }
+.mood-item { text-align: center; cursor: pointer; font-size: 0.75rem; transition: 0.3s; }
+.mood-item:hover { transform: translateY(-5px); }
+.emoji { font-size: 2rem; display: block; margin-bottom: 5px; }
+
+/* Note Section */
+#moodNote {
+    width: 100%;
+    height: 80px;
+    border: 1px solid #eee;
+    border-radius: 10px;
+    padding: 10px;
+    margin: 10px 0;
+    font-family: inherit;
+}
+.save-mood-btn {
+    width: 100%;
+    background: #4A90E2;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+/* Assessment Grid (แบบวงกลม) */
+.assessment-grid { display: flex; justify-content: space-around; margin-top: 15px; }
+.assess-item { text-align: center; cursor: pointer; }
+.circle-icon {
+    width: 70px;
+    height: 70px;
+    background: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem;
+    margin-bottom: 8px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+/* Quote */
+.quote-container { text-align: center; padding: 20px; font-style: italic; color: #555; }
