@@ -8,141 +8,234 @@
     <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;600&display=swap" rel="stylesheet">
 </head>
 <body class="earth-tone">
-    <header>
-        <div class="logo" onclick="showPage('home')">สุขใจ 🌿</div>
-        <div class="hamburger" onclick="toggleMenu()">☰</div>
-        <nav id="menu" class="hidden">
+
+    <nav id="menu" class="menu-overlay hidden">
+        <div class="menu-content">
             <a href="#" onclick="showPage('home')">🏠 หน้าหลัก</a>
-            <a href="#" onclick="showPage('guide')">📖 วิธีใช้งาน</a>
-            <a href="#" onclick="showPage('testMenu')">📝 เลือกแบบทดสอบ</a>
-            <a href="#" onclick="loadArticles()">📚 บทความ</a>
+            <a href="#" onclick="showPage('testMenu')">📝 แบบทดสอบ</a>
             <a href="#" onclick="showPage('history')">📜 ประวัติบันทึกใจ</a>
-        </nav>
+            <a href="#" onclick="showPage('guide')">💡 คำแนะนำ</a> <a href="#" onclick="showPage('about')">🌿 เกี่ยวกับเรา</a> <button class="btn-close-menu" onclick="toggleMenu()">ปิดเมนู</button>
+        </div>
+    </nav>
+
+    <header>
+        <div class="header-container">
+            <div class="logo" onclick="showPage('home')">
+                <span class="logo-icon">🌿</span> สุขใจ
+            </div>
+            <div class="hamburger" onclick="toggleMenu()">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
     </header>
 
     <main class="container">
+        
         <section id="home" class="active">
-            <div class="greeting-header">
-                <h2 id="greetingText">สวัสดีตอนเช้า ✨</h2>
-                <p>วันนี้เป็นวันที่ดีนะ มาดูแลใจกันเถอะ</p>
-            </div>
-
-
-
-            <div class="glass-card">
-                <h3>ตอนนี้คุณรู้สึกอย่างไร?</h3>
-                <div class="mood-selector">
-                    <div class="mood-item" onclick="selectMood('มีความสุข', '😆')"><span>😆</span><br>สุข</div>
-                    <div class="mood-item" onclick="selectMood('โอเค', '😐')"><span>😐</span><br>โอเค</div>
-                    <div class="mood-item" onclick="selectMood('เครียด', '😠')"><span>😠</span><br>เครียด</div>
-                    <div class="mood-item" onclick="selectMood('เศร้า', '😫')"><span>😫</span><br>เศร้า</div>
-                </div>
-                <div id="noteSection" class="hidden">
-                    <p id="selectedMoodText"></p>
-                    <textarea id="moodNote" placeholder="ระบายความในใจออกมาได้เลย..."></textarea>
-                    <button class="btn-main" onclick="saveMoodAndNote()">บันทึกไว้ในความทรงจำ</button>
+            <div class="hero-section">
+                <div class="greeting-content">
+                    <h3 id="greetingText">สวัสดีค่ะ ✨</h3>
+                    <div class="quote-box-modern">
+                        <h2 id="quoteText">"วันนี้เป็นวันที่ดีนะ.."</h2>
+                        <small id="quoteAuthor">- สุขใจ</small>
+                    </div>
                 </div>
             </div>
 
-
-
-
-            <h3>ประเมินสุขภาพใจ</h3>
-            <div class="assessment-grid">
-                <div class="assess-item" onclick="startScreening('ST5')">
-                    <div class="circle-icon">⚡</div><span>เครียด</span>
+            <div class="dashboard-grid">
+                <div class="glass-card mood-card">
+                    <h3>วันนี้ใจเป็นอย่างไร?</h3>
+                    <div class="mood-selector-modern">
+                        <div class="mood-item" onclick="selectMood('มีความสุข', '😆')">
+                            <span class="emoji">😆</span><span>สุข</span>
+                        </div>
+                        <div class="mood-item" onclick="selectMood('โอเค', '😐')">
+                            <span class="emoji">😐</span><span>โอเค</span>
+                        </div>
+                        <div class="mood-item" onclick="selectMood('เครียด', '😠')">
+                            <span class="emoji">😠</span><span>เครียด</span>
+                        </div>
+                        <div class="mood-item" onclick="selectMood('เศร้า', '😫')">
+                            <span class="emoji">😫</span><span>เศร้า</span>
+                        </div>
+                    </div>
+                    <div id="noteSection" class="hidden">
+                        <p id="selectedMoodText"></p>
+                        <textarea id="moodNote" placeholder="ระบายความในใจออกมาได้เลย..."></textarea>
+                        <button class="btn-primary" onclick="saveMoodAndNote()">บันทึกความทรงจำ</button>
+                    </div>
                 </div>
-                <div class="assess-item" onclick="startPreScreening('PHQ2')">
-                    <div class="circle-icon">💧</div><span>เศร้า</span>
-                </div>
-                <div class="assess-item" onclick="startScreening('BURNOUT')">
-                    <div class="circle-icon">🔥</div><span>หมดไฟ</span>
+
+                <div class="quick-check-card">
+                    <h3>เช็คสุขภาพใจด่วน</h3>
+                    <div class="assessment-grid-modern">
+        <div class="assess-card" onclick="startPreScreening('PHQ2')">
+        <div class="assess-icon phq">💧</div>
+        <span>ภาวะซึมเศร้า</span>
+    </div>
+    <div class="assess-card" onclick="startTest('WHO5')">
+        <div class="assess-icon st" style="background: #e8f5e9; color: #2e7d32;">🌈</div>
+        <span>ดัชนีความสุข</span>
+    </div>
+    <div class="assess-card" onclick="startTest('ST5')">
+        <div class="assess-icon bo" style="background: #fff3e0; color: #ef6c00;">🌪️</div>
+        <span>ความเครียด</span>
+    </div>
+    <div class="assess-card" onclick="startTest('BURNOUT')">
+        <div class="assess-icon bo">🔥</div>
+        <span>ภาวะหมดไฟ</span>
+    </div>
+</div>
                 </div>
             </div>
-
-
-
-
-                        <div class="glass-card music-banner">
-                <div class="music-info">
-                    <h3 style="margin-top:0;">ให้ท่วงทำนองช่วยโอบกอดคุณนะ..</h3>
-                    <p id="musicStatus">"ลองกดฟังเพลงผ่อนคลายสักนิดไหม?"</p>
-                </div>
-                <audio id="bgMusic"></audio>
-                <div class="player-controls">
-                    <button onclick="prevTrack()" class="ctrl-btn">⏮</button>
-                    <button onclick="toggleMusic()" id="playPauseBtn" class="ctrl-btn play-main">▶</button>
-                    <button onclick="nextTrack()" class="ctrl-btn">⏭</button>
-                </div>
-            </div>
-            
         </section>
 
-        <section id="testMenu">
-            <h2>แบบทดสอบทั้งหมด 🌿</h2>
-            
-            <div class="glass-card test-card" onclick="startPreScreening('PHQ2')">
-                <div class="test-icon">😊</div>
-                <div class="test-info">
-                    <h3>ภาวะซึมเศร้า</h3>
-                    <p>คัดกรองเบื้องต้น (2Q + PHQ-9)</p>
-                </div>
+<section id="testMenu">
+    <div class="section-header"><h2>คลังแบบทดสอบ 📝</h2></div>
+    <div class="test-list-modern">
+        
+        <div class="glass-card test-row" onclick="startPreScreening('PHQ2')">
+            <div class="test-icon-box">💧</div>
+            <div class="test-text">
+                <h4>ภาวะซึมเศร้า</h4>
+                <p>คัดกรองเบื้องต้น (2Q + PHQ-9)</p>
             </div>
+        </div>
 
-            <div class="glass-card test-card" onclick="startScreening('WHO5')">
-                <div class="test-icon">🌈</div>
-                <div class="test-info">
-                    <h3>ดัชนีความสุข</h3>
-                    <p>แบบวัดความสุข (WHO-5)</p>
-                </div>
+        <div class="glass-card test-row" onclick="startTest('WHO5')">
+            <div class="test-icon-box">🌈</div>
+            <div class="test-text">
+                <h4>ดัชนีความสุข</h4>
+                <p>แบบวัดความสุขสากล (WHO-5)</p>
             </div>
+        </div>
 
-            <div class="glass-card test-card" onclick="startScreening('ST5')">
-                <div class="test-icon">🌪️</div>
-                <div class="test-info">
-                    <h3>ระดับความเครียด</h3>
-                    <p>แบบประเมินความเครียด (ST-5)</p>
-                </div>
+        <div class="glass-card test-row" onclick="startTest('ST5')">
+            <div class="test-icon-box">🌪️</div>
+            <div class="test-text">
+                <h4>ระดับความเครียด</h4>
+                <p>แบบประเมินความเครียด (ST-5)</p>
             </div>
+        </div>
 
-            <button class="btn-main" onclick="showPage('home')">กลับหน้าหลัก</button>
+        <div class="glass-card test-row" onclick="startTest('BURNOUT')">
+            <div class="test-icon-box">🔥</div>
+            <div class="test-text">
+                <h4>ภาวะหมดไฟ</h4>
+                <p>แบบประเมิน Burnout ในการทำงาน</p>
+            </div>
+        </div>
+
+    </div>
+    <button class="btn-ghost" onclick="showPage('home')">กลับหน้าหลัก</button>
+</section>
+
+        <section id="guide">
+            <div class="glass-card">
+                <h2>💡 คำแนะนำในการดูแลใจ</h2>
+                <ul style="text-align: left; line-height: 2;">
+                    <li>หมั่นสำรวจอารมณ์ตัวเองอย่างสม่ำเสมอ</li>
+                    <li>หากเครียดเกินไป ลองฟังเพลงผ่อนคลายในแอปของเรา</li>
+                    <li>การทำแบบทดสอบเป็นเพียงการคัดกรองเบื้องต้น</li>
+                    <li>หากรู้สึกไม่ไหว ควรปรึกษาผู้เชี่ยวชาญหรือสายด่วน 1323</li>
+                </ul>
+                <button class="btn-primary" onclick="showPage('home')">รับทราบ</button>
+            </div>
+        </section>
+
+        <section id="about">
+            <div class="glass-card text-center">
+                <h2>🌿 เกี่ยวกับ สุขใจ</h2>
+                <p>เราตั้งใจสร้างพื้นที่ปลอดภัยเล็กๆ เพื่อให้ทุกคนได้กลับมาดูแลใจของตัวเองในทุกวัน</p>
+                <p style="margin-top: 15px; font-size: 0.9rem; color: #666;">เวอร์ชัน 1.0.0</p>
+                <button class="btn-ghost" onclick="showPage('home')">กลับหน้าหลัก</button>
+            </div>
         </section>
 
         <section id="screening">
-            <h2 id="qTitle"></h2>
             <div class="glass-card">
+                <h2 id="qTitle"></h2>
                 <p id="qNumber"></p>
                 <h3 id="qText" style="margin: 20px 0;"></h3>
                 <div id="qOptions"></div>
             </div>
         </section>
 
-        <section id="result">
-            <div class="glass-card result-box">
-                <h2 id="resLevel"></h2>
-                <p id="resScore"></p>
-                <div id="resAdvice" class="advice-box"></div>
-                <button class="btn-main" onclick="showPage('home')">กลับหน้าหลัก</button>
+<section id="result">
+    <div class="glass-card result-card" id="printableArea">
+        
+        <div id="resultHeader" class="result-status-banner">
+            <h3 style="margin:0; opacity: 0.8; font-weight: 300; font-size: 0.9rem;">Mental Health Report</h3>
+            <h2 id="resLevel" style="margin: 5px 0;">ระดับคะแนน: กำลังคำนวณ</h2>
+            <p id="resDate" style="font-size: 0.75rem; margin: 0; opacity: 0.9;"></p>
+        </div>
+
+        <div class="stats-section" style="padding: 20px;">
+            <h4 style="margin: 0 0 10px 0; font-size: 1rem;"><i class="icon">📊</i> แนวโน้มสภาวะจิตใจ</h4>
+            <div class="mini-chart-container">
+                <div id="historyBars" class="history-bars">
+                    </div>
             </div>
-        </section>
+            <p style="font-size: 0.7rem; color: #888; text-align: center; margin-top: 5px;">เปรียบเทียบผลการทดสอบ 3 ครั้งล่าสุด</p>
+        </div>
+
+        <div class="score-visual" style="padding: 0 20px 20px;">
+            <div class="progress-container">
+                <div id="resBar" class="progress-bar"></div>
+            </div>
+            <div class="score-label" style="display: flex; justify-content: space-between; font-size: 0.85rem;">
+                <span>คะแนนของคุณ: <strong id="resScore">0</strong></span>
+                <span id="maxScoreLabel"></span>
+            </div>
+        </div>
+
+        <div class="analysis-section" style="padding: 0 20px 20px;">
+            <div class="advice-card highlight" style="background: #fdf8f2; padding: 15px; border-radius: 12px; border-left: 4px solid var(--primary);">
+                <h4 style="margin: 0 0 8px 0; color: var(--primary-dark);"><i class="icon">💡</i> บทวิเคราะห์เฉพาะคุณ</h4>
+                <p id="resAdvice" style="margin: 0; font-size: 0.9rem; line-height: 1.5; color: #444;"></p>
+            </div>
+
+            <div id="medicalAdvice" class="medical-box hidden" style="margin-top: 15px; background: #fff0f0; border: 1px solid #ffcccc; padding: 15px; border-radius: 12px;">
+                <h4 style="margin: 0 0 8px 0; color: #d9534f;"><i class="icon">🏥</i> ข้อแนะนำทางการแพทย์</h4>
+                <p style="font-size: 0.85rem; margin-bottom: 8px;">ควรปรึกษาผู้เชี่ยวชาญเพื่อรับคำแนะนำที่ถูกต้อง:</p>
+                <ul style="padding-left: 20px; font-size: 0.85rem; color: #555;">
+                    <li>โทรสายด่วนสุขภาพจิต <strong>1323</strong> (ฟรี 24 ชม.)</li>
+                    <li>ปรึกษาห้องพยาบาล หรือแผนกจิตเวช รพ.ใกล้บ้าน</li>
+                    <li>ลองจดบันทึกอาการที่เกิดขึ้นบ่อยๆ เพื่อแจ้งแพทย์</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="result-actions no-print" style="padding: 20px; display: flex; flex-direction: column; gap: 10px;">
+        <button class="btn-primary" onclick="window.print()" style="width: 100%;"><i class="icon">🖨️</i> พิมพ์หรือบันทึกเป็น PDF</button>
+        <button class="btn-ghost" onclick="shareResult()" style="width: 100%;"><i class="icon">🔗</i> แชร์ให้เพื่อนหรือคนใกล้ชิด</button>
+        <button class="btn-text" onclick="showPage('home')" style="width: 100%; text-align: center; color: #666; cursor: pointer; padding: 10px;">กลับหน้าหลัก</button>
+    </div>
+</section>
 
         <section id="history">
-            <h2>ประวัติบันทึกใจ 📜</h2>
+            <div class="section-header"><h2>ประวัติบันทึกใจ 📜</h2></div>
             <div id="historyList"></div>
-            <button class="btn-main" onclick="showPage('home')">กลับหน้าหลัก</button>
-        </section>
-
-        <section id="guide">
-            <h2>คู่มือการใช้งาน 📖</h2>
-            <div class="glass-card">
-                <p>1. หน้าหลัก: บันทึกอารมณ์และประเมินแบบด่วน</p>
-                <p>2. ฟังเพลง: กดเล่นเพลงเพื่อความผ่อนคลาย</p>
-                <p>3. เมนู: เข้าถึงแบบทดสอบฉบับเต็มและประวัติย้อนหลัง</p>
-                <button class="btn-main" onclick="showPage('home')">รับทราบ</button>
-            </div>
+            <button class="btn-ghost" onclick="showPage('home')">กลับหน้าหลัก</button>
         </section>
 
     </main>
+
+    <div class="sticky-player glass-card">
+        <div class="player-info">
+            <span class="music-note">🎵</span>
+            <marquee behavior="scroll" direction="left" id="musicStatus">พร้อมฟังเพลงผ่อนคลายไหม?</marquee>
+        </div>
+        <div class="player-controls">
+            <button onclick="prevTrack()" class="p-btn">⏮</button>
+            <button onclick="toggleMusic()" id="playPauseBtn" class="p-btn play-btn">▶</button>
+            <button onclick="nextTrack()" class="p-btn">⏭</button>
+        </div>
+        <audio id="bgMusic"></audio>
+    </div>
 
     <script src="questions.js"></script>
     <script src="app.js"></script>
