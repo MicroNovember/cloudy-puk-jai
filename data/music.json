@@ -12,33 +12,33 @@
         },
         {
             "id": "music2",
-            "title": "เสียงธรรมชาติผ่อนคลาย",
+            "title": "YT1",
             "artist": "ธรรมชาติบำบัด",
             "description": "เสียงน้ำไหลและนก chirp ช่วยลดความเครียด",
-            "spotifyUrl": "https://open.spotify.com/embed/track/5K5dBJ3uVd5tN0LhqB3rCc?utm_source=generator&theme=0",
+            "spotifyUrl": "https://www.youtube.com/watch?v=YNWPwyw-lvM",
             "image": "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
             "duration": "5:20",
             "category": "ธรรมชาติ"
         },
         {
             "id": "music3",
-            "title": "เสียงเปียโนสำหรับสมาธิ",
-            "artist": "Piano Therapy",
-            "description": "เสียงเปียโนเบาๆ ช่วยเพิ่มสมาธิและความสงบ",
-            "spotifyUrl": "https://open.spotify.com/embed/track/3x5xEpe15RDFQmX8N8lNpS?utm_source=generator&theme=0",
+            "title": "Pixabay",
+            "artist": "Pixabay",
+            "description": "Pixabay",
+            "spotifyUrl": "https://cdn.pixabay.com/audio/2022/03/30/audio_dbcee70571.mp3",
             "image": "https://images.unsplash.com/photo-1520523839897-bd0b52f945a0?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
             "duration": "4:15",
             "category": "สมาธิ"
         },
         {
             "id": "music4",
-            "title": "ดนตรีบำบัดความวิตกกังวล",
-            "artist": "Anxiety Relief Sounds",
-            "description": "ดนตรีที่ออกแบบมาสำหรับลดความวิตกกังวลโดยเฉพาะ",
-            "spotifyUrl": "https://open.spotify.com/embed/track/5S4qD4hCnTaV4eshXqs1H5?utm_source=generator&theme=0",
+            "title": "Forever Love",
+            "artist": "Ahjay Stelino",
+            "description": "Forever Love",
+            "spotifyUrl": "https://assets.mixkit.co/music/38/38.mp3",
             "image": "https://images.unsplash.com/photo-1511379938547-c1f69419868d?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
-            "duration": "6:30",
-            "category": "ลดความกังวล"
+            "duration": "1:51",
+            "category": "อบอุ่น"
         },
         {
             "id": "music5",

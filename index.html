@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MindBloom - จิตใจเบิกบาน</title>
+    <title>Cloudy-Puk-Jai</title>
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -60,8 +60,8 @@
             <div class="flex items-center justify-between">
                 <!-- Logo -->
                 <div class="flex items-center space-x-2">
-                    <div class="text-2xl text-primary">🌱</div>
-                    <h1 class="text-xl font-bold text-primary">MindBloom</h1>
+                    <div class="text-2xl text-primary">🌸</div>
+                    <h1 class="text-xl font-bold text-primary">Cloudy-Puk-Jai</h1>
                 </div>
                 
                 <!-- Mobile Menu Button -->
@@ -123,6 +123,10 @@
                 <a href="#" @click="navigateTo('tools'); mobileMenuOpen = false" class="block px-3 py-2 rounded-lg font-medium text-gray-600 dark:text-gray-300 hover:bg-primary-light hover:text-white transition-colors">
                     <i class="fas fa-wind mr-2"></i>เครื่องมือผ่อนคลาย
                 </a>
+                <!-- Theme Toggle -->
+                    <button @click="toggleDarkMode()" class="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors" aria-label="สลับธีม">
+                        <i :class="darkMode ? 'fas fa-sun' : 'fas fa-moon'" class="text-lg"></i>
+                    </button>
             </div>
         </div>
     </header>
@@ -366,144 +370,274 @@
             </div>
         </div>
 
-        <!-- Music & Podcast Page -->
-        <div x-show="currentPage === 'music'" x-transition class="space-y-8">
-            <h2 class="text-2xl md:text-3xl font-bold text-primary mb-6 flex items-center">
-                <i class="fas fa-music mr-3"></i>เพลงและพอดแคสต์
-            </h2>
+        
+      <!-- Music & Podcast Page -->
+<div x-show="currentPage === 'music'" x-transition class="space-y-8">
+    <h2 class="text-2xl md:text-3xl font-bold text-primary mb-6 flex items-center">
+        <i class="fas fa-music mr-3"></i>เพลงและพอดแคสต์
+    </h2>
+    
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <!-- Player -->
+        <div class="lg:col-span-2 bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6">
+            <h3 class="text-xl font-bold text-primary mb-2" x-text="currentTrack.title || 'เลือกเพลงหรือพอดแคสต์'"></h3>
+            <p class="text-gray-600 dark:text-gray-300 mb-6" x-text="currentTrack.description || 'เลือกรายการจากด้านขวาเพื่อเริ่มฟัง'"></p>
             
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                <!-- Player -->
-                <div class="lg:col-span-2 bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6">
-                    <h3 class="text-xl font-bold text-primary mb-2" x-text="currentTrack.title || 'เลือกเพลงหรือพอดแคสต์'"></h3>
-                    <p class="text-gray-600 dark:text-gray-300 mb-6" x-text="currentTrack.description || 'เลือกรายการจากด้านขวาเพื่อเริ่มฟัง'"></p>
-                    
-                    <div class="rounded-xl overflow-hidden">
-                        <template x-if="currentTrack.spotifyUrl">
-                            <iframe 
-                                :src="currentTrack.spotifyUrl" 
-                                width="100%" 
-                                height="352" 
-                                frameborder="0" 
-                                allowfullscreen="" 
-                                allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" 
-                                loading="lazy" 
-                                class="rounded-lg"
-                                :title="currentTrack.title"
-                            ></iframe>
-                        </template>
-                        <template x-if="!currentTrack.spotifyUrl">
-                            <div class="bg-gray-100 dark:bg-gray-700 rounded-lg p-12 text-center">
-                                <i class="fas fa-headphones text-6xl text-gray-300 dark:text-gray-600 mb-6"></i>
-                                <p class="text-gray-500 dark:text-gray-400">ยังไม่ได้เลือกเพลงหรือพอดแคสต์</p>
-                            </div>
-                        </template>
-                    </div>
-                    
-                    <div class="mt-6 p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
-                        <h4 class="font-bold text-primary mb-2">คำแนะนำการฟัง</h4>
-                        <p class="text-sm text-gray-600 dark:text-gray-300">ฟังเพลงผ่อนคลายอย่างน้อย 15-30 นาทีต่อวัน สามารถช่วยลดความเครียดและความวิตกกังวลได้</p>
-                    </div>
-                </div>
+            <div class="rounded-xl overflow-hidden">
+                <!-- Spotify Player -->
+                <template x-if="currentTrack.spotifyUrl && currentTrack.spotifyUrl.includes('open.spotify.com')">
+                    <iframe 
+                        :src="currentTrack.spotifyUrl" 
+                        width="100%" 
+                        height="352" 
+                        frameborder="0" 
+                        allowfullscreen="" 
+                        allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" 
+                        loading="lazy" 
+                        class="rounded-lg"
+                        :title="currentTrack.title"
+                    ></iframe>
+                </template>
                 
-                <!-- Playlist -->
-                <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 max-h-[600px] overflow-y-auto scrollbar-thin">
-                    <!-- Tabs -->
-                    <div class="flex border-b border-gray-200 dark:border-gray-700 mb-6">
-                        <button 
-                            @click="musicTab = 'music'" 
-                            :class="{ 'border-b-2 border-primary text-primary': musicTab === 'music' }" 
-                            class="flex-1 py-3 font-medium text-center"
-                            id="musicTab"
-                            name="musicTab"
-                            value="music"
+                <!-- YouTube Player -->
+                <template x-if="currentTrack.spotifyUrl && (currentTrack.spotifyUrl.includes('youtube.com') || currentTrack.spotifyUrl.includes('youtu.be'))">
+                    <iframe 
+                        :src="currentTrack.spotifyUrl.includes('embed/') ? currentTrack.spotifyUrl : getYouTubeEmbedUrl(currentTrack.spotifyUrl)" 
+                        width="100%" 
+                        height="352" 
+                        frameborder="0" 
+                        allowfullscreen="" 
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                        loading="lazy" 
+                        class="rounded-lg"
+                        :title="currentTrack.title"
+                    ></iframe>
+                </template>
+                
+                <!-- Pixabay Audio Player -->
+                <template x-if="currentTrack.spotifyUrl && currentTrack.spotifyUrl.includes('pixabay.com')">
+                    <div class="bg-gray-50 dark:bg-gray-800 p-6 rounded-lg">
+                        <div class="flex items-center mb-4">
+                            <i class="fas fa-music text-2xl text-primary mr-3"></i>
+                            <div>
+                                <h4 class="font-bold text-lg" x-text="currentTrack.title"></h4>
+                                <p class="text-gray-600 dark:text-gray-300" x-text="currentTrack.artist"></p>
+                            </div>
+                        </div>
+                        
+                        <audio 
+                            controls 
+                            class="w-full"
+                            x-bind:src="getDirectAudioUrl(currentTrack.spotifyUrl)"
+                            @play="onAudioPlay"
+                            @pause="onAudioPause"
                         >
-                            <i class="fas fa-music mr-2"></i>เพลงผ่อนคลาย
-                        </button>
-                        <button 
-                            @click="musicTab = 'podcast'" 
-                            :class="{ 'border-b-2 border-primary text-primary': musicTab === 'podcast' }" 
-                            class="flex-1 py-3 font-medium text-center"
-                            id="podcastTab"
-                            name="musicTab"
-                            value="podcast"
+                            <p>เบราว์เซอร์ของคุณไม่รองรับ audio element</p>
+                        </audio>
+                        
+                        <div class="mt-4 flex items-center justify-between text-sm text-gray-500">
+                            <span>แหล่งที่มา: Pixabay</span>
+                            <span x-text="currentTrack.duration"></span>
+                        </div>
+                    </div>
+                </template>
+                
+                <!-- Generic Audio Player สำหรับไฟล์ MP3/WAV/OGG -->
+                <template x-if="currentTrack.spotifyUrl && 
+                               !currentTrack.spotifyUrl.includes('open.spotify.com') && 
+                               !currentTrack.spotifyUrl.includes('youtube.com') && 
+                               !currentTrack.spotifyUrl.includes('youtu.be') && 
+                               !currentTrack.spotifyUrl.includes('pixabay.com') && 
+                               (currentTrack.spotifyUrl.includes('.mp3') || 
+                                currentTrack.spotifyUrl.includes('.wav') ||
+                                currentTrack.spotifyUrl.includes('.ogg'))">
+                    <div class="bg-gray-50 dark:bg-gray-800 p-6 rounded-lg">
+                        <div class="flex items-center mb-4">
+                            <i class="fas fa-volume-up text-2xl text-primary mr-3"></i>
+                            <div>
+                                <h4 class="font-bold text-lg" x-text="currentTrack.title"></h4>
+                                <p class="text-gray-600 dark:text-gray-300" x-text="currentTrack.artist"></p>
+                            </div>
+                        </div>
+                        
+                        <audio 
+                            controls 
+                            class="w-full"
+                            x-bind:src="currentTrack.spotifyUrl"
+                            @play="onAudioPlay"
+                            @pause="onAudioPause"
                         >
-                            <i class="fas fa-podcast mr-2"></i>พอดแคสต์
-                        </button>
-                        <button 
-                            @click="musicTab = 'playlist'" 
-                            :class="{ 'border-b-2 border-primary text-primary': musicTab === 'playlist' }" 
-                            class="flex-1 py-3 font-medium text-center"
-                            id="playlistTab"
-                            name="musicTab"
-                            value="playlist"
-                        >
-                            <i class="fas fa-list mr-2"></i>เพลย์ลิสต์
-                        </button>
+                            <p>เบราว์เซอร์ของคุณไม่รองรับ audio element</p>
+                        </audio>
+                        
+                        <div class="mt-4 flex items-center justify-between text-sm text-gray-500">
+                            <span x-text="getSourceType(currentTrack.spotifyUrl)"></span>
+                            <span x-text="currentTrack.duration"></span>
+                        </div>
                     </div>
-                    
-                    <!-- Music List -->
-                    <div x-show="musicTab === 'music'" class="space-y-3">
-                        <template x-for="(track, index) in musicData.music" :key="track.id">
-                            <button 
-                                @click="playTrack(track)" 
-                                :class="{ 'bg-primary bg-opacity-10 border-l-4 border-primary': currentTrack.id === track.id }" 
-                                class="w-full flex items-center p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
-                                :id="`track-${track.id}`"
-                                :name="`musicTrack`"
-                                :value="track.id"
-                            >
-                                <img :src="track.image" :alt="track.title" class="w-12 h-12 rounded-lg object-cover">
-                                <div class="ml-4 text-left flex-1">
-                                    <h4 class="font-semibold truncate" x-text="track.title"></h4>
-                                    <p class="text-sm text-gray-500 dark:text-gray-400 truncate" x-text="`${track.artist} • ${track.duration}`"></p>
-                                </div>
-                            </button>
-                        </template>
+                </template>
+                
+                <!-- ไม่มีอะไรถูกเลือก -->
+                <template x-if="!currentTrack.spotifyUrl">
+                    <div class="bg-gray-100 dark:bg-gray-700 rounded-lg p-12 text-center">
+                        <i class="fas fa-headphones text-6xl text-gray-300 dark:text-gray-600 mb-6"></i>
+                        <p class="text-gray-500 dark:text-gray-400">ยังไม่ได้เลือกเพลงหรือพอดแคสต์</p>
                     </div>
-                    
-                    <!-- Podcast List -->
-                    <div x-show="musicTab === 'podcast'" class="space-y-3">
-                        <template x-for="(track, index) in musicData.podcasts" :key="track.id">
-                            <button 
-                                @click="playTrack(track)" 
-                                :class="{ 'bg-primary bg-opacity-10 border-l-4 border-primary': currentTrack.id === track.id }" 
-                                class="w-full flex items-center p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
-                                :id="`podcast-${track.id}`"
-                                :name="`podcastTrack`"
-                                :value="track.id"
-                            >
-                                <img :src="track.image" :alt="track.title" class="w-12 h-12 rounded-lg object-cover">
-                                <div class="ml-4 text-left flex-1">
-                                    <h4 class="font-semibold truncate" x-text="track.title"></h4>
-                                    <p class="text-sm text-gray-500 dark:text-gray-400 truncate" x-text="`${track.artist} • ${track.duration}`"></p>
-                                </div>
-                            </button>
-                        </template>
-                    </div>
-                    
-                    <!-- Playlist List -->
-                    <div x-show="musicTab === 'playlist'" class="space-y-3">
-                        <template x-for="(track, index) in musicData.playlists" :key="track.id">
-                            <button 
-                                @click="playTrack(track)" 
-                                :class="{ 'bg-primary bg-opacity-10 border-l-4 border-primary': currentTrack.id === track.id }" 
-                                class="w-full flex items-center p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
-                                :id="`playlist-${track.id}`"
-                                :name="`playlistTrack`"
-                                :value="track.id"
-                            >
-                                <img :src="track.image" :alt="track.title" class="w-12 h-12 rounded-lg object-cover">
-                                <div class="ml-4 text-left flex-1">
-                                    <h4 class="font-semibold truncate" x-text="track.title"></h4>
-                                    <p class="text-sm text-gray-500 dark:text-gray-400 truncate" x-text="`${track.artist} • ${track.duration}`"></p>
-                                </div>
-                            </button>
-                        </template>
-                    </div>
-                </div>
+                </template>
+            </div>
+            
+            <div class="mt-6 p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                <h4 class="font-bold text-primary mb-2">คำแนะนำการฟัง</h4>
+                <p class="text-sm text-gray-600 dark:text-gray-300">ฟังเพลงผ่อนคลายอย่างน้อย 15-30 นาทีต่อวัน สามารถช่วยลดความเครียดและความวิตกกังวลได้</p>
             </div>
         </div>
+        
+        <!-- Playlist -->
+        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 max-h-[600px] overflow-y-auto scrollbar-thin">
+            <!-- Tabs -->
+            <div class="flex border-b border-gray-200 dark:border-gray-700 mb-6">
+                <button 
+                    @click="musicTab = 'music'" 
+                    :class="{ 'border-b-2 border-primary text-primary': musicTab === 'music' }" 
+                    class="flex-1 py-3 font-medium text-center"
+                    id="musicTab"
+                    name="musicTab"
+                    value="music"
+                >
+                    <i class="fas fa-music mr-2"></i>เพลงผ่อนคลาย
+                </button>
+                <button 
+                    @click="musicTab = 'podcast'" 
+                    :class="{ 'border-b-2 border-primary text-primary': musicTab === 'podcast' }" 
+                    class="flex-1 py-3 font-medium text-center"
+                    id="podcastTab"
+                    name="musicTab"
+                    value="podcast"
+                >
+                    <i class="fas fa-podcast mr-2"></i>พอดแคสต์
+                </button>
+                <button 
+                    @click="musicTab = 'playlist'" 
+                    :class="{ 'border-b-2 border-primary text-primary': musicTab === 'playlist' }" 
+                    class="flex-1 py-3 font-medium text-center"
+                    id="playlistTab"
+                    name="musicTab"
+                    value="playlist"
+                >
+                    <i class="fas fa-list mr-2"></i>เพลย์ลิสต์
+                </button>
+            </div>
+            
+            <!-- Music List -->
+            <div x-show="musicTab === 'music'" class="space-y-3">
+                <template x-for="(track, index) in musicData.music" :key="track.id">
+                    <button 
+                        @click="playTrack(track)" 
+                        :class="{ 'bg-primary bg-opacity-10 border-l-4 border-primary': currentTrack.id === track.id }" 
+                        class="w-full flex items-center p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                        :id="`track-${track.id}`"
+                        :name="`musicTrack`"
+                        :value="track.id"
+                    >
+                        <img :src="track.image" :alt="track.title" class="w-12 h-12 rounded-lg object-cover">
+                        <div class="ml-4 text-left flex-1">
+                            <h4 class="font-semibold truncate" x-text="track.title"></h4>
+                            <p class="text-sm text-gray-500 dark:text-gray-400 truncate" x-text="`${track.artist} • ${track.duration}`"></p>
+                        </div>
+                        <!-- ไอคอนแสดงแหล่งที่มา -->
+                        <div class="ml-2">
+                            <template x-if="track.spotifyUrl && track.spotifyUrl.includes('open.spotify.com')">
+                                <i class="fab fa-spotify text-green-500 text-lg" title="Spotify"></i>
+                            </template>
+                            <template x-else-if="track.spotifyUrl && (track.spotifyUrl.includes('youtube.com') || track.spotifyUrl.includes('youtu.be'))">
+                                <i class="fab fa-youtube text-red-500 text-lg" title="YouTube"></i>
+                            </template>
+                            <template x-else-if="track.spotifyUrl && track.spotifyUrl.includes('pixabay.com')">
+                                <i class="fas fa-music text-blue-500 text-lg" title="Pixabay"></i>
+                            </template>
+                            <template x-else-if="track.spotifyUrl && (track.spotifyUrl.includes('.mp3') || track.spotifyUrl.includes('.wav') || track.spotifyUrl.includes('.ogg'))">
+                                <i class="fas fa-file-audio text-purple-500 text-lg" title="Audio File"></i>
+                            </template>
+                        </div>
+                    </button>
+                </template>
+            </div>
+            
+            <!-- Podcast List -->
+            <div x-show="musicTab === 'podcast'" class="space-y-3">
+                <template x-for="(track, index) in musicData.podcasts" :key="track.id">
+                    <button 
+                        @click="playTrack(track)" 
+                        :class="{ 'bg-primary bg-opacity-10 border-l-4 border-primary': currentTrack.id === track.id }" 
+                        class="w-full flex items-center p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                        :id="`podcast-${track.id}`"
+                        :name="`podcastTrack`"
+                        :value="track.id"
+                    >
+                        <img :src="track.image" :alt="track.title" class="w-12 h-12 rounded-lg object-cover">
+                        <div class="ml-4 text-left flex-1">
+                            <h4 class="font-semibold truncate" x-text="track.title"></h4>
+                            <p class="text-sm text-gray-500 dark:text-gray-400 truncate" x-text="`${track.artist} • ${track.duration}`"></p>
+                        </div>
+                        <!-- ไอคอนแสดงแหล่งที่มา -->
+                        <div class="ml-2">
+                            <template x-if="track.spotifyUrl && track.spotifyUrl.includes('open.spotify.com')">
+                                <i class="fab fa-spotify text-green-500 text-lg" title="Spotify"></i>
+                            </template>
+                            <template x-else-if="track.spotifyUrl && (track.spotifyUrl.includes('youtube.com') || track.spotifyUrl.includes('youtu.be'))">
+                                <i class="fab fa-youtube text-red-500 text-lg" title="YouTube"></i>
+                            </template>
+                            <template x-else-if="track.spotifyUrl && track.spotifyUrl.includes('pixabay.com')">
+                                <i class="fas fa-music text-blue-500 text-lg" title="Pixabay"></i>
+                            </template>
+                            <template x-else-if="track.spotifyUrl && (track.spotifyUrl.includes('.mp3') || track.spotifyUrl.includes('.wav') || track.spotifyUrl.includes('.ogg'))">
+                                <i class="fas fa-file-audio text-purple-500 text-lg" title="Audio File"></i>
+                            </template>
+                        </div>
+                    </button>
+                </template>
+            </div>
+            
+            <!-- Playlist List -->
+            <div x-show="musicTab === 'playlist'" class="space-y-3">
+                <template x-for="(track, index) in musicData.playlists" :key="track.id">
+                    <button 
+                        @click="playTrack(track)" 
+                        :class="{ 'bg-primary bg-opacity-10 border-l-4 border-primary': currentTrack.id === track.id }" 
+                        class="w-full flex items-center p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                        :id="`playlist-${track.id}`"
+                        :name="`playlistTrack`"
+                        :value="track.id"
+                    >
+                        <img :src="track.image" :alt="track.title" class="w-12 h-12 rounded-lg object-cover">
+                        <div class="ml-4 text-left flex-1">
+                            <h4 class="font-semibold truncate" x-text="track.title"></h4>
+                            <p class="text-sm text-gray-500 dark:text-gray-400 truncate" x-text="`${track.artist} • ${track.duration}`"></p>
+                        </div>
+                        <!-- ไอคอนแสดงแหล่งที่มา -->
+                        <div class="ml-2">
+                            <template x-if="track.spotifyUrl && track.spotifyUrl.includes('open.spotify.com')">
+                                <i class="fab fa-spotify text-green-500 text-lg" title="Spotify"></i>
+                            </template>
+                            <template x-else-if="track.spotifyUrl && (track.spotifyUrl.includes('youtube.com') || track.spotifyUrl.includes('youtu.be'))">
+                                <i class="fab fa-youtube text-red-500 text-lg" title="YouTube"></i>
+                            </template>
+                            <template x-else-if="track.spotifyUrl && track.spotifyUrl.includes('pixabay.com')">
+                                <i class="fas fa-music text-blue-500 text-lg" title="Pixabay"></i>
+                            </template>
+                            <template x-else-if="track.spotifyUrl && (track.spotifyUrl.includes('.mp3') || track.spotifyUrl.includes('.wav') || track.spotifyUrl.includes('.ogg'))">
+                                <i class="fas fa-file-audio text-purple-500 text-lg" title="Audio File"></i>
+                            </template>
+                        </div>
+                    </button>
+                </template>
+            </div>
+        </div>
+    </div>
+</div>  
+
+
+
 
         <!-- Articles Page -->
         <div x-show="currentPage === 'articles'" x-transition class="space-y-8">
@@ -732,7 +866,7 @@
                     
                     <!-- Recommendations -->
                     <div class="bg-gradient-to-r from-primary-light to-primary text-white rounded-lg p-6 mb-8">
-                        <h4 class="font-bold text-white mb-4">คำแนะนำเพิ่มเติมจาก MindBloom</h4>
+                        <h4 class="font-bold text-white mb-4">คำแนะนำเพิ่มเติมจาก Cloudy-Puk-Jai</h4>
                         <div class="text-left space-y-3">
                             <div class="flex items-start">
                                 <i class="fas fa-heart mt-1 mr-3"></i>
@@ -841,7 +975,7 @@
             <div class="flex flex-col items-center space-y-6">
                 <div class="flex items-center space-x-2">
                     <div class="text-2xl text-primary">🌱</div>
-                    <h2 class="text-xl font-bold text-primary">MindBloom</h2>
+                    <h2 class="text-xl font-bold text-primary">Cloudy-Puk-Jai</h2>
                 </div>
                 
                 <p class="text-gray-600 dark:text-gray-300 text-center">"พื้นที่พักใจที่คนอยากกลับมาใช้ทุกวัน"</p>
@@ -873,7 +1007,7 @@
                     </button>
                 </div>
                 
-                <p class="text-gray-500 dark:text-gray-400 text-sm">© 2023 MindBloom. พัฒนาด้วยความห่วงใย</p>
+                <p class="text-gray-500 dark:text-gray-400 text-sm">© 2026 Cloudy-Puk-Jai. พัฒนาด้วยความห่วงใย</p>
             </div>
         </div>
     </footer>
@@ -935,7 +1069,7 @@
         <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl max-w-md w-full max-h-[90vh] overflow-y-auto">
             <div class="p-6">
                 <div class="flex justify-between items-center mb-6">
-                    <h3 class="text-2xl font-bold text-primary">เกี่ยวกับ MindBloom</h3>
+                    <h3 class="text-2xl font-bold text-primary">เกี่ยวกับ Cloudy-Puk-Jai</h3>
                     <button 
                         @click="closeModal()" 
                         class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
@@ -947,7 +1081,7 @@
                 </div>
                 
                 <div class="space-y-4">
-                    <p>MindBloom เป็นพื้นที่ปลอดภัยสำหรับการดูแลสุขภาพจิตเบื้องต้น เราเชื่อว่าทุกคนควรมีพื้นที่พักใจและเครื่องมือที่จะช่วยให้จิตใจเบิกบานขึ้นในแต่ละวัน</p>
+                    <p>Cloudy-Puk-Jai เป็นพื้นที่ปลอดภัยสำหรับการดูแลสุขภาพจิตเบื้องต้น เราเชื่อว่าทุกคนควรมีพื้นที่พักใจและเครื่องมือที่จะช่วยให้จิตใจเบิกบานขึ้นในแต่ละวัน</p>
                     
                     <div>
                         <h4 class="font-bold text-primary mb-2">สิ่งที่เรามีให้</h4>

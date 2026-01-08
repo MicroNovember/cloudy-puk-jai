@@ -37,6 +37,7 @@ document.addEventListener('alpine:init', () => {
         // Music
         musicTab: 'music',
         currentTrack: {},
+        audioPlaying: false,
         musicData: {
             music: [],
             podcasts: [],
@@ -344,8 +345,104 @@ document.addEventListener('alpine:init', () => {
         
         // Music Functions
         playTrack(track) {
-            this.currentTrack = track;
+            this.currentTrack = {
+            id: track.id,
+            title: track.title,
+            artist: track.artist,
+            description: track.description, // ต้องมีบรรทัดนี้
+            spotifyUrl: track.spotifyUrl,
+            image: track.image,
+            duration: track.duration,
+            category: track.category
+            };
         },
+
+
+// เพิ่ม
+        // ฟังก์ชันสำหรับจัดการ audio
+onAudioPlay() {
+    this.audioPlaying = true;
+},
+
+onAudioPause() {
+    this.audioPlaying = false;
+},
+
+// ฟังก์ชันแปลง YouTube URL เป็น embed URL
+getYouTubeEmbedUrl(url) {
+    if (!url) return '';
+    
+    // ถ้าเป็น embed URL อยู่แล้ว
+    if (url.includes('embed/')) return url;
+    
+    // แปลงจาก YouTube URL ปกติเป็น embed
+    const videoId = this.extractYouTubeId(url);
+    if (videoId) {
+        return `https://www.youtube.com/embed/${videoId}?autoplay=1`;
+    }
+    
+    return url;
+},
+
+// ฟังก์ชันดึง YouTube Video ID
+extractYouTubeId(url) {
+    if (!url) return '';
+    
+    const regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
+    const match = url.match(regExp);
+    return (match && match[7].length === 11) ? match[7] : '';
+},
+
+// ฟังก์ชันตรวจสอบประเภทของ URL
+getSourceType(url) {
+    if (!url) return 'ไม่ระบุ';
+    if (url.includes('open.spotify.com')) return 'Spotify';
+    if (url.includes('youtube.com') || url.includes('youtu.be')) return 'YouTube';
+    if (url.includes('pixabay.com')) return 'Pixabay';
+    if (url.includes('.mp3')) return 'ไฟล์ MP3';
+    if (url.includes('.wav')) return 'ไฟล์ WAV';
+    if (url.includes('.ogg')) return 'ไฟล์ OGG';
+    return 'แหล่งที่มา';
+},
+
+// ฟังก์ชันแปลง Pixabay URL เป็น direct audio URL
+getDirectAudioUrl(url) {
+    if (!url || !url.includes('pixabay.com')) return url;
+    
+    // ถ้าเป็น URL หน้าเว็บ Pixabay music เช่น https://pixabay.com/music/upbeat-sun-bunny-108599/
+    // ต้องดึง ID จาก URL
+    if (url.includes('pixabay.com/music/')) {
+        // ตัวอย่าง: ดึง ID 108599 จาก URL
+        const match = url.match(/pixabay\.com\/music\/.*-(\d+)\/$/);
+        if (match && match[1]) {
+            const musicId = match[1];
+            // ใช้ Pixabay API หรือสร้าง direct URL (นี่เป็นตัวอย่าง)
+            // ในความเป็นจริงอาจต้องใช้ Pixabay API เพื่อดึง direct link
+            return `https://cdn.pixabay.com/audio/2023/01/01/audio_${musicId}.mp3`;
+        }
+    }
+    
+    return url;
+},
+
+// ฟังก์ชันดึง direct audio URL จาก Pixabay (แบบง่าย)
+getPixabayDirectLink(url) {
+    // สำหรับตัวอย่าง ให้ใช้เสียงอื่นแทนถ้าเป็น Pixabay page URL
+    if (url.includes('pixabay.com/music/')) {
+        // ส่งคืน direct MP3 link จากแหล่งอื่นแทน
+        return 'https://assets.mixkit.co/music/preview/mixkit-piano-1181.mp3';
+    }
+    return url;
+},
+
+
+
+
+
+
+
+
+
         
         // Article Functions
         openArticleModal(article) {
