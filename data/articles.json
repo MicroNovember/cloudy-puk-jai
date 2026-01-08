@@ -37,8 +37,8 @@
       "id": "article4",
       "title": "ชวนฝึกหายใจแบบ 4-7-8",
       "excerpt": "(Breathing Exercise)",
-      "content": "<a href=\"https://thestandard.co/life/4-7-8-breathing-exercise/\" target=\"_blank\" rel=\"noopener noreferrer\">เปิดบทความ 4-7-8</a>",
-      "category": "ความสุข",
+      "content": "<button onclick=\\\"window.open('https://thestandard.co/life/4-7-8-breathing-exercise/', '_blank', 'noopener,noreferrer')\\\">เปิดบทความ 4-7-8</button>",
+            "category": "ความสุข",
       "author": "ภูริตา บุญล้อม",
       "date": "2023-10-05",
       "readTime": "6 นาที",
@@ -49,6 +49,7 @@
     ]
 
 }
+
 
 
 
