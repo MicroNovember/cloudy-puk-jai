@@ -238,6 +238,30 @@
                 </template>
             </div>
         </div>
+
+
+        </div> <!-- ปิด Features Grid -->
+
+<!-- Quick Help Section -->
+<div x-show="agreedToTerms && currentPage === 'home'" class="mt-8 pt-6 border-t border-gray-200 dark:border-gray-700">
+    <div class="bg-gradient-to-r from-primary/5 to-primary-light/5 rounded-xl p-5 text-center">
+        <div class="max-w-md mx-auto">
+            <div class="text-3xl mb-3">🌸</div>
+            <h4 class="text-base font-bold text-primary mb-2">ต้องการดูคำแนะนำอีกครั้ง?</h4>
+            <p class="text-gray-600 dark:text-gray-300 mb-4 text-sm">
+                สามารถเปิดคู่มือการใช้งานได้ตลอดเวลา
+            </p>
+            <button @click="modalOpen = 'welcome'" 
+                    class="inline-flex items-center gap-2 bg-primary hover:bg-primary-dark text-white 
+                           font-medium px-4 py-2.5 rounded-lg transition-colors">
+                <i class="fas fa-book-open"></i>
+                เปิดคู่มือการใช้งาน
+            </button>
+            </div>
+            </div>
+        </div>
+
+        
     </div> <!-- ปิดหน้า Home -->
 
  
@@ -1997,7 +2021,129 @@
 
 
 
-
+            <!-- Welcome/Intro Modal สำหรับผู้ใช้ใหม่ -->
+            <div x-show="modalOpen === 'welcome'" x-transition class="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center p-4 z-50">
+                <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl max-w-md w-full max-h-[90vh] overflow-y-auto">
+                    <div class="p-6">
+                        <!-- Header -->
+                        <div class="text-center mb-6">
+                            <div class="text-4xl mb-4">🌸</div>
+                            <h3 class="text-xl font-bold text-primary">ยินดีต้อนรับสู่ Cloudy-Puk-Jai 🌸</h3>
+                            <p class="text-sm text-gray-600 dark:text-gray-300 mt-2">คำแนะนำการใช้งานและนโยบายความเป็นส่วนตัว</p>
+                        </div>
+                        
+                        <!-- Key Points -->
+                        <div class="space-y-4 mb-6">
+                            <!-- 1. พื้นที่ปลอดภัย -->
+                            <div class="flex items-start gap-3 bg-green-50 dark:bg-green-900/20 p-3 rounded-lg">
+                                <div class="bg-green-100 dark:bg-green-800 p-2 rounded-full">
+                                    <i class="fas fa-shield-alt text-green-600 dark:text-green-400"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-green-700 dark:text-green-300">พื้นที่ปลอดภัยสำหรับคุณ</h4>
+                                    <p class="text-sm text-gray-700 dark:text-gray-300 mt-1">
+                                        ที่นี่คือพื้นที่ที่คุณสามารถดูแลสุขภาพใจได้อย่างสบายใจ
+                                    </p>
+                                </div>
+                            </div>
+                            
+                            <!-- 2. ไม่ต้องใส่ข้อมูลส่วนตัว -->
+                            <div class="flex items-start gap-3 bg-blue-50 dark:bg-blue-900/20 p-3 rounded-lg">
+                                <div class="bg-blue-100 dark:bg-blue-800 p-2 rounded-full">
+                                    <i class="fas fa-user-secret text-blue-600 dark:text-blue-400"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-blue-700 dark:text-blue-300">ไม่ต้องใส่ข้อมูลส่วนตัว</h4>
+                                    <p class="text-sm text-gray-700 dark:text-gray-300 mt-1">
+                                        ไม่จำเป็นต้องใส่ชื่อจริง เบอร์โทร หรือข้อมูลส่วนตัวใดๆ
+                                    </p>
+                                </div>
+                            </div>
+                            
+                            <!-- 3. ข้อมูลที่เราเก็บ -->
+                            <div class="flex items-start gap-3 bg-purple-50 dark:bg-purple-900/20 p-3 rounded-lg">
+                                <div class="bg-purple-100 dark:bg-purple-800 p-2 rounded-full">
+                                    <i class="fas fa-database text-purple-600 dark:text-purple-400"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-purple-700 dark:text-purple-300">ข้อมูลที่เราเก็บ</h4>
+                                    <p class="text-sm text-gray-700 dark:text-gray-300 mt-1">
+                                        เราเก็บเฉพาะ: บันทึกส่วนตัวของคุณ, ผลแบบทดสอบ, และสถิติการใช้งาน 
+                                        <span class="font-semibold">ซึ่งทั้งหมดไม่ระบุตัวตน</span>
+                                    </p>
+                                </div>
+                            </div>
+                            
+                            <!-- 4. ลบข้อมูลได้ทุกเมื่อ -->
+                            <div class="flex items-start gap-3 bg-yellow-50 dark:bg-yellow-900/20 p-3 rounded-lg">
+                                <div class="bg-yellow-100 dark:bg-yellow-800 p-2 rounded-full">
+                                    <i class="fas fa-trash-alt text-yellow-600 dark:text-yellow-400"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-yellow-700 dark:text-yellow-300">ลบข้อมูลได้ทุกเมื่อ</h4>
+                                    <p class="text-sm text-gray-700 dark:text-gray-300 mt-1">
+                                        คุณสามารถลบข้อมูลทั้งหมดของคุณได้เมื่อต้องการ
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Important Notice -->
+                        <div class="bg-red-50 dark:bg-red-900/20 border-l-4 border-red-400 dark:border-red-600 p-4 rounded-r-lg mb-6">
+                            <div class="flex">
+                                <div class="flex-shrink-0">
+                                    <i class="fas fa-exclamation-triangle text-red-500"></i>
+                                </div>
+                                <div class="ml-3">
+                                    <p class="text-sm font-bold text-red-800 dark:text-red-300">
+                                        ⚠️ หมายเหตุสำคัญ
+                                    </p>
+                                    <p class="text-sm text-red-700 dark:text-red-400 mt-1">
+                                        แอพนี้เป็นเครื่องมือดูแลสุขภาพใจเบื้องต้น ไม่สามารถทดแทนการปรึกษาผู้เชี่ยวชาญได้ 
+                                        หากคุณต้องการความช่วยเหลือ โปรดติดต่อ 
+                                        <span class="font-semibold">สายด่วนสุขภาพจิต 1323</span>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Agreement Checkbox -->
+                        <div class="mb-6">
+                            <label class="flex items-start">
+                                <input type="checkbox" 
+                                    x-model="agreedToTerms"
+                                    class="mt-1 mr-3 h-5 w-5 text-primary">
+                                <span class="text-sm text-gray-700 dark:text-gray-300">
+                                    ฉันเข้าใจแล้วว่า Cloudy-Puk-Jai เป็นเครื่องมือดูแลสุขภาพใจเบื้องต้น 
+                                    และข้อมูลทั้งหมดจะถูกเก็บไว้ในอุปกรณ์ของฉันเท่านั้น
+                                </span>
+                            </label>
+                        </div>
+                        
+                        <!-- Action Button -->
+                        <button @click="acceptTerms()" 
+                                :disabled="!agreedToTerms"
+                                :class="!agreedToTerms ? 
+                                    'bg-gray-300 dark:bg-gray-700 cursor-not-allowed opacity-50' : 
+                                    'bg-primary hover:bg-primary-dark cursor-pointer'"
+                                class="w-full text-white font-medium py-3 px-6 rounded-lg transition-colors 
+                                    flex items-center justify-center gap-2">
+                            <i class="fas fa-heart"></i>
+                            เข้าใจแล้ว เริ่มใช้งาน 💕
+                        </button>
+                        
+                        <!-- Emergency Contact -->
+                        <div class="mt-4 text-center">
+                            <a href="tel:1323" 
+                            class="inline-flex items-center gap-2 text-sm text-red-600 dark:text-red-400 
+                                    hover:text-red-700 dark:hover:text-red-300 transition-colors">
+                                <i class="fas fa-phone-alt"></i>
+                                สายด่วนสุขภาพจิต 1323
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
    
 

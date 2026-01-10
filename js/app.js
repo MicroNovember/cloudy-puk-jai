@@ -11,6 +11,10 @@ document.addEventListener('alpine:init', () => {
         musicTipsOpen: false,  // สำหรับเปิด-ปิดคำแนะนำ
         articleTipsOpen: false,  // สำหรับเปิด-ปิดคำแนะนำบทความ
         assessmentTipsOpen: true,  // ให้แสดงตั้งแต่แรก (default เปิด)
+        agreedToTerms: false,
+        
+
+
         
         // User Data
         journalEntries: [],
@@ -57,12 +61,15 @@ document.addEventListener('alpine:init', () => {
         // Assessments
         assessmentsData: [],
         currentQuiz: {
-    id: '',
-    title: '',
-    desc: '',
-    questions: [],
-    results: []
-},
+            id: '',
+            title: '',
+            desc: '',
+            type: '',        // เพิ่ม
+            questions: [],
+            results: [],
+            timeNeeded: 0    // เพิ่ม
+        },
+
         currentQuestionIndex: 0,
         quizAnswers: [],
         quizScore: 0,
@@ -232,6 +239,37 @@ document.addEventListener('alpine:init', () => {
             return this.assessmentsData.filter(a => a.type === 'personality');
         },
 
+
+
+        // Methods
+    acceptTerms() {
+    if (this.agreedToTerms) {
+        localStorage.setItem('agreedToTerms', 'true');
+        this.modalOpen = null;
+        
+        // แสดงข้อความแบบเบาๆ
+        const msg = document.createElement('div');
+        msg.textContent = 'ยินดีต้อนรับ 🌸';
+        msg.className = 'fixed top-4 right-4 bg-primary text-white px-4 py-2 rounded z-50';
+        document.body.appendChild(msg);
+        
+        setTimeout(() => {
+            msg.remove();
+        }, 2000);
+        
+    } else {
+        const msg = document.createElement('div');
+        msg.textContent = 'กรุณายอมรับข้อตกลง';
+        msg.className = 'fixed top-4 right-4 bg-red-500 text-white px-4 py-2 rounded z-50';
+        document.body.appendChild(msg);
+        
+        setTimeout(() => {
+            msg.remove();
+        }, 2000);
+    }
+},
+
+
         // Methods
         async init() {
 
@@ -243,6 +281,26 @@ document.addEventListener('alpine:init', () => {
             this.darkMode = localStorage.getItem('darkMode') === 'true' || 
                            (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches);
             
+            // +++ เพิ่มโค้ดนี้เข้าไปใน init() +++
+    // ตรวจสอบว่าผู้ใช้เคยเห็น Welcome Modal หรือยัง
+    const savedAgreement = localStorage.getItem('agreedToTerms');
+    console.log('Saved agreement from localStorage:', savedAgreement);
+    
+    if (savedAgreement !== 'true') {
+        // ถ้ายังไม่เคยเห็น ให้แสดง modal
+        setTimeout(() => {
+            this.modalOpen = 'welcome';
+            console.log('Showing welcome modal for new user');
+        }, 1000);
+    } else {
+        // ถ้าเคยเห็นแล้ว
+        this.agreedToTerms = true;
+        console.log('User has already agreed to terms');
+    }
+    // +++ จบโค้ดที่เพิ่ม +++
+
+
+
             // โหลดข้อมูลจาก localStorage
             const savedData = JSON.parse(localStorage.getItem('mindbloomData') || '{}');
             this.journalEntries = savedData.journalEntries || [];
@@ -277,21 +335,7 @@ document.addEventListener('alpine:init', () => {
             this.updateTreeAnimation();
         },
 
-        // ใน methods section ของ app.js
-            navigateToFeature(feature) {
-            if (feature.page === 'tools') {
-        // เปิดหน้า tools.html ในหน้าต่างใหม่
-            window.location.href = 'tools.html';
-            } else {
-        // ไปยังหน้าในแอพเดียวกัน
-            this.currentPage = feature.page;
-            }
-    
-        // ปิดเมนูมือถือถ้าเปิดอยู่
-            this.mobileMenuOpen = false;
-        },
-
-        
+       
         async loadData() {
             try {
                 // Load music data
@@ -466,6 +510,8 @@ _viewHistoryDetail(history) {
             const mood = this.moods.find(m => m.id === moodId);
             return mood ? mood.emoji : '😐';
         },
+
+
 
         // ===== เพิ่มฟังก์ชัน ประวัติ=====
 getAverageScore() {
@@ -659,45 +705,6 @@ getAssessmentCategory(type) {
         },
         
 
-        // เพิ่ม  auto save
-                // เพิ่มฟังก์ชันนี้หลังฟังก์ชัน getMusicRecommendation() แต่ก่อนฟังก์ชัน updateTreeAnimation()
-        autoSaveAssessmentResult() {
-            if (this.resultAutoSaved) return;
-            
-            if (!this.quizScore && this.quizScore !== 0) return;
-            
-            const result = {
-                id: this.currentQuiz.id,
-                title: this.currentQuiz.title,
-                score: this.quizScore,
-                result: this.quizResult.title,
-                resultAdvice: this.quizResult.advice || '',
-                date: new Date().toISOString(),
-                formattedDate: new Date().toLocaleDateString('th-TH', {
-                    year: 'numeric',
-                    month: 'long',
-                    day: 'numeric',
-                    hour: '2-digit',
-                    minute: '2-digit'
-                })
-            };
-            
-            // เพิ่มเข้าในประวัติ
-            this.assessmentHistory.unshift(result);
-            
-            // จำกัดจำนวนบันทึก
-            if (this.assessmentHistory.length > 50) {
-                this.assessmentHistory = this.assessmentHistory.slice(0, 50);
-            }
-            
-            // บันทึกลง localStorage
-            this.saveData();
-            
-            // อัปเดตสถานะ
-            this.resultAutoSaved = true;
-            
-            console.log('บันทึกผลการทดสอบอัตโนมัติแล้ว:', result);
-        },
         
         // ฟังก์ชันแจ้งเตือน
         showNotification(message, type = 'info') {
