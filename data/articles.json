@@ -1,100 +1,175 @@
 {
-    "articles": [
-        {
-            "id": "article1",
-            "title": "5 เทคนิคง่ายๆ ในการจัดการความเครียด",
-            "excerpt": "เรียนรู้วิธีจัดการกับความเครียดในชีวิตประจำวันด้วยเทคนิคง่ายๆ ที่ทำได้ทันที",
-            "content": "<h3 class=\"text-xl font-bold mb-4\">5 เทคนิคง่ายๆ ในการจัดการความเครียด</h3><p class=\"mb-4\">ความเครียดเป็นส่วนหนึ่งของชีวิต แต่เราสามารถเรียนรู้ที่จะจัดการกับมันได้อย่างมีประสิทธิภาพ นี่คือ 5 เทคนิคง่ายๆ ที่คุณสามารถเริ่มทำได้ทันที:</p><ol class=\"list-decimal pl-5 mb-4 space-y-2\"><li><strong>ฝึกการหายใจลึกๆ</strong>: หายใจเข้าลึกๆ ทางจมูก นับ 1-4 ค้างไว้ 4 วินาที แล้วหายใจออกทางปากช้าๆ นับ 1-6 ทำซ้ำ 5-10 ครั้ง</li><li><strong>เขียนระบายความรู้สึก</strong>: การเขียนบันทึกช่วยให้เราได้ระบายและจัดระเบียบความคิด ลองเขียนสิ่งที่ทำให้คุณเครียดและความรู้สึกที่เกิดขึ้น</li><li><strong>ออกกำลังกายเบาๆ</strong>: แม้แต่การเดิน 10-15 นาที ก็สามารถช่วยลดความเครียดและเพิ่มสารเอ็นดอร์ฟินได้</li><li><strong>ฝึก mindfulness</strong>: อยู่กับปัจจุบันขณะโดยไม่ตัดสิน ลองสังเกตลมหายใจหรือความรู้สึกในร่างกาย</li><li><strong>พูดคุยกับคนที่ไว้ใจ</strong>: การแบ่งปันปัญหากับเพื่อนหรือคนในครอบครัวสามารถช่วยให้รู้สึกดีขึ้น</li></ol><p>จำไว้ว่าการดูแลตัวเองไม่ใช่ความเห็นแก่ตัว แต่เป็นความจำเป็นสำหรับสุขภาพจิตที่ดี</p>",
-            "category": "จัดการความเครียด",
-            "author": "ดร.สุขใจ ใจดี",
-            "date": "2023-10-15",
-            "readTime": "5 นาที",
-            "image": "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80"
-        },
-        {
-            "id": "article2",
-            "title": "วิธีฝึก mindfulness สำหรับผู้เริ่มต้น",
-            "excerpt": "เริ่มต้นฝึก mindfulness แบบง่ายๆ ในชีวิตประจำวัน เพื่อเพิ่มสติและลดความเครียด",
-            "content": "<h3 class=\"text-xl font-bold mb-4\">วิธีฝึก mindfulness สำหรับผู้เริ่มต้น</h3><p class=\"mb-4\">Mindfulness คือการมีสติอยู่กับปัจจุบันขณะโดยไม่ตัดสิน มันช่วยลดความเครียดและเพิ่มความสุขในชีวิตประจำวันได้</p><h4 class=\"font-bold mb-3\">วิธีเริ่มต้นฝึก mindfulness:</h4><ol class=\"list-decimal pl-5 mb-4 space-y-2\"><li><strong>เริ่มจากสิ่งเล็กๆ</strong>: เริ่มฝึกวันละ 1-2 นาที แล้วค่อยเพิ่มเวลาขึ้นเรื่อยๆ</li><li><strong>ฝึกตอนทำกิจกรรมประจำวัน</strong>: ลองมีสติขณะแปรงฟัน อาบน้ำ หรือรับประทานอาหาร สังเกตรสชาติ กลิ่น และสัมผัส</li><li><strong>ฝึกสังเกตลมหายใจ</strong>: นั่งในท่าสบาย สังเกตลมหายใจเข้า-ออกโดยไม่พยายามควบคุม</li><li><strong>ใช้แอปช่วยฝึก</strong>: มีแอปหลายตัวที่ช่วยแนะนำการฝึก mindfulness สำหรับผู้เริ่มต้น</li><li><strong>อย่าตัดสินตัวเอง</strong>: เมื่อจิตใจวอกแวก (ซึ่งเป็นเรื่องปกติ) แค่รับรู้แล้วดึงความสนใจกลับมาที่ลมหายใจ</li></ol><p>การฝึก mindfulness เป็นเหมือนการฝึกกล้ามเนื้อจิตใจ ยิ่งฝึกบ่อยก็ยิ่งแข็งแรงขึ้น</p>",
-            "category": "mindfulness",
-            "author": "ครูเล็ก สมาธิสุข",
-            "date": "2023-10-10",
-            "readTime": "7 นาที",
-            "image": "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80"
-        },
-        {
-            "id": "article3",
-            "title": "สร้างนิสัยขอบคุณ: ความสุขจากสิ่งเล็กๆ",
-            "excerpt": "การฝึกขอบคุณสิ่งเล็กๆ ในชีวิตประจำวันสามารถเปลี่ยนมุมมองและเพิ่มความสุขได้",
-            "content": "<h3 class=\"text-xl font-bold mb-4\">สร้างนิสัยขอบคุณ: ความสุขจากสิ่งเล็กๆ</h3><p class=\"mb-4\">การขอบคุณไม่ใช่แค่ความรู้สึก แต่เป็นทักษะที่สามารถฝึกฝนได้ การวิจัยพบว่าการฝึกขอบคุณสามารถเพิ่มความสุขและลดอาการซึมเศร้าได้</p><h4 class=\"font-bold mb-3\">วิธีสร้างนิสัยขอบคุณ:</h4><ol class=\"list-decimal pl-5 mb-4 space-y-2\"><li><strong>บันทึกขอบคุณประจำวัน</strong>: ก่อนนอนทุกวัน ลองเขียน 3 สิ่งที่คุณรู้สึกขอบคุณในวันนั้น ไม่ต้องใหญ่โต แค่สิ่งเล็กๆ ก็มีค่า</li><li><strong>พูดขอบคุณกับคนรอบตัว</strong>: แสดงความขอบคุณกับคนที่ช่วยเหลือคุณ หรือแม้แต่คนที่ทำหน้าที่ประจำวัน</li><li><strong>สังเกตสิ่งดีๆ รอบตัว</strong>: ฝึกมองหาสิ่งดีๆ รอบตัว เช่น ใบไม้สีเขียว อากาศที่สดชื่น รอยยิ้มของคนแปลกหน้า</li><li><strong>เขียนจดหมายขอบคุณ</strong>: เขียนจดหมายขอบคุณถึงคนที่มีความหมายในชีวิตของคุณ (จะส่งหรือไม่ส่งก็ได้)</li><li><strong>ใช้ของระลึก</strong>: วางของเล็กๆ ที่เตือนให้คุณนึกถึงสิ่งที่ควรขอบคุณในที่ที่เห็นได้ง่าย</li></ol><p>การฝึกขอบคุณช่วยให้สมองของเราค้นหาสิ่งดีๆ รอบตัวมากขึ้น จนกลายเป็นนิสัยที่ทำได้โดยอัตโนมัติ</p>",
-            "category": "ความสุข",
-            "author": "โค้ชสายสุข",
-            "date": "2023-10-05",
-            "readTime": "6 นาที",
-            "image": "https://images.unsplash.com/photo-1541781774459-bb2af2f05b55?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80"
-        },
-           
-
-  {
-    "id": "manarom-ext-01",
-    "type": "external",
-    "title": "สิ่งที่คนเข้าใจผิดเกี่ยวกับการฟังเพลงเศร้า",
-    "excerpt": "สดุดี อภิสุทธิพร นักดนตรีบำบัด โรงพยาบาลมนารมย์",
-    "content": "<div class='text-center py-4'><p>บทความนี้อยู่บนเว็บไซต์ภายนอก</p><p>คลิกปุ่มด้านล่างเพื่อเปิดอ่านบทความเต็มบนเว็บไซต์ Manarom</p></div>",
-    "category": "เด็กและวัยรุ่น",
-    "author": "https://www.manarom.com/blog/listening_to_sad_music.html",
-    "date": " ",
-    "readTime": "8 นาที",
-    "image": "https://www.manarom.com/blog/img/listening_to_sad_music_index.jpg",
-    "externalUrl": "https://www.manarom.com/blog/listening_to_sad_music.html",
-    "source": "Manarom"
-  },
-  {
-    "id": "manarom-ext-02",
-    "type": "external",
-    "title": "โรคซึมเศร้าในเด็ก",
-    "excerpt": "ความแตกต่างของอาการซึมเศร้าในเด็กที่ผู้ใหญ่อาจมองข้าม",
-    "content": "<div class='text-center py-4'><p>บทความนี้อยู่บนเว็บไซต์ภายนอก</p><p>คลิกปุ่มด้านล่างเพื่อเปิดอ่านบทความเต็มบนเว็บไซต์ Manarom</p></div>",
-    "category": "เด็กและวัยรุ่น",
-    "author": "ทีมมนารมณ์",
-    "date": "2024-12-15",
-    "readTime": "10 นาที",
-    "image": "https://www.manarom.com/blog/img/depression_in_children_index.jpg",
-    "externalUrl": "https://www.manarom.com/blog/depression-in-children.html",
-    "source": "Manarom"
-  },
-  {
-    "id": "manarom-ext-03",
-    "type": "external",
-    "title": "สมาธิสั้นในวัยรุ่นและวัยทำงาน",
-    "excerpt": "ADHD ไม่ได้หายไปเมื่อโตขึ้น แต่จะแสดงอาการในรูปแบบที่แตกต่าง",
-    "content": "<div class='text-center py-4'><p>บทความนี้อยู่บนเว็บไซต์ภายนอก</p><p>คลิกปุ่มด้านล่างเพื่อเปิดอ่านบทความเต็มบนเว็บไซต์ Manarom</p></div>",
-    "category": "การทำงาน",
-    "author": "ทีมมนารมณ์",
-    "date": "2024-11-30",
-    "readTime": "12 นาที",
-    "image": "https://www.manarom.com/blog/img/ADHD_in_teens_and_adults_index.jpg",
-    "externalUrl": "https://www.manarom.com/blog/adhd-in-adults.html",
-    "source": "Manarom"
-  },
-  {
-    "id": "manarom-ext-04",
-    "type": "external",
-    "title": "เตรียมตัวอย่างไร เมื่อต้องไปพบจิตแพทย์",
-    "excerpt": "เตรียมตัวอย่างไร เมื่อต้องไปพบจิตแพทย์",
-    "content": "<div class='text-center py-4'><p>บทความนี้อยู่บนเว็บไซต์ภายนอก</p><p>คลิกปุ่มด้านล่างเพื่อเปิดอ่านบทความเต็มบนเว็บไซต์ Manarom</p></div>",
-    "category": "สุขภาพจิต",
-    "author": "ทีมมนารมณ์",
-    "date": "2024-11-20",
-    "readTime": "7 นาที",
-    "image": "https://www.manarom.com/blog/img/seeing_psychiatrist_index.jpg",
-    "externalUrl": "https://www.manarom.com/blog/seeing_psychiatrist.html",
-    "source": "Manarom"
-  }
-
-]
-
-
-
-
+  "articles": [
+    {
+      "id": "article-5fa203ba",
+      "type": "local",
+      "title": "5 เทคนิคง่ายๆ ในการจัดการความเครียด",
+      "excerpt": "เรียนรู้วิธีจัดการกับความเครียดในชีวิตประจำวันด้วยเทคนิคง่ายๆ ที่ทำได้ทันที",
+      "content": "<h3 class=\"text-xl font-bold mb-4\">5 เทคนิคง่ายๆ ในการจัดการความเครียด</h3><p class=\"mb-4\">ความเครียดเป็นส่วนหนึ่งของชีวิต แต่เราสามารถเรียนรู้ที่จะจัดการกับมันได้อย่างมีประสิทธิภาพ นี่คือ 5 เทคนิคง่ายๆ ที่คุณสามารถเริ่มทำได้ทันที:</p><ol class=\"list-decimal pl-5 mb-4 space-y-2\"><li><strong>ฝึกการหายใจลึกๆ</strong>: หายใจเข้าลึกๆ ทางจมูก นับ 1-4 ค้างไว้ 4 วินาที แล้วหายใจออกทางปากช้าๆ นับ 1-6 ทำซ้ำ 5-10 ครั้ง</li><li><strong>เขียนระบายความรู้สึก</strong>: การเขียนบันทึกช่วยให้เราได้ระบายและจัดระเบียบความคิด ลองเขียนสิ่งที่ทำให้คุณเครียดและความรู้สึกที่เกิดขึ้น</li><li><strong>ออกกำลังกายเบาๆ</strong>: แม้แต่การเดิน 10-15 นาที ก็สามารถช่วยลดความเครียดและเพิ่มสารเอ็นดอร์ฟินได้</li><li><strong>ฝึก mindfulness</strong>: อยู่กับปัจจุบันขณะโดยไม่ตัดสิน ลองสังเกตลมหายใจหรือความรู้สึกในร่างกาย</li><li><strong>พูดคุยกับคนที่ไว้ใจ</strong>: การแบ่งปันปัญหากับเพื่อนหรือคนในครอบครัวสามารถช่วยให้รู้สึกดีขึ้น</li></ol><p>จำไว้ว่าการดูแลตัวเองไม่ใช่ความเห็นแก่ตัว แต่เป็นความจำเป็นสำหรับสุขภาพจิตที่ดี</p>",
+      "category": "",
+      "author": "ดร.สุขใจ ใจดี",
+      "date": "2023-10-15",
+      "readTime": "5 นาที",
+      "image": "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80"
+    },
+    {
+      "id": "article-01f81735",
+      "type": "local",
+      "title": "วิธีฝึก mindfulness สำหรับผู้เริ่มต้น",
+      "excerpt": "เริ่มต้นฝึก mindfulness แบบง่ายๆ ในชีวิตประจำวัน เพื่อเพิ่มสติและลดความเครียด",
+      "content": "<h3 class=\"text-xl font-bold mb-4\">วิธีฝึก mindfulness สำหรับผู้เริ่มต้น</h3><p class=\"mb-4\">Mindfulness คือการมีสติอยู่กับปัจจุบันขณะโดยไม่ตัดสิน มันช่วยลดความเครียดและเพิ่มความสุขในชีวิตประจำวันได้</p><h4 class=\"font-bold mb-3\">วิธีเริ่มต้นฝึก mindfulness:</h4><ol class=\"list-decimal pl-5 mb-4 space-y-2\"><li><strong>เริ่มจากสิ่งเล็กๆ</strong>: เริ่มฝึกวันละ 1-2 นาที แล้วค่อยเพิ่มเวลาขึ้นเรื่อยๆ</li><li><strong>ฝึกตอนทำกิจกรรมประจำวัน</strong>: ลองมีสติขณะแปรงฟัน อาบน้ำ หรือรับประทานอาหาร สังเกตรสชาติ กลิ่น และสัมผัส</li><li><strong>ฝึกสังเกตลมหายใจ</strong>: นั่งในท่าสบาย สังเกตลมหายใจเข้า-ออกโดยไม่พยายามควบคุม</li><li><strong>ใช้แอปช่วยฝึก</strong>: มีแอปหลายตัวที่ช่วยแนะนำการฝึก mindfulness สำหรับผู้เริ่มต้น</li><li><strong>อย่าตัดสินตัวเอง</strong>: เมื่อจิตใจวอกแวก (ซึ่งเป็นเรื่องปกติ) แค่รับรู้แล้วดึงความสนใจกลับมาที่ลมหายใจ</li></ol><p>การฝึก mindfulness เป็นเหมือนการฝึกกล้ามเนื้อจิตใจ ยิ่งฝึกบ่อยก็ยิ่งแข็งแรงขึ้น</p>",
+      "category": "",
+      "author": "ครูเล็ก สมาธิสุข",
+      "date": "2023-10-10",
+      "readTime": "7 นาที",
+      "image": "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80"
+    },
+    {
+      "id": "article-e9eedd94",
+      "type": "local",
+      "title": "สร้างนิสัยขอบคุณ: ความสุขจากสิ่งเล็กๆ",
+      "excerpt": "การฝึกขอบคุณสิ่งเล็กๆ ในชีวิตประจำวันสามารถเปลี่ยนมุมมองและเพิ่มความสุขได้",
+      "content": "<h3 class=\"text-xl font-bold mb-4\">สร้างนิสัยขอบคุณ: ความสุขจากสิ่งเล็กๆ</h3><p class=\"mb-4\">การขอบคุณไม่ใช่แค่ความรู้สึก แต่เป็นทักษะที่สามารถฝึกฝนได้ การวิจัยพบว่าการฝึกขอบคุณสามารถเพิ่มความสุขและลดอาการซึมเศร้าได้</p><h4 class=\"font-bold mb-3\">วิธีสร้างนิสัยขอบคุณ:</h4><ol class=\"list-decimal pl-5 mb-4 space-y-2\"><li><strong>บันทึกขอบคุณประจำวัน</strong>: ก่อนนอนทุกวัน ลองเขียน 3 สิ่งที่คุณรู้สึกขอบคุณในวันนั้น ไม่ต้องใหญ่โต แค่สิ่งเล็กๆ ก็มีค่า</li><li><strong>พูดขอบคุณกับคนรอบตัว</strong>: แสดงความขอบคุณกับคนที่ช่วยเหลือคุณ หรือแม้แต่คนที่ทำหน้าที่ประจำวัน</li><li><strong>สังเกตสิ่งดีๆ รอบตัว</strong>: ฝึกมองหาสิ่งดีๆ รอบตัว เช่น ใบไม้สีเขียว อากาศที่สดชื่น รอยยิ้มของคนแปลกหน้า</li><li><strong>เขียนจดหมายขอบคุณ</strong>: เขียนจดหมายขอบคุณถึงคนที่มีความหมายในชีวิตของคุณ (จะส่งหรือไม่ส่งก็ได้)</li><li><strong>ใช้ของระลึก</strong>: วางของเล็กๆ ที่เตือนให้คุณนึกถึงสิ่งที่ควรขอบคุณในที่ที่เห็นได้ง่าย</li></ol><p>การฝึกขอบคุณช่วยให้สมองของเราค้นหาสิ่งดีๆ รอบตัวมากขึ้น จนกลายเป็นนิสัยที่ทำได้โดยอัตโนมัติ</p>",
+      "category": "",
+      "author": "โค้ชสายสุข",
+      "date": "2023-10-05",
+      "readTime": "6 นาที",
+      "image": "https://images.unsplash.com/photo-1541781774459-bb2af2f05b55?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80"
+    },
+    {
+      "id": "article-4571343a",
+      "type": "external",
+      "title": "สิ่งที่คนเข้าใจผิดเกี่ยวกับการฟังเพลงเศร้า",
+      "excerpt": "สดุดี อภิสุทธิพร นักดนตรีบำบัด โรงพยาบาลมนารมย์",
+      "content": "<div class='text-center py-4'><p>บทความนี้อยู่บนเว็บไซต์ภายนอก</p><p>คลิกปุ่มด้านล่างเพื่อเปิดอ่านบทความเต็มบนเว็บไซต์ Manarom</p></div>",
+      "category": "",
+      "author": "https://www.manarom.com/blog/listening_to_sad_music.html",
+      "date": " ",
+      "readTime": "8 นาที",
+      "image": "https://www.manarom.com/blog/img/listening_to_sad_music_index.jpg",
+      "externalUrl": "https://www.manarom.com/blog/listening_to_sad_music.html",
+      "source": "Manarom"
+    },
+    {
+      "id": "article-0c4a6513",
+      "type": "external",
+      "title": "โรคซึมเศร้าในเด็ก",
+      "excerpt": "ความแตกต่างของอาการซึมเศร้าในเด็กที่ผู้ใหญ่อาจมองข้าม",
+      "content": "<div class='text-center py-4'><p>บทความนี้อยู่บนเว็บไซต์ภายนอก</p><p>คลิกปุ่มด้านล่างเพื่อเปิดอ่านบทความเต็มบนเว็บไซต์ Manarom</p></div>",
+      "category": "",
+      "author": "https://www.manarom.com/blog/depression-in-children.html",
+      "date": "2024-12-15",
+      "readTime": "10 นาที",
+      "image": "https://www.manarom.com/blog/img/depression_in_children_index.jpg",
+      "externalUrl": "https://www.manarom.com/blog/depression-in-children.html",
+      "source": "Manarom"
+    },
+    {
+      "id": "article-49333fb9",
+      "type": "external",
+      "title": "สมาธิสั้นในวัยรุ่นและวัยทำงาน",
+      "excerpt": "ADHD ไม่ได้หายไปเมื่อโตขึ้น แต่จะแสดงอาการในรูปแบบที่แตกต่าง",
+      "content": "<div class='text-center py-4'><p>บทความนี้อยู่บนเว็บไซต์ภายนอก</p><p>คลิกปุ่มด้านล่างเพื่อเปิดอ่านบทความเต็มบนเว็บไซต์ Manarom</p></div>",
+      "category": "",
+      "author": "https://www.manarom.com/blog/adhd-in-adults.html",
+      "date": "2024-11-30",
+      "readTime": "12 นาที",
+      "image": "https://www.manarom.com/blog/img/ADHD_in_teens_and_adults_index.jpg",
+      "externalUrl": "https://www.manarom.com/blog/adhd-in-adults.html",
+      "source": "Manarom"
+    },
+    {
+      "id": "article-d8a3e18f",
+      "type": "external",
+      "title": "เตรียมตัวอย่างไร เมื่อต้องไปพบจิตแพทย์",
+      "excerpt": "เตรียมตัวอย่างไร เมื่อต้องไปพบจิตแพทย์",
+      "content": "<div class='text-center py-4'><p>บทความนี้อยู่บนเว็บไซต์ภายนอก</p><p>คลิกปุ่มด้านล่างเพื่อเปิดอ่านบทความเต็มบนเว็บไซต์ Manarom</p></div>",
+      "category": "",
+      "author": "https://www.manarom.com/blog/seeing_psychiatrist.html",
+      "date": "2024-11-20",
+      "readTime": "7 นาที",
+      "image": "https://www.manarom.com/blog/img/seeing_psychiatrist_index.jpg",
+      "externalUrl": "https://www.manarom.com/blog/seeing_psychiatrist.html",
+      "source": ""
+    },
+    {
+      "id": "article-f98b5d4d",
+      "type": "external",
+      "title": "“ไม่มีคำว่าสายเกินไป” เป็นแค่ประโยคปลอบใจตัวเอง",
+      "excerpt": "“ไม่มีคำว่าสายเกินไป” เป็นแค่ประโยคปลอบใจตัวเอง",
+      "content": "<div class='text-center py-4'><p>บทความนี้อยู่บนเว็บไซต์ภายนอก</p><p>คลิกปุ่มด้านล่างเพื่อเปิดอ่านบทความเต็ม</p></div>",
+      "category": "",
+      "author": "https://sirichaiwatt.com/",
+      "date": "2026-01-10",
+      "readTime": "5 นาที",
+      "image": "https://i0.wp.com/sirichaiwatt.com/wp-content/uploads/2023/05/%E0%B9%84%E0%B8%A1%E0%B9%88%E0%B8%A1%E0%B8%B5%E0%B8%84%E0%B8%B3%E0%B8%A7%E0%B9%88%E0%B8%B2%E0%B8%AA%E0%B8%B2%E0%B8%A2.webp?resize=1536%2C1152&ssl=1",
+      "externalUrl": "https://sirichaiwatt.com/%E0%B8%9A%E0%B8%97%E0%B8%84%E0%B8%A7%E0%B8%B2%E0%B8%A1%E0%B8%94%E0%B8%B5%E0%B9%86%E0%B8%AA%E0%B8%B1%E0%B9%89%E0%B8%99%E0%B9%86/%E0%B9%84%E0%B8%A1%E0%B9%88%E0%B8%A1%E0%B8%B5%E0%B8%84%E0%B8%B3%E0%B8%A7%E0%B9%88%E0%B8%B2%E0%B8%AA%E0%B8%B2%E0%B8%A2%E0%B9%80%E0%B8%81%E0%B8%B4%E0%B8%99%E0%B9%84%E0%B8%9B",
+      "source": ""
+    },
+    {
+      "id": "article-b0c9575a",
+      "type": "external",
+      "title": "เหตุผลที่ควร “ขอบคุณตัวเอง”",
+      "excerpt": "เหตุผลที่ควร “ขอบคุณตัวเอง”",
+      "content": "",
+      "category": "",
+      "author": "https://sirichaiwatt.com/%E0%B8%9A%E0%B8%97%E0%B8%84%E0%B8%A7%E0%B8%B2%E0%B8%A1%E0%B8%94%E0%B8%B5%E0%B9%86%E0%B8%AA%E0%B8%B1%E0%B9%89%E0%B8%99%E0%B9%86/%E0%B9%80%E0%B8%AB%E0%B8%95%E0%B8%B8%E0%B8%9C%E0%B8%A5%E0%B8%97%E0%B8%B5%E0%B9%88%E0%B8%84%E0%B8%A7%E0%B8%A3-%E0%B8%82%E0%B8%AD%E0%B8%9A%E0%B8%84%E0%B8%B8%E0%B8%93%E0%B8%95%E0%B8%B1%E0%B8%A7",
+      "date": "2026-01-10",
+      "readTime": "5 นาที",
+      "image": "https://i0.wp.com/sirichaiwatt.com/wp-content/uploads/2023/11/%E0%B9%80%E0%B8%AB%E0%B8%95%E0%B8%B8%E0%B8%9C%E0%B8%A5%E0%B8%97%E0%B8%B5%E0%B9%88%E0%B8%84%E0%B8%A7%E0%B8%A3%E0%B8%82%E0%B8%AD%E0%B8%9A%E0%B8%84%E0%B8%B8%E0%B8%93%E0%B8%95%E0%B8%B1%E0%B8%A7%E0%B9%80%E0%B8%AD%E0%B8%87.webp?resize=1536%2C1152&ssl=1",
+      "externalUrl": "https://sirichaiwatt.com/%E0%B8%9A%E0%B8%97%E0%B8%84%E0%B8%A7%E0%B8%B2%E0%B8%A1%E0%B8%94%E0%B8%B5%E0%B9%86%E0%B8%AA%E0%B8%B1%E0%B9%89%E0%B8%99%E0%B9%86/%E0%B9%80%E0%B8%AB%E0%B8%95%E0%B8%B8%E0%B8%9C%E0%B8%A5%E0%B8%97%E0%B8%B5%E0%B9%88%E0%B8%84%E0%B8%A7%E0%B8%A3-%E0%B8%82%E0%B8%AD%E0%B8%9A%E0%B8%84%E0%B8%B8%E0%B8%93%E0%B8%95%E0%B8%B1%E0%B8%A7",
+      "source": ""
+    },
+    {
+      "id": "article-e929091f",
+      "type": "external",
+      "title": "“การยอมรับ – ทำไมต้องรับ” กับผลลัพธ์ที่แตกต่าง",
+      "excerpt": "“การยอมรับ – ทำไมต้องรับ” กับผลลัพธ์ที่แตกต่าง",
+      "content": "",
+      "category": "",
+      "author": "https://sirichaiwatt.com/%E0%B8%9A%E0%B8%97%E0%B8%84%E0%B8%A7%E0%B8%B2%E0%B8%A1%E0%B8%94%E0%B8%B5%E0%B9%86/%E0%B8%81%E0%B8%B2%E0%B8%A3%E0%B8%9E%E0%B8%B1%E0%B8%92%E0%B8%99%E0%B8%B2%E0%B8%95%E0%B8%99%E0%B9%80%E0%B8%AD%E0%B8%87/%E0%B9%80%E0%B8%9B%E0%B8%A5%E0%B8%B5%E0%B9%88%E0%B8%A2%E0%B8%99%E0%B8%97%E0%B8%B1%E0%B8%A8%E0%B8%99%E0%B8%84%E0%B8%95%E0%B8%B4/%E0%B8%81%E0%B8%B2%E0%B8%A3%E0%B8%A2%E0%B8%AD%E0%B8%A1%E0%B8%A3%E0%B8%B1%E0%B8%9A-%E0%B8%97%E0%B8%B3%E0%B9%84%E0%B8%A1%E0%B8%95%E0%B9%89%E0%B8%AD%E0%B8%87%E0%B8%A3%E0%B8%B1%E0%B8%9A-%E0%B8%81",
+      "date": "2026-01-10",
+      "readTime": "5 นาที",
+      "image": "https://i0.wp.com/sirichaiwatt.com/wp-content/uploads/2024/04/%E0%B8%97%E0%B8%B3%E0%B9%84%E0%B8%A1%E0%B8%95%E0%B9%89%E0%B8%AD%E0%B8%87%E0%B8%A3%E0%B8%B1%E0%B8%9A.webp?w=1200&ssl=1",
+      "externalUrl": "https://sirichaiwatt.com/%E0%B8%9A%E0%B8%97%E0%B8%84%E0%B8%A7%E0%B8%B2%E0%B8%A1%E0%B8%94%E0%B8%B5%E0%B9%86/%E0%B8%81%E0%B8%B2%E0%B8%A3%E0%B8%9E%E0%B8%B1%E0%B8%92%E0%B8%99%E0%B8%B2%E0%B8%95%E0%B8%99%E0%B9%80%E0%B8%AD%E0%B8%87/%E0%B9%80%E0%B8%9B%E0%B8%A5%E0%B8%B5%E0%B9%88%E0%B8%A2%E0%B8%99%E0%B8%97%E0%B8%B1%E0%B8%A8%E0%B8%99%E0%B8%84%E0%B8%95%E0%B8%B4/%E0%B8%81%E0%B8%B2%E0%B8%A3%E0%B8%A2%E0%B8%AD%E0%B8%A1%E0%B8%A3%E0%B8%B1%E0%B8%9A-%E0%B8%97%E0%B8%B3%E0%B9%84%E0%B8%A1%E0%B8%95%E0%B9%89%E0%B8%AD%E0%B8%87%E0%B8%A3%E0%B8%B1%E0%B8%9A-%E0%B8%81",
+      "source": ""
+    },
+    {
+      "id": "article-349feaec",
+      "type": "external",
+      "title": "ขึ้นอย่าหลง ลงอย่าท้อ",
+      "excerpt": "ขึ้นอย่าหลง ลงอย่าท้อ",
+      "content": "",
+      "category": "",
+      "author": "https://sirichaiwatt.com/%E0%B8%9A%E0%B8%97%E0%B8%84%E0%B8%A7%E0%B8%B2%E0%B8%A1%E0%B8%94%E0%B8%B5%E0%B9%86/%E0%B8%81%E0%B8%B2%E0%B8%A3%E0%B8%9E%E0%B8%B1%E0%B8%92%E0%B8%99%E0%B8%B2%E0%B8%95%E0%B8%99%E0%B9%80%E0%B8%AD%E0%B8%87/%E0%B8%82%E0%B8%B6%E0%B9%89%E0%B8%99%E0%B8%AD%E0%B8%A2%E0%B9%88%E0%B8%B2%E0%B8%AB%E0%B8%A5%E0%B8%87-%E0%B8%A5%E0%B8%87%E0%B8%AD%E0%B8%A2%E0%B9%88%E0%B8%B2%E0%B8%97%E0%B9%89%E0%B8%AD",
+      "date": "2026-01-10",
+      "readTime": "5 นาที",
+      "image": "https://i0.wp.com/sirichaiwatt.com/wp-content/uploads/2019/08/%E0%B8%82%E0%B8%B6%E0%B9%89%E0%B8%99%E0%B8%AD%E0%B8%A2%E0%B9%88%E0%B8%B2%E0%B8%AB%E0%B8%A5%E0%B8%87.jpg?w=1024&ssl=1",
+      "externalUrl": "https://sirichaiwatt.com/%E0%B8%9A%E0%B8%97%E0%B8%84%E0%B8%A7%E0%B8%B2%E0%B8%A1%E0%B8%94%E0%B8%B5%E0%B9%86/%E0%B8%81%E0%B8%B2%E0%B8%A3%E0%B8%9E%E0%B8%B1%E0%B8%92%E0%B8%99%E0%B8%B2%E0%B8%95%E0%B8%99%E0%B9%80%E0%B8%AD%E0%B8%87/%E0%B8%82%E0%B8%B6%E0%B9%89%E0%B8%99%E0%B8%AD%E0%B8%A2%E0%B9%88%E0%B8%B2%E0%B8%AB%E0%B8%A5%E0%B8%87-%E0%B8%A5%E0%B8%87%E0%B8%AD%E0%B8%A2%E0%B9%88%E0%B8%B2%E0%B8%97%E0%B9%89%E0%B8%AD",
+      "source": ""
+    },
+    {
+      "id": "article-0bf1893d",
+      "type": "local",
+      "title": "ลดเครียดได้ด้วยวิธีง่ายๆ ที่คุณอาจมองข้าม",
+      "excerpt": "ลดเครียดได้ด้วยวิธีง่ายๆ ที่คุณอาจมองข้าม",
+      "content": "<h3 class=\"text-xl font-bold mb-4\">11 WAYS TO RELIEVE STRESS</h3>\n<h4 class=\"font-bold mb-3\">ลดเครียดได้ด้วยวิธีง่ายๆ ที่คุณอาจมองข้าม</h4>\n<h4 class=\"font-bold mb-3\">เรื่องโดย... ศิริกร โพธิจัทร</h4>\n<p class=\"mb-4\">ดอกเตอร์เควิน แซปแมนเซล นักจิตวิทยาคลินิกและผู้อำนวยการ The Kentucky Center for Anxiety and Related Disorders รัฐเคนทักกี สหรัฐอเมริกา ระบุถึงวิธีลดเครียดไว้ ดังนี้ให้เทคนิคดีๆ เพื่อคุณภาพการนอนที่ดี ดังนี้</p>\n<p class=\"mb-4\">⬧ จดจ่อกับปัจจัยที่ควบคุมได้ ปัญหาหรือปัจจัยที่ควบคุมไม่ได้ให้พักไว้ก่อน</p>\n<p class=\"mb-4\">⬧ หลับตื่นนอนให้เขียนสิ่งที่ต้องทำโดยเรียงลำดับความสำคัญและทำเท่าที่ทำได้</p>\n<p class=\"mb-4\">⬧ จัดวันพักผ่อนให้ตัวเองโดยที่ไม่ต้องทำอะไรเลยอย่างน้อย 1 วันใน 1 สัปดาห์</p>\n<p class=\"mb-4\">⬧ ออกกำลังกายอย่างน้อยวันละ 20 นาทีต่อเนื่อง และยืดเหยียดร่างกายก่อนและหลังออกกำลังกายอีก 10-15 นาที</p>\n<p class=\"mb-4\">⬧ จดบันทึกเรื่องราวดีๆ และสิ่งที่ทำให้คุณยิ้มหรือหัวเราะได้อย่างน้อยวันละ 1 เรื่อง</p>\n<p class=\"mb-4\">⬧ ทำงานฝีมือ เพราะเป็นการใช้ประสาทสัมผัสทั้ง 5 ร่วมกับการฝึกสมาธิไปพร้อมๆ กัน</p>\n<p class=\"mb-4\">⬧ ฝึกโยคะในท่าที่ได้ก้มหัวลง เช่น ท่าสุนัขแลลง (Downward-Facing Dog) จะทำให้เลือดไหลไปที่สมองได้ดีมากขึ้น</p>\n<p class=\"mb-4\">⬧ ปฏิเสธให้เป็น การทำในสิ่งที่ผืนใจไม่ได้ช่วยให้คุณรู้สึกดี แต่มันจะส่งผลในทางตรงกันข้ามเสมอ</p>\n<p class=\"mb-4\">⬧ แช่หรืออาบน้ำอุ่น ช่วยขจัดเซลล์ผิวที่ตายแล้ว แนะนำให้อาบหรือแช่น้ำอุ่น 10 นาที แล้วอาบน้ำเย็นปิดท้าย 5 นาที จะทำให้รู้สึกสดชื่นขึ้น</p>\n<p class=\"mb-4\">⬧ ใช้เครื่องหอม เช่น โลชั่นหรือน้ำมันนวดผสมน้ำมันหอมระเหยจากสมุนไพรที่คุณชอบ เช่น ลาเวนเดอร์ ทีทรี คาโมมายล์ กุหลาบ</p>\n<p class=\"mb-4\">⬧ เข้านอนและตื่นนอนในเวลาเดิม ถ้าทำได้ต่อเนื่องครบ 1 เดือน คุณก็ไม่ต้องใช้นาฬิกาปลุกอีกเลย</p>\n<p class=\"mb-4\">สุดท้ายหาเวลาให้ครอบครัว เพื่อน คนรัก ใช้เวลาที่มีคุณภาพกับพวกเขาให้ได้มากที่สุดเท่าที่จะทำได้ พักเรื่องงานไว้ก่อน ไว้กลับไปที่ทำงานค่อยไปทำใหม่</p>\n<p class=\"mb-4\">นิตยสารชีวจิต ปีที่ 24 ฉบับที่ 563 เดือน 16 มีนาคม 2565</p>",
+      "category": "",
+      "author": "นิตยสารชีวจิต ปีที่ 24 ฉบับที่ 563 เดือน 16 มีนาคม 2565",
+      "date": "2026-01-10",
+      "readTime": "5 นาที",
+      "image": "https://cheewajit.com/app/uploads/2022/04/iStock-1293744859.jpg"
+    }
+  ],
+  "categories": [
+    "ความเครียด",
+    "ความสุข",
+    "การนอน",
+    "ความสัมพันธ์",
+    "การทำงาน",
+    "สุขภาพจิต",
+    "การผ่อนคลาย",
+    "พัฒนาตนเอง"
+  ],
+  "lastUpdated": "2026-01-10"
 }
