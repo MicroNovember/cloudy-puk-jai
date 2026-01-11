@@ -1,0 +1,360 @@
+/* ============================================
+   TOOLS SPECIFIC STYLES - Breathing Buddy
+   ============================================ */
+
+/* BREATHING CIRCLE */
+.breathing-circle {
+    width: 16.5rem;
+    height: 16.5rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+}
+
+.breathing-circle::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    padding: 0.5rem;
+    background: linear-gradient(135deg, 
+        rgba(255, 255, 255, 0.2), 
+        rgba(255, 255, 255, 0.1), 
+        rgba(255, 255, 255, 0.05));
+    -webkit-mask: 
+        linear-gradient(#fff 0 0) content-box, 
+        linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+}
+
+.breathing-circle::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: radial-gradient(circle at 30% 30%, 
+        rgba(255, 255, 255, 0.15) 0%, 
+        transparent 70%);
+    pointer-events: none;
+}
+ 
+
+/* MOBILE ADJUSTMENTS */
+@media (max-width: 768px) {
+    .breathing-circle {
+        width: 18rem;
+        height: 18rem;
+    }
+    
+    .breathing-circle .text-7xl {
+        font-size: 5rem;
+    }
+    
+    .breathing-circle .text-xl {
+        font-size: 1.125rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .breathing-circle {
+        width: 16rem;
+        height: 16rem;
+    }
+    
+    .breathing-circle .text-7xl {
+        font-size: 4.5rem;
+    }
+}
+
+/* INSTRUCTION CARDS */
+.instruction-card {
+    background-color: var(--color-bg-card);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+    text-align: center;
+    box-shadow: var(--shadow-md);
+    cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 1px solid transparent;
+    position: relative;
+    overflow: hidden;
+}
+
+.instruction-card:hover {
+    transform: translateY(-8px);
+    box-shadow: var(--shadow-xl);
+}
+
+.instruction-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, 
+        transparent, 
+        rgba(255, 255, 255, 0.1), 
+        transparent);
+    transition: left 0.7s ease;
+}
+
+.dark .instruction-card::before {
+    background: linear-gradient(90deg, 
+        transparent, 
+        rgba(255, 255, 255, 0.05), 
+        transparent);
+}
+
+.instruction-card:hover::before {
+    left: 100%;
+}
+
+.instruction-number {
+    font-size: 4rem;
+    font-weight: 900;
+    margin-bottom: 1rem;
+    line-height: 1;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.instruction-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+}
+
+.instruction-text {
+    font-size: 1rem;
+    line-height: 1.6;
+}
+
+/* BREATHING ANIMATIONS */
+@keyframes breatheIn {
+    0% {
+        transform: scale(0.95);
+        opacity: 0.9;
+        box-shadow: 
+            0 25px 50px -12px rgba(5, 148, 103, 0.2),
+            inset 0 1px 2px rgba(255, 255, 255, 0.1);
+    }
+    50% {
+        transform: scale(1.05);
+        opacity: 1;
+        box-shadow: 
+            0 25px 50px -12px rgba(5, 148, 103, 0.3),
+            inset 0 1px 2px rgba(255, 255, 255, 0.2);
+    }
+    100% {
+        transform: scale(0.95);
+        opacity: 0.9;
+        box-shadow: 
+            0 25px 50px -12px rgba(5, 148, 103, 0.2),
+            inset 0 1px 2px rgba(255, 255, 255, 0.1);
+    }
+}
+
+@keyframes breatheHold {
+    0%, 100% {
+        transform: scale(1.03);
+        filter: brightness(1.05);
+        box-shadow: 
+            0 25px 50px -12px rgba(20, 184, 165, 0.2),
+            inset 0 1px 2px rgba(255, 255, 255, 0.1);
+    }
+    50% {
+        transform: scale(1);
+        filter: brightness(0.95);
+        box-shadow: 
+            0 25px 50px -12px rgba(20, 184, 165, 0.1),
+            inset 0 1px 2px rgba(255, 255, 255, 0.05);
+    }
+}
+
+@keyframes breatheOut {
+    0% {
+        transform: scale(1.05);
+        opacity: 1;
+        box-shadow: 
+            0 25px 50px -12px rgba(107, 114, 128, 0.2),
+            inset 0 1px 2px rgba(255, 255, 255, 0.1);
+    }
+    100% {
+        transform: scale(0.95);
+        opacity: 0.9;
+        box-shadow: 
+            0 25px 50px -12px rgba(107, 114, 128, 0.1),
+            inset 0 1px 2px rgba(255, 255, 255, 0.05);
+    }
+}
+
+@keyframes pulseGlow {
+    0%, 100% {
+        box-shadow: 
+            0 0 15px rgba(5, 148, 103, 0.2),
+            0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    }
+    50% {
+        box-shadow: 
+            0 0 30px rgba(5, 148, 103, 0.3),
+            0 10px 15px -3px rgba(0, 0, 0, 0.08);
+    }
+}
+
+@keyframes notificationSlide {
+    0% {
+        transform: translateX(100%) scale(0.8);
+        opacity: 0;
+    }
+    100% {
+        transform: translateX(0) scale(1);
+        opacity: 1;
+    }
+}
+
+@keyframes slideDown {
+    0% {
+        transform: translateY(-8px);
+        opacity: 0;
+    }
+    100% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* STATE INDICATORS */
+.state-indicator {
+    display: flex;
+    gap: 2rem;
+    margin-top: 2rem;
+    justify-content: center;
+}
+
+.state-dot {
+    width: 1rem;
+    height: 1rem;
+    border-radius: 50%;
+    transition: all 0.3s;
+    position: relative;
+}
+
+.state-dot::before {
+    content: '';
+    position: absolute;
+    inset: -4px;
+    border-radius: 50%;
+    border: 2px solid currentColor;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.state-dot.active {
+    transform: scale(1.4);
+}
+
+.state-dot.active::before {
+    opacity: 0.5;
+}
+
+.state-dot.inhale {
+    background-color: var(--color-primary-600);
+}
+
+.state-dot.hold {
+    background-color: var(--color-accent-500);
+}
+
+.state-dot.exhale {
+    background-color: var(--color-secondary-600);
+}
+
+/* RESPONSIVE ADJUSTMENTS */
+@media (max-width: 768px) {
+    .instruction-card {
+        padding: 1.5rem;
+    }
+    
+    .instruction-number {
+        font-size: 3rem;
+    }
+    
+    .instruction-title {
+        font-size: 1.25rem;
+    }
+    
+    .state-indicator {
+        gap: 1.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .breathing-circle {
+        width: 14rem;
+        height: 14rem;
+    }
+    
+    .instruction-card {
+        padding: 1.25rem;
+    }
+    
+    .instruction-number {
+        font-size: 2.5rem;
+    }
+    
+    .instruction-title {
+        font-size: 1.125rem;
+    }
+    
+    .state-dot {
+        width: 0.75rem;
+        height: 0.75rem;
+    }
+}
+
+/* SMOOTH TRANSITIONS */
+* {
+    transition: background-color 0.3s ease, 
+                border-color 0.3s ease,
+                color 0.3s ease;
+}
+
+/* ACCESSIBILITY FOCUS STYLES */
+:focus-visible {
+    outline: 2px solid var(--color-primary-500);
+    outline-offset: 2px;
+}
+
+/* PRINT STYLES */
+@media print {
+    .breathing-circle {
+        box-shadow: none !important;
+        border: 2px solid #000 !important;
+    }
+    
+    .btn-primary,
+    .btn-secondary,
+    .btn-outline,
+    .btn-icon {
+        display: none !important;
+    }
+}
+
+@media (max-width: 640px) {
+    .instruction-card {
+        padding: 1rem; /* น้อยลงสำหรับมือถือ */
+        border-radius: 0.75rem;
+    }
+    
+    .instruction-number {
+        font-size: 1.75rem; /* เล็กลงสำหรับมือถือ */
+        margin-bottom: 0.5rem;
+    }
+}

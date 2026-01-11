@@ -1,7 +1,7 @@
 /* ============================================================================
    CLOUDY-PUK-JAI - COMPLETE CSS SYSTEM
-   Mental Health App Design System with Soft Pastel Colors
-   Version 1.0.0 | Designed for All Devices
+   Mental Health App Design System with Soft Green Colors
+   Version 1.1.0 | Designed for All Devices
    ============================================================================ */
 
 /* ============================================================================
@@ -10,115 +10,126 @@
 
 :root {
   /* ============================================
-     🍃 NATURE-INSPIRED PRIMARY PALETTE (Soft Pastel Green)
+     🍃 PRIMARY PALETTE - Nature Green
      ============================================ */
-  --color-primary-50: #F0F9F2;
-  --color-primary-100: #DCF1E0;
-  --color-primary-200: #B8E2C1;
-  --color-primary-300: #94D3A2;
-  --color-primary-400: #70C483;
-  --color-primary-500: #5D8F6F;
-  --color-primary-600: #4A7C59;
-  --color-primary-700: #376A43;
-  --color-primary-800: #24572D;
-  --color-primary-900: #114417;
+  --color-primary-50: #e8fcf3;
+  --color-primary-100: #d0f9e7;
+  --color-primary-200: #a8f4d0;
+  --color-primary-300: #80efb9;
+  --color-primary-400: #58e9a2;
+  --color-primary-500: #059467;
+  --color-primary-600: #047a56;
+  --color-primary-700: #036045;
+  --color-primary-800: #024634;
+  --color-primary-900: #012c23;
   
   --color-primary: var(--color-primary-500);
   --color-primary-light: var(--color-primary-300);
   --color-primary-dark: var(--color-primary-700);
   
   /* ============================================
-     🌸 SECONDARY & ACCENT PALETTE
+     🏔️ SECONDARY PALETTE - Gray
      ============================================ */
-  --color-secondary-50: #FFF5F7;
-  --color-secondary-100: #FFEBEF;
-  --color-secondary-200: #FFB8C6;
-  --color-secondary-300: #FF94A9;
-  --color-secondary-400: #FF708C;
-  --color-secondary-500: #FF4C6F;
-  
-  --color-accent-50: #FFFCF0;
-  --color-accent-100: #FFF8E1;
-  --color-accent-200: #FFEBB3;
-  --color-accent-300: #FFDE85;
-  --color-accent-400: #FFC857;
-  --color-accent-500: #FFB224;
+  --color-secondary-50: #fafafa;
+  --color-secondary-100: #f5f5f5;
+  --color-secondary-200: #e5e5e5;
+  --color-secondary-300: #d4d4d4;
+  --color-secondary-400: #a3a3a3;
+  --color-secondary-500: #525252;
+  --color-secondary-600: #404040;
+  --color-secondary-700: #262626;
+  --color-secondary-800: #171717;
+  --color-secondary-900: #0a0a0a;
   
   /* ============================================
-     😊 MOOD PALETTE (Reduced Saturation)
+     🌿 ACCENT PALETTE - Soft Teal
      ============================================ */
-  --color-mood-happy: #FFF7D6;
-  --color-mood-calm: #E6F4FF;
-  --color-mood-sad: #F0E6FF;
-  --color-mood-anxious: #FFE6E6;
-  --color-mood-energetic: #E6FFE6;
-  --color-mood-neutral: #F5F5F5;
+  --color-accent-50: #edfdf9;
+  --color-accent-100: #dbfbf3;
+  --color-accent-200: #b8f7e8;
+  --color-accent-300: #94f3dc;
+  --color-accent-400: #71efd1;
+  --color-accent-500: #14b8a5;
+  --color-accent-600: #0f9485;
+  --color-accent-700: #0a7065;
+  --color-accent-800: #064c45;
+  --color-accent-900: #032825;
   
   /* ============================================
-     🚨 FEEDBACK PALETTE (Mental Health Friendly)
+     😊 MOOD PALETTE - Reduced Saturation
      ============================================ */
-  --color-feedback-success-soft: #A7E6B3;
-  --color-feedback-success: #4CAF50;
-  --color-feedback-success-dark: #2E7D32;
-  --color-feedback-success-text: #1B5E20;
+  --color-mood-happy: #FFF7D6;      /* เหลืองอ่อน */
+  --color-mood-calm: #E6F4FF;       /* น้ำเงินอ่อน */
+  --color-mood-sad: #F0E6FF;        /* ม่วงอ่อน */
+  --color-mood-anxious: #FFE6E6;    /* แดงอ่อน */
+  --color-mood-energetic: #E6FFE6;  /* เขียวอ่อน */
+  --color-mood-neutral: #F5F5F5;    /* เทาอ่อน */
   
-  --color-feedback-warning-soft: #FFE0B2;
-  --color-feedback-warning: #FF9800;
-  --color-feedback-warning-dark: #EF6C00;
-  --color-feedback-warning-text: #E65100;
+  /* ============================================
+     🚨 FEEDBACK PALETTE - Mental Health Friendly
+     ============================================ */
+  --color-feedback-success-soft: #d1fae5;
+  --color-feedback-success: #10b981;
+  --color-feedback-success-dark: #059669;
+  --color-feedback-success-text: #065f46;
   
-  --color-feedback-error-soft: #FFCDD2;
-  --color-feedback-error: #FF6B6B;
-  --color-feedback-error-dark: #D32F2F;
-  --color-feedback-error-text: #B71C1C;
+  --color-feedback-warning-soft: #fef3c7;
+  --color-feedback-warning: #f59e0b;
+  --color-feedback-warning-dark: #d97706;
+  --color-feedback-warning-text: #92400e;
   
-  --color-feedback-info-soft: #B3E5FC;
-  --color-feedback-info: #42A5F5;
-  --color-feedback-info-dark: #1976D2;
-  --color-feedback-info-text: #0D47A1;
+  --color-feedback-error-soft: #ffa2a2;
+  --color-feedback-error: #db2424;
+  --color-feedback-error-dark: #b91c1c;
+  --color-feedback-error-text: #7f1d1d;
+  
+  --color-feedback-info-soft: #e0f2fe;
+  --color-feedback-info: #0ea5e9;
+  --color-feedback-info-dark: #0284c7;
+  --color-feedback-info-text: #0369a1;
   
   /* ============================================
      📝 TEXT PALETTE
      ============================================ */
-  --color-text-primary: #1A1A1A;
-  --color-text-secondary: #4A5568;
-  --color-text-tertiary: #718096;
-  --color-text-disabled: #A0AEC0;
-  --color-text-inverse: #FFFFFF;
-  --color-text-on-primary: #FFFFFF;
+  --color-text-primary: #171717;
+  --color-text-secondary: #525252;
+  --color-text-tertiary: #a1a1a1;
+  --color-text-disabled: #d4d4d4;
+  --color-text-inverse: #fafafa;
+  --color-text-on-primary: #e8fcf3;
   
   /* ============================================
      🖼️ BACKGROUND PALETTE
      ============================================ */
-  --color-bg-primary: #FFFFFF;
-  --color-bg-secondary: #F8FAFC;
-  --color-bg-tertiary: #F1F5F9;
-  --color-bg-overlay: rgba(0, 0, 0, 0.5);
+  --color-bg-primary: #f5f5f5;
+  --color-bg-secondary: #fafafa;
+  --color-bg-tertiary: #ffffff;
+  --color-bg-overlay: rgba(0, 0, 0, 0.4);
   
   /* ============================================
      🏞️ SURFACE PALETTE
      ============================================ */
-  --color-surface: #FFFFFF;
-  --color-surface-elevated: #F8FAFC;
-  --color-surface-hover: #EDF2F7;
-  --color-surface-active: #E2E8F0;
+  --color-surface: #fafafa;
+  --color-surface-elevated: #ffffff;
+  --color-surface-hover: #f0f0f0;
+  --color-surface-active: #e3e3e3;
   
   /* ============================================
      📏 BORDER PALETTE
      ============================================ */
-  --color-border-light: #E2E8F0;
-  --color-border-medium: #CBD5E1;
-  --color-border-strong: #94A3B8;
-  --color-border-focus: var(--color-primary-400);
+  --color-border-light: #e5e5e5;
+  --color-border-medium: #d4d4d4;
+  --color-border-strong: #a1a1a1;
+  --color-border-focus: #059467;
   
   /* ============================================
      📱 SHADOW SYSTEM
      ============================================ */
   --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
-  --shadow-inner: inset 0 2px 4px 0 rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.07);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.08);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.09);
+  --shadow-inner: inset 0 2px 4px 0 rgba(0, 0, 0, 0.04);
   
   /* ============================================
      📐 SPACING SYSTEM
@@ -183,43 +194,101 @@
    ============================================================================ */
 
 .dark {
-  /* Primary */
-  --color-primary-50: #0D1F14;
-  --color-primary-100: #1A2F1F;
-  --color-primary-200: #27402A;
-  --color-primary-300: #345035;
-  --color-primary-400: #416040;
-  --color-primary: #5D8F6F;
-  --color-primary-600: #6BAF7A;
-  --color-primary-700: #79CF85;
-  --color-primary-800: #87EF90;
-  --color-primary-900: #95FF9B;
+  /* 🍃 PRIMARY PALETTE - Dark Green */
+  --color-primary-50: #012c23;
+  --color-primary-100: #024634;
+  --color-primary-200: #036045;
+  --color-primary-300: #047a56;
+  --color-primary-400: #059467;
+  --color-primary: #06ae78;
+  --color-primary-600: #07c889;
+  --color-primary-700: #08e29a;
+  --color-primary-800: #09fcab;
+  --color-primary-900: #e8fcf3;
+  --color-primary-light: #80efb9;
+  --color-primary-dark: #024634;
   
-  /* Text */
-  --color-text-primary: #F1F5F9;
-  --color-text-secondary: #CBD5E1;
-  --color-text-tertiary: #94A3B8;
-  --color-text-disabled: #64748B;
-  --color-text-inverse: #1A1A1A;
+  /* 🏔️ SECONDARY PALETTE - Dark Gray */
+  --color-secondary-50: #0a0a0a;
+  --color-secondary-100: #171717;
+  --color-secondary-200: #262626;
+  --color-secondary-300: #404040;
+  --color-secondary-400: #525252;
+  --color-secondary-500: #6b6b6b;
+  --color-secondary-600: #858585;
+  --color-secondary-700: #a1a1a1;
+  --color-secondary-800: #d4d4d4;
+  --color-secondary-900: #fafafa;
   
-  /* Background */
-  --color-bg-primary: #0F172A;
-  --color-bg-secondary: #1E293B;
-  --color-bg-tertiary: #334155;
+  /* 🌿 ACCENT PALETTE - Dark Teal */
+  --color-accent-50: #032825;
+  --color-accent-100: #064c45;
+  --color-accent-200: #0a7065;
+  --color-accent-300: #0f9485;
+  --color-accent-400: #14b8a5;
+  --color-accent-500: #18dcc5;
+  --color-accent-600: #45e9d3;
+  --color-accent-700: #71efd1;
+  --color-accent-800: #94f3dc;
+  --color-accent-900: #edfdf9;
   
-  /* Surface */
-  --color-surface: #1E293B;
-  --color-surface-elevated: #2D3748;
-  --color-surface-hover: #374151;
-  --color-surface-active: #4B5563;
+  /* 😊 MOOD PALETTE - Dark Mode Friendly */
+  --color-mood-happy: #4a3c00;      /* เหลืองเข้ม */
+  --color-mood-calm: #002b4d;       /* น้ำเงินเข้ม */
+  --color-mood-sad: #3a0066;        /* ม่วงเข้ม */
+  --color-mood-anxious: #660000;    /* แดงเข้ม */
+  --color-mood-energetic: #004d00;  /* เขียวเข้ม */
+  --color-mood-neutral: #262626;    /* เทาเข้ม */
   
-  /* Border */
-  --color-border-light: #334155;
-  --color-border-medium: #475569;
-  --color-border-strong: #64748B;
+  /* 📝 TEXT PALETTE */
+  --color-text-primary: #f5f5f5;
+  --color-text-secondary: #d4d4d4;
+  --color-text-tertiary: #a1a1a1;
+  --color-text-disabled: #525252;
+  --color-text-inverse: #171717;
+  --color-text-on-primary: #e8fcf3;
   
-  /* Shadows */
-  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+  /* 🖼️ BACKGROUND PALETTE */
+  --color-bg-primary: #171717;
+  --color-bg-secondary: #262626;
+  --color-bg-tertiary: #404040;
+  --color-bg-overlay: rgba(0, 0, 0, 0.6);
+  
+  /* 🏞️ SURFACE PALETTE */
+  --color-surface: #262626;
+  --color-surface-elevated: #404040;
+  --color-surface-hover: #525252;
+  --color-surface-active: #6b6b6b;
+  
+  /* 📏 BORDER PALETTE */
+  --color-border-light: #404040;
+  --color-border-medium: #525252;
+  --color-border-strong: #6b6b6b;
+  --color-border-focus: #059467;
+  
+  /* 🚨 FEEDBACK PALETTE - Dark Mode */
+  --color-feedback-success-soft: #065f46;
+  --color-feedback-success: #10b981;
+  --color-feedback-success-dark: #34d399;
+  --color-feedback-success-text: #a7f3d0;
+  
+  --color-feedback-warning-soft: #92400e;
+  --color-feedback-warning: #f59e0b;
+  --color-feedback-warning-dark: #fbbf24;
+  --color-feedback-warning-text: #fef3c7;
+  
+  --color-feedback-error-soft: #7f1d1d;
+  --color-feedback-error: #dc2626;
+  --color-feedback-error-dark: #f87171;
+  --color-feedback-error-text: #fecaca;
+  
+  --color-feedback-info-soft: #0369a1;
+  --color-feedback-info: #0ea5e9;
+  --color-feedback-info-dark: #38bdf8;
+  --color-feedback-info-text: #bae6fd;
+  
+  /* 📱 SHADOW SYSTEM */
+  --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.3);
   --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4);
   --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
   --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.6);
