@@ -75,22 +75,22 @@
                     <a href="#" @click="currentPage = 'home'" :class="currentPage === 'home' ? 'bg-primary-light text-white' : 'text-gray-600 dark:text-gray-300'" class="px-3 py-2 rounded-lg font-medium hover:bg-primary-light hover:text-white transition-colors">
                         <i class="fas fa-home mr-2"></i>หน้าหลัก
                     </a>
-                    <a href="#" @click="currentPage = 'journal'" :class="currentPage === 'journal' ? 'bg-primary-light text-white' : 'text-gray-600 dark:text-gray-300'" class="px-3 py-2 rounded-lg font-medium hover:bg-primary-light hover:text-white transition-colors">
+                    <a href="#journal" @click="navigateTo('journal')" :class="currentPage === 'journal' ? 'bg-primary-light text-white' : 'text-gray-600 dark:text-gray-300'" class="px-3 py-2 rounded-lg font-medium hover:bg-primary-light hover:text-white transition-colors">
                         <i class="fas fa-book mr-2"></i>สมุดบันทึก
                     </a>
-                    <a href="#" @click="currentPage = 'music'" :class="currentPage === 'music' ? 'bg-primary-light text-white' : 'text-gray-600 dark:text-gray-300'" class="px-3 py-2 rounded-lg font-medium hover:bg-primary-light hover:text-white transition-colors">
+                    <a href="#music" @click="navigateTo('music')" :class="currentPage === 'music' ? 'bg-primary-light text-white' : 'text-gray-600 dark:text-gray-300'" class="px-3 py-2 rounded-lg font-medium hover:bg-primary-light hover:text-white transition-colors">
                         <i class="fas fa-music mr-2"></i>เพลงและพอดแคสต์
                     </a>
-                    <a href="#" @click="currentPage = 'articles'" :class="currentPage === 'articles' ? 'bg-primary-light text-white' : 'text-gray-600 dark:text-gray-300'" class="px-3 py-2 rounded-lg font-medium hover:bg-primary-light hover:text-white transition-colors">
+                    <a href="#articles" @click="navigateTo('articles')" :class="currentPage === 'articles' ? 'bg-primary-light text-white' : 'text-gray-600 dark:text-gray-300'" class="px-3 py-2 rounded-lg font-medium hover:bg-primary-light hover:text-white transition-colors">
                         <i class="fas fa-newspaper mr-2"></i>บทความ
                     </a>
-                    <a href="#" @click="currentPage = 'assessments'" :class="currentPage === 'assessments' ? 'bg-primary-light text-white' : 'text-gray-600 dark:text-gray-300'" class="px-3 py-2 rounded-lg font-medium hover:bg-primary-light hover:text-white transition-colors">
+                    <a href="#assessments" @click="navigateTo('assessments')" :class="currentPage === 'assessments' ? 'bg-primary-light text-white' : 'text-gray-600 dark:text-gray-300'" class="px-3 py-2 rounded-lg font-medium hover:bg-primary-light hover:text-white transition-colors">
                         <i class="fas fa-clipboard-check mr-2"></i>แบบทดสอบ
                     </a>
-                                    <a href="history.html" @click="mobileMenuOpen = false" class="block px-3 py-2 rounded-lg font-medium text-gray-600 dark:text-gray-300 hover:bg-primary-light hover:text-white transition-colors">
+                    <a href="history.html" @click="mobileMenuOpen = false" class="block px-3 py-2 rounded-lg font-medium text-gray-600 dark:text-gray-300 hover:bg-primary-light hover:text-white transition-colors">
                     <i class="fas fa-history mr-2"></i>ประวัติผลการทดสอบ
                 </a>
-                    <a href="#" @click="currentPage = 'growth'" :class="currentPage === 'growth' ? 'bg-primary-light text-white' : 'text-gray-600 dark:text-gray-300'" class="px-3 py-2 rounded-lg font-medium hover:bg-primary-light hover:text-white transition-colors">
+                    <a href="#growth" @click="navigateTo('growth')" :class="currentPage === 'growth' ? 'bg-primary-light text-white' : 'text-gray-600 dark:text-gray-300'" class="px-3 py-2 rounded-lg font-medium hover:bg-primary-light hover:text-white transition-colors">
                         <i class="fas fa-seedling mr-2"></i>สวนแห่งใจ
                     </a>
                     <a href="#" @click="navigateTo('tools')" class="px-3 py-2 rounded-lg font-medium text-gray-600 dark:text-gray-300 hover:bg-primary-light hover:text-white transition-colors">
@@ -109,23 +109,23 @@
                 <a href="#" @click="currentPage = 'home'; mobileMenuOpen = false" :class="currentPage === 'home' ? 'bg-primary-light text-white' : 'text-gray-600 dark:text-gray-300'" class="block px-3 py-2 rounded-lg font-medium hover:bg-primary-light hover:text-white transition-colors">
                     <i class="fas fa-home mr-2"></i>หน้าหลัก
                 </a>
-                <a href="#" @click="currentPage = 'journal'; mobileMenuOpen = false" :class="currentPage === 'journal' ? 'bg-primary-light text-white' : 'text-gray-600 dark:text-gray-300'" class="block px-3 py-2 rounded-lg font-medium hover:bg-primary-light hover:text-white transition-colors">
+                <a href="#journal" @click="navigateTo('journal'); mobileMenuOpen = false" :class="currentPage === 'journal' ? 'bg-primary-light text-white' : 'text-gray-600 dark:text-gray-300'" class="block px-3 py-2 rounded-lg font-medium hover:bg-primary-light hover:text-white transition-colors">
                     <i class="fas fa-book mr-2"></i>สมุดบันทึก
                 </a>
-                <a href="#" @click="currentPage = 'music'; mobileMenuOpen = false" :class="currentPage === 'music' ? 'bg-primary-light text-white' : 'text-gray-600 dark:text-gray-300'" class="block px-3 py-2 rounded-lg font-medium hover:bg-primary-light hover:text-white transition-colors">
+                <a href="#music" @click="navigateTo('music'); mobileMenuOpen = false" :class="currentPage === 'music' ? 'bg-primary-light text-white' : 'text-gray-600 dark:text-gray-300'" class="block px-3 py-2 rounded-lg font-medium hover:bg-primary-light hover:text-white transition-colors">
                     <i class="fas fa-music mr-2"></i>เพลงและพอดแคสต์
                 </a>
-                <a href="#" @click="currentPage = 'articles'; mobileMenuOpen = false" :class="currentPage === 'articles' ? 'bg-primary-light text-white' : 'text-gray-600 dark:text-gray-300'" class="block px-3 py-2 rounded-lg font-medium hover:bg-primary-light hover:text-white transition-colors">
+                <a href="#articles" @click="navigateTo('articles'); mobileMenuOpen = false" :class="currentPage === 'articles' ? 'bg-primary-light text-white' : 'text-gray-600 dark:text-gray-300'" class="block px-3 py-2 rounded-lg font-medium hover:bg-primary-light hover:text-white transition-colors">
                     <i class="fas fa-newspaper mr-2"></i>บทความ
                 </a>
-                <a href="#" @click="currentPage = 'assessments'; mobileMenuOpen = false" :class="currentPage === 'assessments' ? 'bg-primary-light text-white' : 'text-gray-600 dark:text-gray-300'" class="block px-3 py-2 rounded-lg font-medium hover:bg-primary-light hover:text-white transition-colors">
+                <a href="#assessments" @click="navigateTo('assessments'); mobileMenuOpen = false" :class="currentPage === 'assessments' ? 'bg-primary-light text-white' : 'text-gray-600 dark:text-gray-300'" class="block px-3 py-2 rounded-lg font-medium hover:bg-primary-light hover:text-white transition-colors">
                     <i class="fas fa-clipboard-check mr-2"></i>แบบทดสอบ
                 </a>
                                 <a href="history.html" @click="mobileMenuOpen = false" class="block px-3 py-2 rounded-lg font-medium text-gray-600 dark:text-gray-300 hover:bg-primary-light hover:text-white transition-colors">
                     <i class="fas fa-history mr-2"></i>ประวัติผลการทดสอบ
                 </a>
 
-                <a href="#" @click="currentPage = 'growth'; mobileMenuOpen = false" :class="currentPage === 'growth' ? 'bg-primary-light text-white' : 'text-gray-600 dark:text-gray-300'" class="block px-3 py-2 rounded-lg font-medium hover:bg-primary-light hover:text-white transition-colors">
+                <a href="#growth" @click="navigateTo('growth'); mobileMenuOpen = false" :class="currentPage === 'growth' ? 'bg-primary-light text-white' : 'text-gray-600 dark:text-gray-300'" class="block px-3 py-2 rounded-lg font-medium hover:bg-primary-light hover:text-white transition-colors">
                     <i class="fas fa-seedling mr-2"></i>สวนแห่งใจ
                 </a>
                 <a href="#" @click="navigateTo('tools'); mobileMenuOpen = false" class="block px-3 py-2 rounded-lg font-medium text-gray-600 dark:text-gray-300 hover:bg-primary-light hover:text-white transition-colors">

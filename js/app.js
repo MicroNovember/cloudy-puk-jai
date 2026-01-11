@@ -33,6 +33,7 @@ document.addEventListener('alpine:init', () => {
         resultAutoSaved: false,
         
         
+        
         // Forms
         journalForm: {
             date: new Date().toISOString().split('T')[0],
@@ -301,6 +302,67 @@ showConfirmModal(title, message, onConfirm, onCancel = null) {
             author: "ผู้ไม่ประสงค์ออกนาม"
         },
         
+
+        // ===== 1. เพิ่ม Route System =====
+        routes: {          // ✅ ถูก!
+    '': 'home',
+    'journal': 'journal',
+    'music': 'music',
+    'articles': 'articles',
+    'assessments': 'assessments',
+    'quiz': 'quiz',
+    'results': 'results',
+    'growth': 'growth'
+},
+
+// ===== 2. เปลี่ยนการเปลี่ยนหน้า =====
+navigateTo(page) {
+    // ถ้าเป็น tools ให้ไปหน้าใหม่
+    if (page === 'tools') {
+        window.location.href = 'tools.html';
+        return;
+    }
+    
+    // เปลี่ยนหน้าในแอป + อัพเดท URL
+    this.currentPage = page;
+    
+    // อัพเดท URL ใน address bar (ไม่รีโหลดหน้า)
+    const url = page === 'home' ? '' : page;
+    window.history.pushState({ page: page }, '', `#${url}`);
+    
+    // ปิดเมนูมือถือถ้าเปิดอยู่
+    this.mobileMenuOpen = false;
+},
+
+// ===== 3. จัดการปุ่ม Back =====
+initRouter() {
+    // จับเหตุการณ์เมื่อ URL เปลี่ยน
+    window.addEventListener('popstate', (event) => {
+    const hash = window.location.hash.substring(1);
+    const page = this.routes[hash] || 'home'; 
+        
+        if (page !== this.currentPage) {
+            this.currentPage = page;
+        }
+    });
+    
+    // จับเหตุการณ์ hashchange (สำหรับคนพิมพ์ URL)
+    window.addEventListener('hashchange', () => {
+        const hash = window.location.hash.substring(1);
+        const page = this.routes[hash] || 'home';
+        
+        if (page !== this.currentPage) {
+            this.currentPage = page;
+        }
+    });
+    
+    // โหลดหน้าแรกจาก URL ถ้ามี
+    const initialHash = window.location.hash.substring(1);
+    if (this.routes[initialHash]) {
+        this.currentPage = this.routes[initialHash];
+    }
+},
+        
         features: [
             { id: 1, icon: '📖', title: 'สมุดบันทึก', description: 'บันทึกความรู้สึกและสิ่งดีๆ ในแต่ละวัน', page: 'journal' },
             { id: 2, icon: '🎵', title: 'เพลงและพอดแคสต์', description: 'ฟังเพลงและพอดแคสต์เพื่อผ่อนคลาย', page: 'music' },
@@ -377,6 +439,11 @@ showConfirmModal(title, message, onConfirm, onCancel = null) {
         { "text": "ทุกคนสามารถทำได้ทุกอย่าง แต่อยู่ที่ว่าคุณจะทำหรือไม่ทำ", "author": "Anonymous ✨" },
         { "text": "ความหวังทำให้เรามีแรงเดินต่อไป", "author": "Cloudy-Puk-Jai 💕" }
         ],
+
+
+            
+
+
         
         // Computed Properties
         get mentalAssessments() {
@@ -418,8 +485,16 @@ showConfirmModal(title, message, onConfirm, onCancel = null) {
 },
 
 
+        
+
+
+
+
+
+
         // Methods
         async init() {
+             this.initRouter(); 
 
             // สุ่มคำคมตอนเริ่มต้น
             this.showRandomQuote(); 
@@ -899,7 +974,7 @@ getAssessmentCategory(type) {
             this.quizScore = 0;
             this.quizResult = {};
             this.resultAutoSaved = false; // <-- เพิ่มบรรทัดนี้
-            this.currentPage = 'quiz';
+            this.navigateTo('quiz'); // แทน this.currentPage = 'quiz'
         },
         
         selectQuizAnswer(value) {
@@ -949,6 +1024,7 @@ getAssessmentCategory(type) {
         retakeQuiz() {
             this.resultAutoSaved = false; // <-- เพิ่มบรรทัดนี้
             this.startAssessment(this.currentQuiz)
+            this.navigateTo('quiz');
         },
         
                 saveAssessmentResult() {
@@ -959,6 +1035,7 @@ getAssessmentCategory(type) {
             } else {
                 this.showNotification('ผลการทดสอบถูกบันทึกไว้แล้ว!', 'info');
             }
+                this.navigateTo('assessments'); // กลับไปหน้าแบบทดสอบ
         },
         
         getResultColor(result) {
