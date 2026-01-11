@@ -12,8 +12,8 @@ document.addEventListener('alpine:init', () => {
         articleTipsOpen: false,  // สำหรับเปิด-ปิดคำแนะนำบทความ
         assessmentTipsOpen: true,  // ให้แสดงตั้งแต่แรก (default เปิด)
         agreedToTerms: false,
-        
-
+        journalTipsOpen: true,
+        activeEntryMenu: null,
 
         
         // User Data
@@ -102,6 +102,154 @@ document.addEventListener('alpine:init', () => {
         // ปิดเมนูมือถือถ้าเปิดอยู่
         this.mobileMenuOpen = false;
     },
+
+
+        // +++ เพิ่มฟังก์ชันเหล่านี้ในส่วน Methods +++
+
+// ฟังก์ชันเปิด/ปิดเมนู
+toggleEntryMenu(entryId) {
+    this.activeEntryMenu = this.activeEntryMenu === entryId ? null : entryId;
+},
+
+// ฟังก์ชันหาชื่ออารมณ์จาก ID
+getMoodLabel(moodId) {
+    const mood = this.moods.find(m => m.id === moodId);
+    return mood ? mood.label : 'ไม่ระบุ';
+},
+
+// ฟังก์ชันลบบันทึก
+            deleteJournalEntry(entryId) {
+            this.activeEntryMenu = null; // ปิดเมนูก่อน
+            
+            // หาข้อมูล entry
+            const entry = this.journalEntries.find(e => e.id === entryId);
+            const date = entry ? this.formatDate(entry.date) : '';
+            
+            // +++ แทนที่ confirm() ด้วย modal สวยๆ +++
+            this.showConfirmModal(
+                'ยืนยันการลบบันทึก',  // title
+                `คุณต้องการลบบันทึกวันที่ ${date} จริงหรือไม่?\n\nการกระทำนี้ไม่สามารถย้อนกลับได้`,  // message
+                // เมื่อกดยืนยัน
+                () => {
+                    const index = this.journalEntries.findIndex(e => e.id === entryId);
+                    
+                    if (index !== -1) {
+                        // ลบออกจาก array
+                        this.journalEntries.splice(index, 1);
+                        
+                        // อัพเดทคะแนนต้นไม้
+                        this.tree.points = Math.max(0, this.tree.points - 20);
+                        this.tree.progress = Math.max(1, this.tree.progress - 1);
+                        
+                        // อัพเดท tree animation
+                        this.updateTreeAnimation();
+                        
+                        // บันทึกข้อมูล
+                        this.saveData();
+                        
+                        // แจ้งเตือนสำเร็จ
+                        this.showNotification('ลบบันทึกเรียบร้อยแล้ว ✓', 'success');
+                    }
+                },
+                // เมื่อกดยกเลิก (optional)
+                () => {
+                    this.showNotification('ยกเลิกการลบบันทึกแล้ว', 'info');
+                }
+            );
+        },
+
+        // +++ เพิ่มฟังก์ชันนี้ต่อจาก deleteJournalEntry() +++
+
+// ฟังก์ชันเปิดดูรายละเอียดบันทึก
+openEntryDetail(entry) {
+    this.currentJournalEntry = entry;
+    this.modalOpen = 'journalDetail';
+},
+
+// ตัวแปรเก็บรายละเอียดบันทึกที่กำลังดู
+currentJournalEntry: null,
+
+// +++ เพิ่มฟังก์ชันนี้ในส่วน Methods +++
+showConfirmModal(title, message, onConfirm, onCancel = null) {
+    // สร้าง modal element
+    const modal = document.createElement('div');
+    modal.className = 'fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center p-4 z-50';
+    modal.innerHTML = `
+        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl max-w-md w-full">
+            <div class="p-6">
+                <!-- Icon -->
+                <div class="text-center mb-4">
+                    <i class="fas fa-exclamation-triangle text-4xl text-yellow-500"></i>
+                </div>
+                
+                <!-- Title -->
+                <h3 class="text-xl font-bold text-center text-gray-800 dark:text-white mb-2">
+                    ${title}
+                </h3>
+                
+                <!-- Message -->
+                <p class="text-gray-600 dark:text-gray-300 text-center mb-6">
+                    ${message}
+                </p>
+                
+                <!-- Buttons -->
+                <div class="flex gap-3">
+                    <button id="confirmCancelBtn" 
+                            class="flex-1 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 
+                                   dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200 
+                                   font-medium py-3 px-6 rounded-lg transition-colors">
+                        ยกเลิก
+                    </button>
+                    <button id="confirmOkBtn" 
+                            class="flex-1 bg-red-500 hover:bg-red-600 text-white 
+                                   font-medium py-3 px-6 rounded-lg transition-colors">
+                        ลบเลย
+                    </button>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    // เพิ่มในหน้าเว็บ
+    document.body.appendChild(modal);
+    
+    // Event Listeners
+    const cancelBtn = modal.querySelector('#confirmCancelBtn');
+    const okBtn = modal.querySelector('#confirmOkBtn');
+    
+    // ปิด modal เมื่อกดยกเลิก
+    cancelBtn.addEventListener('click', () => {
+        document.body.removeChild(modal);
+        if (onCancel) onCancel();
+    });
+    
+    // ยืนยันและปิด modal
+    okBtn.addEventListener('click', () => {
+        document.body.removeChild(modal);
+        onConfirm();
+    });
+    
+    // ปิดเมื่อคลิกนอก modal
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            document.body.removeChild(modal);
+            if (onCancel) onCancel();
+        }
+    });
+    
+    // ปิดด้วยปุ่ม Escape
+    const handleEscape = (e) => {
+        if (e.key === 'Escape') {
+            document.body.removeChild(modal);
+            document.removeEventListener('keydown', handleEscape);
+            if (onCancel) onCancel();
+        }
+    };
+    document.addEventListener('keydown', handleEscape);
+},
+
+
+
 
 
 
@@ -384,7 +532,7 @@ document.addEventListener('alpine:init', () => {
         // Journal Functions
         saveJournalEntry() {
             if (!this.journalForm.date || !this.journalForm.mood) {
-                alert('กรุณากรอกวันที่และเลือกอารมณ์');
+                this.showNotification('กรุณากรอกวันที่และเลือกอารมณ์', 'warning');
                 return;
             }
             
@@ -419,7 +567,9 @@ document.addEventListener('alpine:init', () => {
                 dailyGoal: ''
             };
             
-            alert('บันทึกสำเร็จแล้ว! 🌟');
+              // แสดงการแจ้งเตือนแบบที่แอปใช้
+    this.showNotification('บันทึกสำเร็จแล้ว! 🌟', 'success');
+
         },
         
         getCurrentStreak() {
@@ -445,7 +595,7 @@ document.addEventListener('alpine:init', () => {
         
         downloadJournal() {
             if (this.journalEntries.length === 0) {
-                alert('ยังไม่มีบันทึกที่จะดาวน์โหลด');
+                this.showNotification('ยังไม่มีบันทึกที่จะดาวน์โหลด', 'warning');
                 return;
             }
             
@@ -501,7 +651,7 @@ _viewHistoryDetail(history) {
         
         this.currentPage = 'results';
     } else {
-        alert('ไม่พบข้อมูลแบบทดสอบ');
+        this.showNotification('ไม่พบข้อมูลแบบทดสอบ', 'error');
     }
 },
 
@@ -739,7 +889,7 @@ getAssessmentCategory(type) {
             startAssessment(assessment) {
                 // ตรวจสอบว่า assessment มีข้อมูลครบหรือไม่
             if (!assessment || !assessment.questions || assessment.questions.length === 0) {
-                alert('ไม่พบคำถามสำหรับแบบทดสอบนี้ กรุณาลองใหม่ในภายหลัง');
+                this.showNotification('ไม่พบคำถามสำหรับแบบทดสอบนี้ กรุณาลองใหม่ในภายหลัง', 'error');
                 return;
             }
             
@@ -764,7 +914,7 @@ getAssessmentCategory(type) {
         
                     nextQuestion() {
             if (this.quizAnswers[this.currentQuestionIndex] === undefined) {
-                alert('กรุณาเลือกคำตอบก่อนดำเนินการต่อ');
+                this.showNotification('กรุณาเลือกคำตอบก่อนดำเนินการต่อ', 'warning');
                 return;
             }
             
@@ -805,9 +955,9 @@ getAssessmentCategory(type) {
             // ถ้ายังไม่ได้บันทึกอัตโนมัติ ให้บันทึก
             if (!this.resultAutoSaved) {
                 this.autoSaveAssessmentResult();
-                alert('บันทึกผลการทดสอบเรียบร้อยแล้ว!');
+                this.showNotification('บันทึกผลการทดสอบเรียบร้อยแล้ว!', 'success');
             } else {
-                alert('ผลการทดสอบถูกบันทึกไว้แล้ว!');
+                this.showNotification('ผลการทดสอบถูกบันทึกไว้แล้ว!', 'info');
             }
         },
         
@@ -985,7 +1135,7 @@ getAssessmentCategory(type) {
                     animation: ''
                 };
                 
-                alert('ล้างข้อมูลเรียบร้อยแล้ว');
+                this.showNotification('ล้างข้อมูลเรียบร้อยแล้ว', 'success');
                 this.currentPage = 'home';
             }
         }

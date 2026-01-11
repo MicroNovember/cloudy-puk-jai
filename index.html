@@ -7,7 +7,7 @@
     
     <!-- Tailwind CSS -->
     
-    <script src="https://cdn.tailwindcss.com/3.3.0"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
     
     <!-- Alpine.js -->
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
@@ -279,6 +279,92 @@
                 <i class="fas fa-book mr-3"></i>สมุดบันทึก
             </h2>
             
+                <!-- คำแนะนำสำหรับสมุดบันทึก -->
+<div class="mb-8">
+    <div class="bg-gradient-to-r from-primary/5 to-primary-light/5 border-l-4 border-primary rounded-r-lg p-5">
+        <div class="flex items-center justify-between mb-4 cursor-pointer" @click="journalTipsOpen = !journalTipsOpen">
+            <div class="flex items-center">
+                <i class="fas fa-book-open text-xl text-primary mr-3"></i>
+                <h3 class="text-lg font-bold text-primary">คำแนะนำการเขียนบันทึกสุขภาพใจ</h3>
+            </div>
+            <i class="fas fa-chevron-down text-primary transition-transform duration-300" 
+               :class="{'rotate-180': journalTipsOpen}"></i>
+        </div>
+        
+        <div x-show="journalTipsOpen" x-transition class="space-y-5">
+            <!-- ทำไมต้องเขียนบันทึก -->
+            <div class="flex items-start">
+                <div class="bg-primary/10 p-2 rounded-lg mr-4">
+                    <i class="fas fa-brain text-primary text-lg"></i>
+                </div>
+                <div>
+                    <h4 class="font-bold text-primary mb-1">📝 ทำไมการเขียนบันทึกจึงช่วยสุขภาพจิต?</h4>
+                    <ul class="text-sm text-gray-700 dark:text-gray-300 space-y-1 list-disc pl-5">
+                        <li><strong>ลดความเครียด</strong> โดยระบายความคิดและความรู้สึกออกมา</li>
+                        <li><strong>เข้าใจตัวเองมากขึ้น</strong> ผ่านการทบทวนเหตุการณ์ต่างๆ</li>
+                        <li><strong>ติดตามพัฒนาการ</strong> ทางอารมณ์เมื่อเวลาผ่านไป</li>
+                        <li><strong>ค้นพบรูปแบบความคิด</strong> ที่อาจส่งผลต่ออารมณ์</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- คำแนะนำการเขียน -->
+            <div class="flex items-start">
+                <div class="bg-primary/10 p-2 rounded-lg mr-4">
+                    <i class="fas fa-lightbulb text-primary text-lg"></i>
+                </div>
+                <div>
+                    <h4 class="font-bold text-primary mb-1">💡 คำแนะนำสำหรับการเขียนบันทึก</h4>
+                    <ul class="text-sm text-gray-700 dark:text-gray-300 space-y-1 list-disc pl-5">
+                        <li><strong>เขียนอย่างอิสระ</strong> ไม่ต้องกังวลเรื่องแกรมมาร์หรือการสะกด</li>
+                        <li><strong>ตอบคำถาม "วันนี้ฉันรู้สึกอย่างไร"</strong> โดยไม่ตัดสินตัวเอง</li>
+                        <li><strong>จดบันทึกสิ่งดีๆ</strong> แม้จะเป็นเรื่องเล็กน้อยก็ตาม</li>
+                        <li><strong>ไม่จำเป็นต้องเขียนยาว</strong> แค่ประโยคสองประโยคก็มีคุณค่า</li>
+                        <li><strong>ทบทวนบันทึกเก่า</strong> เพื่อเห็นพัฒนาการของตัวเอง</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- ความเป็นส่วนตัว -->
+            <div class="flex items-start">
+                <div class="bg-primary/10 p-2 rounded-lg mr-4">
+                    <i class="fas fa-lock text-primary text-lg"></i>
+                </div>
+                <div>
+                    <h4 class="font-bold text-primary mb-1">🔒 ความปลอดภัยของบันทึกคุณ</h4>
+                    <ul class="text-sm text-gray-700 dark:text-gray-300 space-y-1 list-disc pl-5">
+                        <li>บันทึกทั้งหมด <strong>เก็บในอุปกรณ์ของคุณเท่านั้น</strong></li>
+                        <li><strong>ไม่มีการส่งข้อมูล</strong> ไปยังเซิร์ฟเวอร์ภายนอก</li>
+                        <li>คุณสามารถ <strong>ลบบันทึกได้ตลอดเวลา</strong> ในหน้าความเป็นส่วนตัว</li>
+                        <li>ข้อมูลจะ <strong>ไม่หาย</strong> แม้ปิดเบราว์เซอร์ (จนกว่าคุณจะลบเอง)</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- ตัวอย่างการเขียน -->
+            <div class="bg-white dark:bg-gray-800 rounded-lg p-4 border border-primary/20">
+                <h4 class="font-bold text-primary mb-2 text-sm">📌 ตัวอย่างข้อความที่สามารถเขียนได้:</h4>
+                <p class="text-sm text-gray-600 dark:text-gray-400 italic">
+                    "วันนี้รู้สึกเหนื่อยจากการทำงาน แต่ก็ภูมิใจที่ส่งโปรเจคเสร็จแล้ว...
+                    สิ่งที่ขอบคุณวันนี้: 1) เพื่อนซื้อกาแฟให้ 2) ฟ้าสวยตอนเย็น 3) น้องแมวมาคลอเคลีย..."
+                </p>
+            </div>
+        </div>
+        
+        <!-- ปุ่ม toggle สำหรับมือถือ -->
+        <div class="mt-4 pt-4 border-t border-primary/20 text-center">
+            <button @click="journalTipsOpen = !journalTipsOpen" 
+                    class="text-primary hover:text-primary-dark text-sm font-medium flex items-center justify-center mx-auto">
+                <span x-text="journalTipsOpen ? 'ซ่อนคำแนะนำ' : 'แสดงคำแนะนำทั้งหมด'"></span>
+                <i class="fas fa-chevron-down ml-2 text-xs transition-transform duration-300" 
+                   :class="{'rotate-180': journalTipsOpen}"></i>
+            </button>
+        </div>
+    </div>
+</div>
+
+
+
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
                 <!-- Journal Form -->
                 <div class="lg:col-span-2 bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6">
@@ -475,18 +561,72 @@
                             </div>
                         </template>
                         
-                        <div class="space-y-4">
-                            <template x-for="(entry, index) in journalEntries.slice(0, 3)" :key="entry.id">
-                                <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
-                                    <div class="flex justify-between items-center mb-2">
-                                        <span class="font-semibold" x-text="formatDate(entry.date)"></span>
-                                        <span class="text-2xl" x-text="getMoodEmoji(entry.mood)"></span>
-                                    </div>
-                                    <p class="text-sm text-gray-600 dark:text-gray-300 truncate" x-text="entry.entry || 'ไม่มีข้อความ'"></p>
-                                </div>
-                            </template>
-                        </div>
+                                <div class="space-y-4">
+    <template x-for="(entry, index) in journalEntries.slice(0, 3)" :key="entry.id">
+        <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-4 relative group">
+            <!-- เมนูสามจุด -->
+            <div class="absolute top-3 right-3">
+                <button @click="toggleEntryMenu(entry.id)"
+                        class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 
+                               p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
+                        :id="'menu-btn-' + entry.id"
+                        aria-label="เมนูการจัดการบันทึก">
+                    <i class="fas fa-ellipsis-v"></i>
+                </button>
+                
+                <!-- Dropdown เมนู -->
+                <div x-show="activeEntryMenu === entry.id" 
+                     x-transition
+                     class="absolute right-0 top-full mt-1 bg-white dark:bg-gray-800 
+                            rounded-lg shadow-lg z-10 border border-gray-200 dark:border-gray-700
+                            min-w-[140px]"
+                     @click.outside="activeEntryMenu = null">
+                    
+                    <!-- ปุ่มลบ -->
+                    <button @click="deleteJournalEntry(entry.id)"
+                            class="w-full text-left px-4 py-3 text-red-600 dark:text-red-400 
+                                   hover:bg-red-50 dark:hover:bg-red-900/20 flex items-center gap-3 
+                                   rounded-t-lg">
+                        <i class="fas fa-trash-alt w-4 text-center"></i>
+                        <span class="text-sm font-medium">ลบบันทึก</span>
+                    </button>
+                    
+                    <!-- ปุ่มดูรายละเอียด (เพิ่ม option) -->
+                    <button @click="openEntryDetail(entry); activeEntryMenu = null"
+                            class="w-full text-left px-4 py-3 text-gray-700 dark:text-gray-300 
+                                   hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center gap-3 
+                                   rounded-b-lg border-t border-gray-100 dark:border-gray-700">
+                        <i class="fas fa-eye w-4 text-center"></i>
+                        <span class="text-sm font-medium">ดูรายละเอียด</span>
+                    </button>
+                </div>
+            </div>
+            
+                <!-- ข้อมูลบันทึก -->
+                <div class="pr-10"> <!-- เพิ่ม padding ขวาให้เมนูไม่ทับเนื้อหา -->
+                    <div class="flex justify-between items-start mb-2">
+                        <span class="font-semibold" x-text="formatDate(entry.date)"></span>
+                        <span class="text-2xl" x-text="getMoodEmoji(entry.mood)"></span>
                     </div>
+                    <p class="text-sm text-gray-600 dark:text-gray-300 line-clamp-2" 
+                    x-text="entry.entry || 'ไม่มีข้อความ'"></p>
+                    
+                    <!-- แสดงสิ่งขอบคุณถ้ามี -->
+                    <div x-show="entry.gratitude && entry.gratitude.length > 0" class="mt-2">
+                        <p class="text-xs text-gray-500 dark:text-gray-400">
+                            <i class="fas fa-heart mr-1"></i>
+                            <span x-text="entry.gratitude.length"></span> สิ่งที่ขอบคุณ
+                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </template>
+                    </div>
+
+
+
+
+                </div>
                     
                     <!-- Tree Progress -->
                     <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6">
@@ -1472,11 +1612,12 @@
                     </div>
                     
                     <!-- Question -->
-                    <h3 class="text-xl md:text-2xl font-bold text-center mb-8" x-text="currentQuiz.questions[currentQuestionIndex].text"></h3>
+                    <h3 class="text-xl md:text-2xl font-bold text-center mb-8" 
+    x-text="currentQuiz?.questions?.[currentQuestionIndex]?.text || 'เลือกคำตอบที่ตรงกับความรู้สึกของคุณที่สุด'"></h3>
                     
                     <!-- Options -->
                     <div class="space-y-4 mb-8">
-                        <template x-for="(option, index) in currentQuiz.questions[currentQuestionIndex].options" :key="index">
+                        <template x-for="(option, index) in (currentQuiz?.questions?.[currentQuestionIndex]?.options || [])" :key="index">
                             <button 
                                 @click="selectQuizAnswer(option.val)" 
                                 :class="{ 'ring-2 ring-primary bg-primary bg-opacity-10': quizAnswers[currentQuestionIndex] === option.val }" 
@@ -2169,7 +2310,87 @@
                 </div>
             </div>
 
-   
+            
+                <!-- Journal Detail Modal -->
+<div x-show="modalOpen === 'journalDetail'" x-transition class="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center p-4 z-50">
+    <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl max-w-md w-full max-h-[80vh] overflow-y-auto">
+        <div class="p-6">
+            <!-- Header -->
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-xl font-bold text-primary flex items-center">
+                    <i class="fas fa-book-open mr-3"></i>
+                    <span x-text="formatDate(currentJournalEntry?.date)"></span>
+                </h3>
+                <button @click="modalOpen = null" 
+                        class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+            
+            <!-- Content -->
+            <div class="space-y-6">
+                <!-- Mood -->
+                <div class="flex items-center gap-4 p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                    <span class="text-4xl" x-text="getMoodEmoji(currentJournalEntry?.mood)"></span>
+                    <div>
+                        <div class="font-bold text-gray-800 dark:text-white">
+                            <span x-text="getMoodLabel(currentJournalEntry?.mood)"></span>
+                        </div>
+                        <div class="text-sm text-gray-600 dark:text-gray-400">อารมณ์วันนั้น</div>
+                    </div>
+                </div>
+                
+                <!-- Journal Entry -->
+                <div x-show="currentJournalEntry?.entry">
+                    <h4 class="font-bold text-gray-700 dark:text-gray-300 mb-2">บันทึกความรุ้สึก</h4>
+                    <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
+                        <p class="text-gray-700 dark:text-gray-300 whitespace-pre-wrap" 
+                           x-text="currentJournalEntry?.entry"></p>
+                    </div>
+                </div>
+                
+                <!-- Gratitude -->
+                <div x-show="currentJournalEntry?.gratitude?.filter(g => g.trim()).length > 0">
+                    <h4 class="font-bold text-gray-700 dark:text-gray-300 mb-2">
+                        <i class="fas fa-heart text-red-400 mr-2"></i>สิ่งดีๆ ที่รู้สึกขอบคุณ
+                    </h4>
+                    <ul class="space-y-2">
+                        <template x-for="(item, idx) in currentJournalEntry?.gratitude" :key="idx">
+                            <li x-show="item.trim()" 
+                                class="flex items-start gap-2 bg-green-50 dark:bg-green-900/20 p-3 rounded-lg">
+                                <i class="fas fa-star text-yellow-500 mt-1 text-sm"></i>
+                                <span class="text-gray-700 dark:text-gray-300" x-text="item"></span>
+                            </li>
+                        </template>
+                    </ul>
+                </div>
+                
+                <!-- Daily Goal -->
+                <div x-show="currentJournalEntry?.dailyGoal">
+                    <h4 class="font-bold text-gray-700 dark:text-gray-300 mb-2">
+                        <i class="fas fa-bullseye text-blue-400 mr-2"></i>เป้าหมายวันนั้น
+                    </h4>
+                    <div class="bg-blue-50 dark:bg-blue-900/20 p-3 rounded-lg">
+                        <p class="text-gray-700 dark:text-gray-300" x-text="currentJournalEntry?.dailyGoal"></p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Close Button -->
+            <button @click="modalOpen = null" 
+                    class="w-full mt-6 bg-primary hover:bg-primary-dark text-white font-medium py-3 px-6 rounded-lg transition-colors">
+                ปิด
+            </button>
+                </div>
+            </div>
+        </div>
+
+
+
+
+
+
+
 
     <!-- Custom JavaScript -->
     <script src="js/app.js"></script>
