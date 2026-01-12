@@ -1,575 +1,504 @@
 <!DOCTYPE html>
 <html lang="th" x-data="breathingApp()" x-init="init()" :class="{ 'dark': darkMode }">
-<head>
+  <head>
+    <link rel="icon" type="image/png" href="image/favicon.png">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Breathing Buddy - Cloudy-Puk-Jai</title>
-    
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    
     <!-- Alpine.js -->
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-    
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Anuphan:wght@300;400;500;600;700&family=Noto+Sans+Thai:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    
     <!-- Design System -->
     <link rel="stylesheet" href="./css/design-system.css">
-    
     <!-- Tools Specific CSS -->
     <link rel="stylesheet" href="./css/tools.css">
-    
     <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: {
-                        primary: {
-                            50: '#f0fdf8',
-                            100: '#dcfcec',
-                            200: '#bbf7d6',
-                            300: '#86efb3',
-                            400: '#4ade8c',
-                            500: '#059467', // primary main
-                            600: '#047a56',
-                            700: '#036045',
-                            800: '#024d37',
-                            900: '#023a29',
-                        },
-                        accent: {
-                            50: '#f0fdfa',
-                            100: '#ccfbef',
-                            200: '#99f6e4',
-                            300: '#5eead4',
-                            400: '#2dd4bf',
-                            500: '#14b8a5', // accent main
-                            600: '#0d9488',
-                            700: '#0f766e',
-                            800: '#115e59',
-                            900: '#134e4a',
-                        },
-                        secondary: {
-                            50: '#f9fafb',
-                            100: '#f3f4f6',
-                            200: '#e5e7eb',
-                            300: '#d1d5db',
-                            400: '#9ca3af',
-                            500: '#6b7280',
-                            600: '#4b5563',
-                            700: '#374151',
-                            800: '#1f2937',
-                            900: '#111827',
-                        },
-                        success: '#10b981',
-                        warning: '#f59e0b',
-                        info: '#3b82f6',
-                        error: '#ef4444',
-                    },
-                    fontFamily: {
-                        'sans': ['Anuphan', 'Noto Sans Thai', 'sans-serif'],
-                    },
-                    animation: {
-                        'breathe-in': 'breatheIn 4s cubic-bezier(0.4, 0, 0.2, 1) infinite',
-                        'breathe-hold': 'breatheHold 7s ease-in-out infinite',
-                        'breathe-out': 'breatheOut 8s cubic-bezier(0.4, 0, 0.2, 1) infinite',
-                        'pulse-glow': 'pulseGlow 2s ease-in-out infinite',
-                        'notification-slide': 'notificationSlide 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55)',
-                        'slide-down': 'slideDown 0.3s ease-out',
-                    },
-                    keyframes: {
-                        breatheIn: {
-                            '0%': { transform: 'scale(0.95)', opacity: '0.9' },
-                            '50%': { transform: 'scale(1.05)', opacity: '1' },
-                            '100%': { transform: 'scale(0.95)', opacity: '0.9' }
-                        },
-                        breatheHold: {
-                            '0%, 100%': { transform: 'scale(1.03)', filter: 'brightness(1.05)' },
-                            '50%': { transform: 'scale(1)', filter: 'brightness(0.95)' }
-                        },
-                        breatheOut: {
-                            '0%': { transform: 'scale(1.05)', opacity: '1' },
-                            '100%': { transform: 'scale(0.95)', opacity: '0.9' }
-                        },
-                        pulseGlow: {
-                            '0%, 100%': { boxShadow: '0 0 15px rgba(5, 148, 103, 0.2)' },
-                            '50%': { boxShadow: '0 0 30px rgba(5, 148, 103, 0.3)' }
-                        },
-                        notificationSlide: {
-                            '0%': { transform: 'translateX(100%) scale(0.8)', opacity: '0' },
-                            '100%': { transform: 'translateX(0) scale(1)', opacity: '1' }
-                        },
-                        slideDown: {
-                            '0%': { transform: 'translateY(-8px)', opacity: '0' },
-                            '100%': { transform: 'translateY(0)', opacity: '1' }
-                        }
-                    }
+      tailwind.config = {
+        darkMode: 'class',
+        theme: {
+          extend: {
+            colors: {
+              primary: {
+                50: '#f0fdf8',
+                100: '#dcfcec',
+                200: '#bbf7d6',
+                300: '#86efb3',
+                400: '#4ade8c',
+                500: '#059467', // primary main
+                600: '#047a56',
+                700: '#036045',
+                800: '#024d37',
+                900: '#023a29',
+              },
+              accent: {
+                50: '#f0fdfa',
+                100: '#ccfbef',
+                200: '#99f6e4',
+                300: '#5eead4',
+                400: '#2dd4bf',
+                500: '#14b8a5', // accent main
+                600: '#0d9488',
+                700: '#0f766e',
+                800: '#115e59',
+                900: '#134e4a',
+              },
+              secondary: {
+                50: '#f9fafb',
+                100: '#f3f4f6',
+                200: '#e5e7eb',
+                300: '#d1d5db',
+                400: '#9ca3af',
+                500: '#6b7280',
+                600: '#4b5563',
+                700: '#374151',
+                800: '#1f2937',
+                900: '#111827',
+              },
+              success: '#10b981',
+              warning: '#f59e0b',
+              info: '#3b82f6',
+              error: '#ef4444',
+            },
+            fontFamily: {
+              'sans': ['Anuphan', 'Noto Sans Thai', 'sans-serif'],
+            },
+            animation: {
+              'breathe-in': 'breatheIn 4s cubic-bezier(0.4, 0, 0.2, 1) infinite',
+              'breathe-hold': 'breatheHold 7s ease-in-out infinite',
+              'breathe-out': 'breatheOut 8s cubic-bezier(0.4, 0, 0.2, 1) infinite',
+              'pulse-glow': 'pulseGlow 2s ease-in-out infinite',
+              'notification-slide': 'notificationSlide 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55)',
+              'slide-down': 'slideDown 0.3s ease-out',
+            },
+            keyframes: {
+              breatheIn: {
+                '0%': {
+                  transform: 'scale(0.95)',
+                  opacity: '0.9'
+                },
+                '50%': {
+                  transform: 'scale(1.05)',
+                  opacity: '1'
+                },
+                '100%': {
+                  transform: 'scale(0.95)',
+                  opacity: '0.9'
                 }
+              },
+              breatheHold: {
+                '0%, 100%': {
+                  transform: 'scale(1.03)',
+                  filter: 'brightness(1.05)'
+                },
+                '50%': {
+                  transform: 'scale(1)',
+                  filter: 'brightness(0.95)'
+                }
+              },
+              breatheOut: {
+                '0%': {
+                  transform: 'scale(1.05)',
+                  opacity: '1'
+                },
+                '100%': {
+                  transform: 'scale(0.95)',
+                  opacity: '0.9'
+                }
+              },
+              pulseGlow: {
+                '0%, 100%': {
+                  boxShadow: '0 0 15px rgba(5, 148, 103, 0.2)'
+                },
+                '50%': {
+                  boxShadow: '0 0 30px rgba(5, 148, 103, 0.3)'
+                }
+              },
+              notificationSlide: {
+                '0%': {
+                  transform: 'translateX(100%) scale(0.8)',
+                  opacity: '0'
+                },
+                '100%': {
+                  transform: 'translateX(0) scale(1)',
+                  opacity: '1'
+                }
+              },
+              slideDown: {
+                '0%': {
+                  transform: 'translateY(-8px)',
+                  opacity: '0'
+                },
+                '100%': {
+                  transform: 'translateY(0)',
+                  opacity: '1'
+                }
+              }
             }
+          }
         }
+      }
     </script>
-</head>
-<body class="bg-gradient-to-br from-gray-100 via-gray-50 to-gray-200 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 text-gray-800 dark:text-gray-200 min-h-screen transition-colors duration-300">
-    
+  </head>
+  <body class="bg-gradient-to-br from-gray-100 via-gray-50 to-gray-200 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 text-gray-800 dark:text-gray-200 min-h-screen transition-colors duration-300">
     <!-- Header -->
     <header class="sticky top-0 z-50 glass-effect shadow-md border-b border-gray-200/50 dark:border-gray-700/50">
-        <div class="container mx-auto px-4 py-3">
-            <div class="flex items-center justify-between">
-                <!-- Back Button -->
-                <a href="index.html" class="btn-secondary group">
-                    <i class="fas fa-arrow-left mr-2 group-hover:translate-x-1 transition-transform"></i>
-                    กลับหน้าหลัก
-                </a>
-                
-                <!-- Logo -->
-                <div class="flex items-center space-x-3">
-                    <div class="text-2xl text-primary-600 dark:text-primary-400 animate-pulse-slow">🌸
-</div>
-                    <h1 class="text-xl font-bold text-primary-700 dark:text-primary-300">ฝึกหายใจลึกด้วยเทคนิค 4-7-8</h1>
-                </div>
-                
-                <!-- Theme Toggle -->
-                <button @click="toggleDarkMode()" 
-                        class="btn-icon group relative"
-                        :title="darkMode ? 'สลับเป็นโหมดสว่าง' : 'สลับเป็นโหมดมืด'">
-                    <i :class="darkMode ? 'fas fa-sun text-amber-500' : 'fas fa-moon text-indigo-500'" 
-                       class="text-lg group-hover:rotate-12 transition-transform"></i>
-                    <span class="absolute -bottom-1 -right-1 w-2 h-2 bg-primary-500 rounded-full animate-pulse opacity-70"></span>
-                </button>
-            </div>
+      <div class="container mx-auto px-4 py-3">
+        <div class="flex items-center justify-between">
+          <!-- Back Button -->
+          <a href="index.html" class="btn-secondary group">
+            <i class="fas fa-arrow-left mr-2 group-hover:translate-x-1 transition-transform"></i> กลับหน้าหลัก </a>
+          <!-- Logo -->
+          <div class="flex items-center space-x-3">
+            <div class="text-2xl text-primary-600 dark:text-primary-400 animate-pulse-slow">🌸 </div>
+            <h1 class="text-xl font-bold text-primary-700 dark:text-primary-300">ฝึกหายใจลึกด้วยเทคนิค 4-7-8</h1>
+          </div>
+          <!-- Theme Toggle -->
+          <button @click="toggleDarkMode()" class="btn-icon group relative" :title="darkMode ? 'สลับเป็นโหมดสว่าง' : 'สลับเป็นโหมดมืด'">
+            <i :class="darkMode ? 'fas fa-sun text-amber-500' : 'fas fa-moon text-indigo-500'" class="text-lg group-hover:rotate-12 transition-transform"></i>
+            <span class="absolute -bottom-1 -right-1 w-2 h-2 bg-primary-500 rounded-full animate-pulse opacity-70"></span>
+          </button>
         </div>
+      </div>
     </header>
-
     <!-- Main Content -->
     <main class="container mx-auto px-4 py-8">
-        <div class="max-w-5xl mx-auto">
-            
-
-            
-            <!-- Breathing Circle Section -->
-            <div class="flex flex-col items-center mb-16">
-                <!-- Breathing Visualization -->
-                <div class="relative mb-10">
-                    <!-- Outer Glow -->
-                    <div class="absolute inset-0 -m-4 rounded-full bg-gradient-to-r from-primary-500/20 to-accent-500/20 blur-xl animate-pulse"></div>
-                    
-                    <!-- Main Circle -->
-                    <div class="breathing-circle shadow-2xl border-4 border-gray-300/50 dark:border-gray-600/50"
-                         :class="{
+      <div class="max-w-5xl mx-auto">
+        <!-- Breathing Circle Section -->
+        <div class="flex flex-col items-center mb-16">
+          <!-- Breathing Visualization -->
+          <div class="relative mb-10">
+            <!-- Outer Glow -->
+            <div class="absolute inset-0 -m-4 rounded-full bg-gradient-to-r from-primary-500/20 to-accent-500/20 blur-xl animate-pulse"></div>
+            <!-- Main Circle -->
+            <div class="breathing-circle shadow-2xl border-4 border-gray-300/50 dark:border-gray-600/50" :class="{
                             'animate-breathe-in bg-gradient-to-br from-primary-600 to-primary-700': currentState === 'inhale' && isRunning,
                             'animate-breathe-hold bg-gradient-to-br from-accent-500 to-accent-600': currentState === 'hold' && isRunning,
                             'animate-breathe-out bg-gradient-to-br from-gray-600 to-gray-700': currentState === 'exhale' && isRunning,
                             'bg-gradient-to-br from-primary-500 to-primary-700': !isRunning
                          }">
-                        <div class="text-center relative z-10">
-                            <!-- Timer Display -->
-                            <div class="text-7xl font-black mb-2"
-                                 :class="{
+              <div class="text-center relative z-10">
+                <!-- Timer Display -->
+                <div class="text-7xl font-black mb-2" :class="{
                                     'text-gray-50': currentState === 'inhale',
                                     'text-gray-900 dark:text-gray-100': currentState === 'hold',
                                     'text-gray-100': currentState === 'exhale',
                                     'text-gray-100': !isRunning
-                                 }"
-                                 x-text="currentTime"></div>
-                            
-                            <!-- State Label -->
-                            <div class="text-xl font-semibold tracking-wider flex items-center justify-center gap-2"
-                                :class="{
+                                 }" x-text="currentTime"></div>
+                <!-- State Label -->
+                <div class="text-xl font-semibold tracking-wider flex items-center justify-center gap-2" :class="{
                                     'text-gray-200': currentState === 'inhale',
                                     'text-gray-800 dark:text-gray-300': currentState === 'hold',
                                     'text-gray-300': currentState === 'exhale',
                                     'text-gray-200': !isRunning
                                 }">
-                                <span x-text="currentStateText"></span>
-                                <span x-show="currentState === 'inhale'" class="text-3xl">🌬️</span>
-                                <span x-show="currentState === 'hold'" class="text-4xl">✨</span>
-                                <span x-show="currentState === 'exhale'" class="text-3xl">💨</span>
-                            </div>
-                            
-                            <!-- Progress Indicator -->
-                            <div class="absolute inset-0 flex items-center justify-center">
-                                
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- State Indicators -->
-                    <div class="flex justify-between mt-8 px-4">
-                        <div class="flex flex-col items-center">
-                            <div class="w-4 h-4 rounded-full bg-primary-600 mb-2 animate-pulse"
-                                 :class="{ 'ring-2 ring-primary-400 ring-offset-2': currentState === 'inhale' }"></div>
-                            <span class="text-sm font-medium text-gray-700 dark:text-gray-300">หายใจเข้า</span>
-                        </div>
-                        <div class="flex flex-col items-center">
-                            <div class="w-4 h-4 rounded-full bg-accent-500 mb-2 animate-pulse"
-                                 :class="{ 'ring-2 ring-accent-400 ring-offset-2': currentState === 'hold' }"></div>
-                            <span class="text-sm font-medium text-gray-700 dark:text-gray-300">กลั้นหายใจ</span>
-                        </div>
-                        <div class="flex flex-col items-center">
-                            <div class="w-4 h-4 rounded-full bg-gray-600 mb-2 animate-pulse"
-                                 :class="{ 'ring-2 ring-gray-500 ring-offset-2': currentState === 'exhale' }"></div>
-                            <span class="text-sm font-medium text-gray-700 dark:text-gray-300">หายใจออก</span>
-                        </div>
-                    </div>
+                  <span x-text="currentStateText"></span>
+                  <span x-show="currentState === 'inhale'" class="text-3xl">🌬️</span>
+                  <span x-show="currentState === 'hold'" class="text-4xl">✨</span>
+                  <span x-show="currentState === 'exhale'" class="text-3xl">💨</span>
                 </div>
-                
-<!-- Controls Section -->
-<div class="w-full max-w-md space-y-8">
-    <!-- Control Buttons -->
-    <div class="flex flex-col sm:flex-row gap-4">
-        <button @click="startBreathing()" 
-                x-show="!isRunning"
-                class="btn-primary group flex-1">
-            <span class="relative z-10 flex items-center justify-center gap-3">
-                <i class="fas fa-play text-lg group-hover:scale-110 transition-transform"></i>
-                <span class="text-lg font-semibold">เริ่มฝึกหายใจ</span>
-            </span>
-        </button>
-        
-        <button @click="pauseBreathing()" 
-                x-show="isRunning"
-                class="btn-secondary group flex-1 bg-accent-500 hover:bg-accent-600 text-gray-900">
-            <span class="relative z-10 flex items-center justify-center gap-3">
-                <i class="fas fa-pause text-lg group-hover:scale-110 transition-transform"></i>
-                <span class="text-lg font-semibold">หยุดพัก</span>
-            </span>
-        </button>
-        
-        <button @click="resetBreathing()" 
-                class="btn-outline group flex-1">
-            <span class="relative z-10 flex items-center justify-center gap-3">
-                <i class="fas fa-redo text-lg group-hover:rotate-180 transition-transform"></i>
-                <span class="text-lg font-semibold">เริ่มใหม่</span>
-            </span>
-        </button>
-    </div>
-    
-    <!-- Stats Cards -->
-    <div class="grid grid-cols-3 gap-4">
-        <div class="stat-card group hover:border-primary-500/30">
-            <div class="stat-number text-primary-600 dark:text-primary-400" 
-                x-text="cycleCount"></div>
-            <div class="stat-label">รอบที่ทำ</div>
-        </div>
-        <div class="stat-card group hover:border-accent-500/30">
-            <div class="stat-number text-accent-600 dark:text-accent-400" 
-                x-text="totalTime"></div>
-            <div class="stat-label">เวลาทั้งหมด</div>
-        </div>
-        <div class="stat-card group hover:border-amber-500/30">
-            <div class="stat-number text-amber-600 dark:text-amber-400" 
-                x-text="dailyProgress"></div>
-            <div class="stat-label">รอบวันนี้</div>
-        </div>
-    </div>
-</div>
-            
-            <!-- Technique Cards -->
-<div class="mb-8 mt-4"> <!-- ลบ grid จากที่นี่ -->
-    <h2 class="text-2xl font-bold mb-4 text-gray-800 dark:text-gray-100 flex items-center gap-3"> <!-- mb-8 → mb-4 -->
-        <div class="p-3 rounded-xl bg-primary-500/10 dark:bg-primary-500/20 text-primary-600 dark:text-primary-400">
-            <i class="fas fa-graduation-cap"></i>
-        </div>
-        <span>ขั้นตอนการฝึก</span>
-    </h2>
-    
-    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3"> <!-- ย้าย grid มาอยู่ที่นี่ -->
-
-                    <!-- Inhale Card -->
-                    <div class="instruction-card group hover:border-primary-500/50" @click="showInstruction('inhale')">
-                        <div class="instruction-number text-primary-600 dark:text-primary-400">4</div>
-                        <h3 class="instruction-title text-gray-800 dark:text-gray-100">หายใจเข้า</h3>
-                        <p class="instruction-text text-gray-600 dark:text-gray-400">หายใจเข้าทางจมูกช้าๆ นับในใจ 1-4</p>
-                        <div class="mt-4 pt-4 border-t border-gray-200/50 dark:border-gray-700/50">
-                            <div class="text-sm text-primary-600 dark:text-primary-400 font-medium flex items-center justify-between">
-                                <span>คลิกดูรายละเอียด</span>
-                                <i class="fas fa-chevron-right group-hover:translate-x-2 transition-transform"></i>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Hold Card -->
-                    <div class="instruction-card group hover:border-accent-500/50" @click="showInstruction('hold')">
-                        <div class="instruction-number text-accent-600 dark:text-accent-400">7</div>
-                        <h3 class="instruction-title text-gray-800 dark:text-gray-100">กลั้นหายใจ</h3>
-                        <p class="instruction-text text-gray-600 dark:text-gray-400">กลั้นหายใจไว้ นับในใจ 1-7 </p>
-                        <div class="mt-4 pt-4 border-t border-gray-200/50 dark:border-gray-700/50">
-                            <div class="text-sm text-accent-600 dark:text-accent-400 font-medium flex items-center justify-between">
-                                <span>คลิกดูรายละเอียด</span>
-                                <i class="fas fa-chevron-right group-hover:translate-x-2 transition-transform"></i>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Exhale Card -->
-                    <div class="instruction-card group hover:border-gray-500/50" @click="showInstruction('exhale')">
-                        <div class="instruction-number text-gray-600 dark:text-gray-400">8</div>
-                        <h3 class="instruction-title text-gray-800 dark:text-gray-100">หายใจออก</h3>
-                        <p class="instruction-text text-gray-600 dark:text-gray-400">หายใจออกทางปากช้าๆ นับในใจ 1-8</p>
-                        <div class="mt-4 pt-4 border-t border-gray-200/50 dark:border-gray-700/50">
-                            <div class="text-sm text-gray-600 dark:text-gray-400 font-medium flex items-center justify-between">
-                                <span>คลิกดูรายละเอียด</span>
-                                <i class="fas fa-chevron-right group-hover:translate-x-2 transition-transform"></i>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-
-
-
-                
+                <!-- Progress Indicator -->
+                <div class="absolute inset-0 flex items-center justify-center"></div>
+              </div>
             </div>
-            
-
-
-
-
-            
-            <!-- Guidance Card (Collapsible) -->
-            <div class="mb-16 w-full">
-                <div class="guidance-card overflow-hidden">
-                    <!-- Header -->
-                    <button @click="guidanceExpanded = !guidanceExpanded"
-                            class="w-full flex items-center justify-between p-6 text-left hover:bg-gray-50/50 dark:hover:bg-gray-800/50 transition-colors"
-                            :class="{ 'border-b border-gray-200/50 dark:border-gray-700/50': guidanceExpanded }">
-                        <div class="flex items-center gap-4 w-full">
-                            <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-primary-500 to-accent-500 flex items-center justify-center text-gray-50">
-                                <i class="fas fa-book-open text-xl"></i>
-                            </div>
-                            <div>
-                                <h2 class="text-2xl font-bold text-gray-800 dark:text-gray-100">คู่มือการฝึกหายใจลึกด้วยเทคนิค 4-7-8</h2>
-                                <p class="text-gray-600 dark:text-gray-400">ทำไมต้องฝึก? ได้ประโยชน์อะไร? วิทยาศาสตร์บอกอะไร?</p>
-                            </div>
-                        </div>
-                        <div class="text-primary-600 dark:text-primary-400">
-                            <i :class="guidanceExpanded ? 'fas fa-chevron-up' : 'fas fa-chevron-down'" 
-                               class="text-xl transition-transform duration-300"></i>
-                        </div>
-                    </button>
-                    
-                    <!-- Content -->
-                    <div x-show="guidanceExpanded"
-                        x-transition:enter="transition ease-out duration-300"
-                        x-transition:enter-start="opacity-0 -translate-y-4"
-                        x-transition:enter-end="opacity-100 translate-y-0"
-                        x-transition:leave="transition ease-in duration-200"
-                        x-transition:leave-start="opacity-100 translate-y-0"
-                        x-transition:leave-end="opacity-0 -translate-y-4"
-                        class="p-6 space-y-8">
-                        
-
-
-                        <!-- Why Section -->
-                        <div>
-                            <h3 class="text-xl font-bold mb-4 text-primary-600 dark:text-primary-400 flex items-center gap-2">
-                                <i class="fas fa-question-circle"></i>
-                                ทำไมต้องฝึกหายใจลึก?
-                            </h3>
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <div class="benefit-item">
-                                    <div class="benefit-icon bg-primary-500/10 text-primary-600 dark:text-primary-400">
-                                        <i class="fas fa-heartbeat"></i>
-                                    </div>
-                                    <div>
-                                        <h4 class="benefit-title">กระตุ้นระบบประสาทผ่อนคลาย</h4>
-                                        <p class="benefit-text">ช่วยลดความดันโลหิตและอัตราการเต้นของหัวใจ</p>
-                                        <span class="reference-tag">Frontiers in Psychology, 2017</span>
-                                    </div>
-                                </div>
-                                
-                                <div class="benefit-item">
-                                    <div class="benefit-icon bg-primary-500/10 text-primary-600 dark:text-primary-400">
-                                        <i class="fas fa-brain"></i>
-                                    </div>
-                                    <div>
-                                        <h4 class="benefit-title">เพิ่มออกซิเจนสู่สมอง</h4>
-                                        <p class="benefit-text">ช่วยให้สมองทำงานได้ดีขึ้น เพิ่มสมาธิและความจำ</p>
-                                        <span class="reference-tag">Journal of Neurophysiology, 2018</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <!-- Scientific Benefits -->
-                        <div>
-                            <h3 class="text-xl font-bold mb-4 text-accent-600 dark:text-accent-400 flex items-center gap-2">
-                                <i class="fas fa-flask"></i>
-                                ประโยชน์ทางวิทยาศาสตร์
-                            </h3>
-                            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                                <div class="stat-benefit">
-                                    <div class="stat-number text-primary-600 dark:text-primary-400">67%</div>
-                                    <div class="stat-label">ลดความเครียด</div>
-                                    <div class="stat-reference">Psychosomatic Medicine, 2019</div>
-                                </div>
-                                
-                                <div class="stat-benefit">
-                                    <div class="stat-number text-accent-600 dark:text-accent-400">45%</div>
-                                    <div class="stat-label">นอนหลับดีขึ้น</div>
-                                    <div class="stat-reference">Journal of Clinical Sleep Medicine, 2020</div>
-                                </div>
-                                
-                                <div class="stat-benefit">
-                                    <div class="stat-number text-primary-600 dark:text-primary-400">15%</div>
-                                    <div class="stat-label">ลดความดันโลหิต</div>
-                                    <div class="stat-reference">Hypertension Journal, 2021</div>
-                                </div>
-                                
-                                <div class="stat-benefit">
-                                    <div class="stat-number text-accent-600 dark:text-accent-400">85%</div>
-                                    <div class="stat-label">เพิ่มสมาธิ</div>
-                                    <div class="stat-reference">Brain, Behavior, and Immunity, 2022</div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <!-- Tips Section -->
-                        <div>
-                            <h3 class="text-xl font-bold mb-4 text-amber-600 dark:text-amber-400 flex items-center gap-2">
-                                <i class="fas fa-lightbulb"></i>
-                                เคล็ดลับสำหรับมือใหม่
-                            </h3>
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <div class="tip-item">
-                                    <div class="tip-icon bg-amber-500/10 text-amber-600 dark:text-amber-400">
-                                        <i class="fas fa-clock"></i>
-                                    </div>
-                                    <div>
-                                        <h4 class="tip-title">เลือกเวลาที่เหมาะสม</h4>
-                                        <p class="tip-text">ฝึกตอนเช้าหรือก่อนนอน ร่างกายพร้อมผ่อนคลายที่สุด</p>
-                                    </div>
-                                </div>
-                                
-                                <div class="tip-item">
-                                    <div class="tip-icon bg-amber-500/10 text-amber-600 dark:text-amber-400">
-                                        <i class="fas fa-spa"></i>
-                                    </div>
-                                    <div>
-                                        <h4 class="tip-title">สร้างบรรยากาศ</h4>
-                                        <p class="tip-text">ไฟสลัวกับเสียงธรรมชาติช่วยเพิ่มสมาธิและประสิทธิภาพ</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+            <!-- State Indicators -->
+            <div class="flex justify-between mt-8 px-4">
+              <div class="flex flex-col items-center">
+                <div class="w-4 h-4 rounded-full bg-primary-600 mb-2 animate-pulse" :class="{ 'ring-2 ring-primary-400 ring-offset-2': currentState === 'inhale' }"></div>
+                <span class="text-sm font-medium text-gray-700 dark:text-gray-300">หายใจเข้า</span>
+              </div>
+              <div class="flex flex-col items-center">
+                <div class="w-4 h-4 rounded-full bg-accent-500 mb-2 animate-pulse" :class="{ 'ring-2 ring-accent-400 ring-offset-2': currentState === 'hold' }"></div>
+                <span class="text-sm font-medium text-gray-700 dark:text-gray-300">กลั้นหายใจ</span>
+              </div>
+              <div class="flex flex-col items-center">
+                <div class="w-4 h-4 rounded-full bg-gray-600 mb-2 animate-pulse" :class="{ 'ring-2 ring-gray-500 ring-offset-2': currentState === 'exhale' }"></div>
+                <span class="text-sm font-medium text-gray-700 dark:text-gray-300">หายใจออก</span>
+              </div>
             </div>
-            
-            <!-- Progress Tracker -->
-            <div class="glass-effect rounded-2xl p-6 mb-12 border border-gray-200/50 dark:border-gray-700/50 w-full">
-                <h2 class="text-2xl font-bold mb-6 text-gray-800 dark:text-gray-100 flex items-center gap-3">
-                    <div class="p-2.5 rounded-lg bg-gradient-to-r from-primary-500 to-accent-500 text-gray-50">
-                        <i class="fas fa-chart-line"></i>
-                    </div>
-                    <span>ความคืบหน้าของคุณ</span>
-                </h2>
-                
-                <div class="space-y-6">
-                    <!-- Daily Goal -->
-                    <div>
-                        <div class="flex justify-between mb-2.5">
-                            <span class="font-medium text-gray-700 dark:text-gray-300">เป้าหมายรายวัน</span>
-                            <span class="font-bold text-primary-600 dark:text-primary-400" 
-                                  x-text="`${dailyProgress}/5 รอบ`"></span>
-                        </div>
-                        <div class="progress-bar bg-gray-200/50 dark:bg-gray-700/50">
-                            <div class="progress-fill bg-gradient-to-r from-primary-500 to-accent-500"
-                                 :style="`width: ${Math.min((dailyProgress/5)*100, 100)}%`"></div>
-                        </div>
-                    </div>
-                    
-                    <!-- Stats -->
-                    <div class="grid grid-cols-2 gap-4">
-                        <div class="text-center p-4 rounded-xl bg-primary-500/5 dark:bg-primary-500/10">
-                            <div class="text-2xl font-bold text-primary-600 dark:text-primary-400" 
-                                 x-text="sessionCount"></div>
-                            <div class="text-sm text-gray-600 dark:text-gray-400">ครั้งที่ฝึก</div>
-                        </div>
-                        <div class="text-center p-4 rounded-xl bg-accent-500/5 dark:bg-accent-500/10">
-                            <div class="text-2xl font-bold text-accent-600 dark:text-accent-400" 
-                                 x-text="totalMinutes"></div>
-                            <div class="text-sm text-gray-600 dark:text-gray-400">นาทีทั้งหมด</div>
-                        </div>
-                    </div>
-                </div>
+          </div>
+          <!-- Controls Section -->
+          <div class="w-full max-w-md space-y-8">
+            <!-- Control Buttons -->
+            <div class="flex flex-col sm:flex-row gap-4">
+              <button @click="startBreathing()" x-show="!isRunning" class="btn-primary group flex-1">
+                <span class="relative z-10 flex items-center justify-center gap-3">
+                  <i class="fas fa-play text-lg group-hover:scale-110 transition-transform"></i>
+                  <span class="text-lg font-semibold">เริ่มฝึกหายใจ</span>
+                </span>
+              </button>
+              <button @click="pauseBreathing()" x-show="isRunning" class="btn-secondary group flex-1 bg-accent-500 hover:bg-accent-600 text-gray-900">
+                <span class="relative z-10 flex items-center justify-center gap-3">
+                  <i class="fas fa-pause text-lg group-hover:scale-110 transition-transform"></i>
+                  <span class="text-lg font-semibold">หยุดพัก</span>
+                </span>
+              </button>
+              <button @click="resetBreathing()" class="btn-outline group flex-1">
+                <span class="relative z-10 flex items-center justify-center gap-3">
+                  <i class="fas fa-redo text-lg group-hover:rotate-180 transition-transform"></i>
+                  <span class="text-lg font-semibold">เริ่มใหม่</span>
+                </span>
+              </button>
             </div>
+            <!-- Stats Cards -->
+            <div class="grid grid-cols-3 gap-4">
+              <div class="stat-card group hover:border-primary-500/30">
+                <div class="stat-number text-primary-600 dark:text-primary-400" x-text="cycleCount"></div>
+                <div class="stat-label">รอบที่ทำ</div>
+              </div>
+              <div class="stat-card group hover:border-accent-500/30">
+                <div class="stat-number text-accent-600 dark:text-accent-400" x-text="totalTime"></div>
+                <div class="stat-label">เวลาทั้งหมด</div>
+              </div>
+              <div class="stat-card group hover:border-amber-500/30">
+                <div class="stat-number text-amber-600 dark:text-amber-400" x-text="dailyProgress"></div>
+                <div class="stat-label">รอบวันนี้</div>
+              </div>
+            </div>
+          </div>
+          <!-- Technique Cards -->
+          <div class="mb-8 mt-4">
+            <!-- ลบ grid จากที่นี่ -->
+            <h2 class="text-2xl font-bold mb-4 text-gray-800 dark:text-gray-100 flex items-center gap-3">
+              <!-- mb-8 → mb-4 -->
+              <div class="p-3 rounded-xl bg-primary-500/10 dark:bg-primary-500/20 text-primary-600 dark:text-primary-400">
+                <i class="fas fa-graduation-cap"></i>
+              </div>
+              <span>ขั้นตอนการฝึก</span>
+            </h2>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              <!-- ย้าย grid มาอยู่ที่นี่ -->
+              <!-- Inhale Card -->
+              <div class="instruction-card group hover:border-primary-500/50" @click="showInstruction('inhale')">
+                <div class="instruction-number text-primary-600 dark:text-primary-400">4</div>
+                <h3 class="instruction-title text-gray-800 dark:text-gray-100">หายใจเข้า</h3>
+                <p class="instruction-text text-gray-600 dark:text-gray-400">หายใจเข้าทางจมูกช้าๆ นับในใจ 1-4</p>
+                <div class="mt-4 pt-4 border-t border-gray-200/50 dark:border-gray-700/50">
+                  <div class="text-sm text-primary-600 dark:text-primary-400 font-medium flex items-center justify-between">
+                    <span>คลิกดูรายละเอียด</span>
+                    <i class="fas fa-chevron-right group-hover:translate-x-2 transition-transform"></i>
+                  </div>
+                </div>
+              </div>
+              <!-- Hold Card -->
+              <div class="instruction-card group hover:border-accent-500/50" @click="showInstruction('hold')">
+                <div class="instruction-number text-accent-600 dark:text-accent-400">7</div>
+                <h3 class="instruction-title text-gray-800 dark:text-gray-100">กลั้นหายใจ</h3>
+                <p class="instruction-text text-gray-600 dark:text-gray-400">กลั้นหายใจไว้ นับในใจ 1-7 </p>
+                <div class="mt-4 pt-4 border-t border-gray-200/50 dark:border-gray-700/50">
+                  <div class="text-sm text-accent-600 dark:text-accent-400 font-medium flex items-center justify-between">
+                    <span>คลิกดูรายละเอียด</span>
+                    <i class="fas fa-chevron-right group-hover:translate-x-2 transition-transform"></i>
+                  </div>
+                </div>
+              </div>
+              <!-- Exhale Card -->
+              <div class="instruction-card group hover:border-gray-500/50" @click="showInstruction('exhale')">
+                <div class="instruction-number text-gray-600 dark:text-gray-400">8</div>
+                <h3 class="instruction-title text-gray-800 dark:text-gray-100">หายใจออก</h3>
+                <p class="instruction-text text-gray-600 dark:text-gray-400">หายใจออกทางปากช้าๆ นับในใจ 1-8</p>
+                <div class="mt-4 pt-4 border-t border-gray-200/50 dark:border-gray-700/50">
+                  <div class="text-sm text-gray-600 dark:text-gray-400 font-medium flex items-center justify-between">
+                    <span>คลิกดูรายละเอียด</span>
+                    <i class="fas fa-chevron-right group-hover:translate-x-2 transition-transform"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Guidance Card (Collapsible) -->
+          <div class="mb-16 w-full">
+            <div class="guidance-card overflow-hidden">
+              <!-- Header -->
+              <button @click="guidanceExpanded = !guidanceExpanded" class="w-full flex items-center justify-between p-6 text-left hover:bg-gray-50/50 dark:hover:bg-gray-800/50 transition-colors" :class="{ 'border-b border-gray-200/50 dark:border-gray-700/50': guidanceExpanded }">
+                <div class="flex items-center gap-4 w-full">
+                  <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-primary-500 to-accent-500 flex items-center justify-center text-gray-50">
+                    <i class="fas fa-book-open text-xl"></i>
+                  </div>
+                  <div>
+                    <h2 class="text-2xl font-bold text-gray-800 dark:text-gray-100">คู่มือการฝึกหายใจลึกด้วยเทคนิค 4-7-8</h2>
+                    <p class="text-gray-600 dark:text-gray-400">ทำไมต้องฝึก? ได้ประโยชน์อะไร? วิทยาศาสตร์บอกอะไร?</p>
+                  </div>
+                </div>
+                <div class="text-primary-600 dark:text-primary-400">
+                  <i :class="guidanceExpanded ? 'fas fa-chevron-up' : 'fas fa-chevron-down'" class="text-xl transition-transform duration-300"></i>
+                </div>
+              </button>
+              <!-- Content -->
+              <div x-show="guidanceExpanded" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 -translate-y-4" x-transition:enter-end="opacity-100 translate-y-0" x-transition:leave="transition ease-in duration-200" x-transition:leave-start="opacity-100 translate-y-0" x-transition:leave-end="opacity-0 -translate-y-4" class="p-6 space-y-8">
+                <!-- Why Section -->
+                <div>
+                  <h3 class="text-xl font-bold mb-4 text-primary-600 dark:text-primary-400 flex items-center gap-2">
+                    <i class="fas fa-question-circle"></i> ทำไมต้องฝึกหายใจลึก?
+                  </h3>
+                  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="benefit-item">
+                      <div class="benefit-icon bg-primary-500/10 text-primary-600 dark:text-primary-400">
+                        <i class="fas fa-heartbeat"></i>
+                      </div>
+                      <div>
+                        <h4 class="benefit-title">กระตุ้นระบบประสาทผ่อนคลาย</h4>
+                        <p class="benefit-text">ช่วยลดความดันโลหิตและอัตราการเต้นของหัวใจ</p>
+                        <span class="reference-tag">Frontiers in Psychology, 2017</span>
+                      </div>
+                    </div>
+                    <div class="benefit-item">
+                      <div class="benefit-icon bg-primary-500/10 text-primary-600 dark:text-primary-400">
+                        <i class="fas fa-brain"></i>
+                      </div>
+                      <div>
+                        <h4 class="benefit-title">เพิ่มออกซิเจนสู่สมอง</h4>
+                        <p class="benefit-text">ช่วยให้สมองทำงานได้ดีขึ้น เพิ่มสมาธิและความจำ</p>
+                        <span class="reference-tag">Journal of Neurophysiology, 2018</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- Scientific Benefits -->
+                <div>
+                  <h3 class="text-xl font-bold mb-4 text-accent-600 dark:text-accent-400 flex items-center gap-2">
+                    <i class="fas fa-flask"></i> ประโยชน์ทางวิทยาศาสตร์
+                  </h3>
+                  <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <div class="stat-benefit">
+                      <div class="stat-number text-primary-600 dark:text-primary-400">67%</div>
+                      <div class="stat-label">ลดความเครียด</div>
+                      <div class="stat-reference">Psychosomatic Medicine, 2019</div>
+                    </div>
+                    <div class="stat-benefit">
+                      <div class="stat-number text-accent-600 dark:text-accent-400">45%</div>
+                      <div class="stat-label">นอนหลับดีขึ้น</div>
+                      <div class="stat-reference">Journal of Clinical Sleep Medicine, 2020</div>
+                    </div>
+                    <div class="stat-benefit">
+                      <div class="stat-number text-primary-600 dark:text-primary-400">15%</div>
+                      <div class="stat-label">ลดความดันโลหิต</div>
+                      <div class="stat-reference">Hypertension Journal, 2021</div>
+                    </div>
+                    <div class="stat-benefit">
+                      <div class="stat-number text-accent-600 dark:text-accent-400">85%</div>
+                      <div class="stat-label">เพิ่มสมาธิ</div>
+                      <div class="stat-reference">Brain, Behavior, and Immunity, 2022</div>
+                    </div>
+                  </div>
+                </div>
+                <!-- Tips Section -->
+                <div>
+                  <h3 class="text-xl font-bold mb-4 text-amber-600 dark:text-amber-400 flex items-center gap-2">
+                    <i class="fas fa-lightbulb"></i> เคล็ดลับสำหรับมือใหม่
+                  </h3>
+                  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="tip-item">
+                      <div class="tip-icon bg-amber-500/10 text-amber-600 dark:text-amber-400">
+                        <i class="fas fa-clock"></i>
+                      </div>
+                      <div>
+                        <h4 class="tip-title">เลือกเวลาที่เหมาะสม</h4>
+                        <p class="tip-text">ฝึกตอนเช้าหรือก่อนนอน ร่างกายพร้อมผ่อนคลายที่สุด</p>
+                      </div>
+                    </div>
+                    <div class="tip-item">
+                      <div class="tip-icon bg-amber-500/10 text-amber-600 dark:text-amber-400">
+                        <i class="fas fa-spa"></i>
+                      </div>
+                      <div>
+                        <h4 class="tip-title">สร้างบรรยากาศ</h4>
+                        <p class="tip-text">ไฟสลัวกับเสียงธรรมชาติช่วยเพิ่มสมาธิและประสิทธิภาพ</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Progress Tracker -->
+          <div class="glass-effect rounded-2xl p-6 mb-12 border border-gray-200/50 dark:border-gray-700/50 w-full">
+            <h2 class="text-2xl font-bold mb-6 text-gray-800 dark:text-gray-100 flex items-center gap-3">
+              <div class="p-2.5 rounded-lg bg-gradient-to-r from-primary-500 to-accent-500 text-gray-50">
+                <i class="fas fa-chart-line"></i>
+              </div>
+              <span>ความคืบหน้าของคุณ</span>
+            </h2>
+            <div class="space-y-6">
+              <!-- Daily Goal -->
+              <div>
+                <div class="flex justify-between mb-2.5">
+                  <span class="font-medium text-gray-700 dark:text-gray-300">เป้าหมายรายวัน</span>
+                  <span class="font-bold text-primary-600 dark:text-primary-400" x-text="`${dailyProgress}/5 รอบ`"></span>
+                </div>
+                <div class="progress-bar bg-gray-200/50 dark:bg-gray-700/50">
+                  <div class="progress-fill bg-gradient-to-r from-primary-500 to-accent-500" :style="`width: ${Math.min((dailyProgress/5)*100, 100)}%`"></div>
+                </div>
+              </div>
+              <!-- Stats -->
+              <div class="grid grid-cols-2 gap-4">
+                <div class="text-center p-4 rounded-xl bg-primary-500/5 dark:bg-primary-500/10">
+                  <div class="text-2xl font-bold text-primary-600 dark:text-primary-400" x-text="sessionCount"></div>
+                  <div class="text-sm text-gray-600 dark:text-gray-400">ครั้งที่ฝึก</div>
+                </div>
+                <div class="text-center p-4 rounded-xl bg-accent-500/5 dark:bg-accent-500/10">
+                  <div class="text-2xl font-bold text-accent-600 dark:text-accent-400" x-text="totalMinutes"></div>
+                  <div class="text-sm text-gray-600 dark:text-gray-400">นาทีทั้งหมด</div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
     </main>
-
     <!-- Footer -->
     <footer class="glass-effect border-t border-gray-200/50 dark:border-gray-700/50 mt-16 py-8">
-        <div class="container mx-auto px-4">
-            <div class="flex flex-col items-center space-y-6">
-                <div class="flex items-center space-x-3">
-                    <div class="text-2xl text-primary-600 dark:text-primary-400">🌸
-</div>
-                    <h2 class="text-xl font-bold text-primary-700 dark:text-primary-300">Cloudy-Puk-Jai</h2>
-                </div>
-                <p class="text-gray-600 dark:text-gray-400 text-center italic">
-                    "ลมหายใจเดียวเปลี่ยนวัน... การฝึกสม่ำเสมอเปลี่ยนชีวิต"
-                </p>
-                <p class="text-gray-500 dark:text-gray-500 text-sm text-center">
-                    © 2026 Cloudy-Puk-Jai | ข้อมูลอ้างอิงจากงานวิจัยทางการแพทย์
-                </p>
-            </div>
+      <div class="container mx-auto px-4">
+        <div class="flex flex-col items-center space-y-6">
+          <div class="flex items-center space-x-3">
+            <div class="text-2xl text-primary-600 dark:text-primary-400">🌸 </div>
+            <h2 class="text-xl font-bold text-primary-700 dark:text-primary-300">Cloudy-Puk-Jai</h2>
+          </div>
+          <p class="text-gray-600 dark:text-gray-400 text-center italic"> "ลมหายใจเดียวเปลี่ยนวัน... การฝึกสม่ำเสมอเปลี่ยนชีวิต" </p>
+          <p class="text-gray-500 dark:text-gray-500 text-sm text-center"> © 2026 Cloudy-Puk-Jai | ข้อมูลอ้างอิงจากงานวิจัยทางการแพทย์ </p>
         </div>
+      </div>
     </footer>
-
     <!-- Notification System -->
     <div class="notification-container">
-        <template x-for="notification in notifications" :key="notification.id">
-            <div class="notification-toast"
-                 :class="`notification-${notification.type}`">
-                <div class="notification-content">
-                    <div class="notification-icon">
-                        <i :class="notification.icon"></i>
-                    </div>
-                    <div class="notification-body">
-                        <h4 class="notification-title" x-text="notification.title"></h4>
-                        <p class="notification-text" x-text="notification.message"></p>
-                    </div>
-                    <button @click="removeNotification(notification.id)" 
-                            class="notification-close">
-                        <i class="fas fa-times"></i>
-                    </button>
-                </div>
+      <template x-for="notification in notifications" :key="notification.id">
+        <div class="notification-toast" :class="`notification-${notification.type}`">
+          <div class="notification-content">
+            <div class="notification-icon">
+              <i :class="notification.icon"></i>
             </div>
-        </template>
-    </div>
-
-    <!-- Instruction Modal -->
-    <div x-show="showModal" 
-         x-transition:enter="transition ease-out duration-200"
-         x-transition:enter-start="opacity-0 scale-95"
-         x-transition:enter-end="opacity-100 scale-100"
-         x-transition:leave="transition ease-in duration-150"
-         x-transition:leave-start="opacity-100 scale-100"
-         x-transition:leave-end="opacity-0 scale-95"
-         class="modal-overlay" @click.self="showModal = null">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 class="modal-title" x-text="modalTitle"></h3>
-                <button @click="showModal = null" class="modal-close">
-                    <i class="fas fa-times"></i>
-                </button>
+            <div class="notification-body">
+              <h4 class="notification-title" x-text="notification.title"></h4>
+              <p class="notification-text" x-text="notification.message"></p>
             </div>
-            <div class="modal-body" x-html="modalContent"></div>
-            <div class="modal-footer">
-                <button @click="showModal = null" class="btn-primary">
-                    เข้าใจแล้ว
-                </button>
-            </div>
+            <button @click="removeNotification(notification.id)" class="notification-close">
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
         </div>
+      </template>
     </div>
-
+    <!-- Instruction Modal -->
+    <div x-show="showModal" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100" x-transition:leave="transition ease-in duration-150" x-transition:leave-start="opacity-100 scale-100" x-transition:leave-end="opacity-0 scale-95" class="modal-overlay" @click.self="showModal = null">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3 class="modal-title" x-text="modalTitle"></h3>
+          <button @click="showModal = null" class="modal-close">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+        <div class="modal-body" x-html="modalContent"></div>
+        <div class="modal-footer">
+          <button @click="showModal = null" class="btn-primary"> เข้าใจแล้ว </button>
+        </div>
+      </div>
+    </div>
     <!-- JavaScript Files -->
     <script src="./js/tools.js"></script>
-</body>
+  </body>
 </html>
