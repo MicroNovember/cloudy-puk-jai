@@ -46,8 +46,21 @@
 }
  
 
+/* BREATHING CIRCLE CONTAINER */
+.breathing-circle-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+}
+
 /* MOBILE ADJUSTMENTS */
 @media (max-width: 768px) {
+    .breathing-circle-container {
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+    
     .breathing-circle {
         width: 18rem;
         height: 18rem;
@@ -59,6 +72,10 @@
     
     .breathing-circle .text-xl {
         font-size: 1.125rem;
+    }
+    
+    .state-indicator {
+        gap: 1rem;
     }
 }
 

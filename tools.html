@@ -19,6 +19,8 @@
     <link rel="stylesheet" href="./css/design-system.css">
     <!-- Tools Specific CSS -->
     <link rel="stylesheet" href="./css/tools.css">
+    <!-- Main Styles CSS -->
+    <link rel="stylesheet" href="./css/styles.css">
     <script>
       tailwind.config = {
         darkMode: 'class',
@@ -146,85 +148,210 @@
       }
     </script>
   </head>
-  <body class="bg-gradient-to-br from-gray-100 via-gray-50 to-gray-200 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 text-gray-800 dark:text-gray-200 min-h-screen transition-colors duration-300">
-    <!-- Header -->
-    <header class="sticky top-0 z-50 glass-effect shadow-md border-b border-gray-200/50 dark:border-gray-700/50">
-      <div class="container mx-auto px-4 py-3">
-        <div class="flex items-center justify-between">
-          <!-- Back Button -->
-          <a href="index.html" class="btn-secondary group">
-            <i class="fas fa-arrow-left mr-2 group-hover:translate-x-1 transition-transform"></i> กลับหน้าหลัก </a>
-          <!-- Logo -->
-          <div class="flex items-center space-x-3">
-            <div class="text-2xl text-primary-600 dark:text-primary-400 animate-pulse-slow">🌸 </div>
-            <h1 class="text-xl font-bold text-primary-700 dark:text-primary-300">ฝึกหายใจลึกด้วยเทคนิค 4-7-8</h1>
-          </div>
-          <!-- Theme Toggle -->
-          <button @click="toggleDarkMode()" class="btn-icon group relative" :title="darkMode ? 'สลับเป็นโหมดสว่าง' : 'สลับเป็นโหมดมืด'">
-            <i :class="darkMode ? 'fas fa-sun text-amber-500' : 'fas fa-moon text-indigo-500'" class="text-lg group-hover:rotate-12 transition-transform"></i>
-            <span class="absolute -bottom-1 -right-1 w-2 h-2 bg-primary-500 rounded-full animate-pulse opacity-70"></span>
-          </button>
-        </div>
-      </div>
-    </header>
-    <!-- Main Content -->
-    <main class="container mx-auto px-4 py-8">
-      <div class="max-w-5xl mx-auto">
-        <!-- Breathing Circle Section -->
-        <div class="flex flex-col items-center mb-16">
-          <!-- Breathing Visualization -->
-          <div class="relative mb-10">
-            <!-- Outer Glow -->
-            <div class="absolute inset-0 -m-4 rounded-full bg-gradient-to-r from-primary-500/20 to-accent-500/20 blur-xl animate-pulse"></div>
-            <!-- Main Circle -->
-            <div class="breathing-circle shadow-2xl border-4 border-gray-300/50 dark:border-gray-600/50" :class="{
-                            'animate-breathe-in bg-gradient-to-br from-primary-600 to-primary-700': currentState === 'inhale' && isRunning,
-                            'animate-breathe-hold bg-gradient-to-br from-accent-500 to-accent-600': currentState === 'hold' && isRunning,
-                            'animate-breathe-out bg-gradient-to-br from-gray-600 to-gray-700': currentState === 'exhale' && isRunning,
-                            'bg-gradient-to-br from-primary-500 to-primary-700': !isRunning
-                         }">
-              <div class="text-center relative z-10">
-                <!-- Timer Display -->
-                <div class="text-7xl font-black mb-2" :class="{
-                                    'text-gray-50': currentState === 'inhale',
-                                    'text-gray-900 dark:text-gray-100': currentState === 'hold',
-                                    'text-gray-100': currentState === 'exhale',
-                                    'text-gray-100': !isRunning
-                                 }" x-text="currentTime"></div>
-                <!-- State Label -->
-                <div class="text-xl font-semibold tracking-wider flex items-center justify-center gap-2" :class="{
-                                    'text-gray-200': currentState === 'inhale',
-                                    'text-gray-800 dark:text-gray-300': currentState === 'hold',
-                                    'text-gray-300': currentState === 'exhale',
-                                    'text-gray-200': !isRunning
-                                }">
-                  <span x-text="currentStateText"></span>
-                  <span x-show="currentState === 'inhale'" class="text-3xl">🌬️</span>
-                  <span x-show="currentState === 'hold'" class="text-4xl">✨</span>
-                  <span x-show="currentState === 'exhale'" class="text-3xl">💨</span>
+  <body class="bg-gradient-to-br from-gray-100 via-gray-50 to-gray-200 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 text-gray-800 dark:text-gray-200 min-h-screen transition-colors duration-300" x-data="breathingApp()" x-init="init()" :class="{ 'dark': darkMode, mobileMenuOpen: false }">
+    <!-- Mobile Header -->
+    <header class="sticky top-0 z-50 bg-white dark:bg-gray-800 shadow-md lg:hidden">
+        <div class="container mx-auto px-4 py-3">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-2">
+                    <div class="text-2xl text-primary">🌸</div>
+                    <h1 class="text-xl font-bold text-primary">Cloudy-Puk-Jai</h1>
                 </div>
-                <!-- Progress Indicator -->
-                <div class="absolute inset-0 flex items-center justify-center"></div>
+                <div class="flex items-center space-x-3">
+                    <button @click="toggleDarkMode()" class="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700">
+                        <i :class="darkMode ? 'fas fa-sun text-amber-500' : 'fas fa-moon text-indigo-500'" class="text-lg"></i>
+                    </button>
+                    <button @click="mobileMenuOpen = !mobileMenuOpen" class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700">
+                        <i class="fas fa-bars text-lg"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Mobile Navigation Menu -->
+    <div x-show="mobileMenuOpen" x-transition class="fixed inset-0 z-40 lg:hidden" style="display: none;">
+        <div class="fixed inset-0 bg-black/50" @click="mobileMenuOpen = false"></div>
+        <div class="fixed right-0 top-0 h-full w-80 bg-white dark:bg-gray-800 shadow-xl overflow-y-auto" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="translate-x-full" x-transition:enter-end="translate-x-0" x-transition:leave="transition ease-in duration-200" x-transition:leave-start="translate-x-0" x-transition:leave-end="translate-x-full">
+            <div class="p-4">
+                <div class="flex items-center justify-between mb-6">
+                    <div class="flex items-center gap-3">
+                        <div class="text-3xl text-primary animate-pulse-slow">🌸</div>
+                        <h3 class="text-xl font-bold text-primary">Cloudy-Puk-Jai</h3>
+                    </div>
+                    <button @click="mobileMenuOpen = false" class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700">
+                        <i class="fas fa-times text-lg"></i>
+                    </button>
+                </div>
+                
+                <div class="space-y-2">
+                    <a href="index.html" @click="mobileMenuOpen = false" class="flex items-center px-3 py-3 rounded-lg font-medium text-gray-600 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                        <i class="fas fa-home-alt mr-3 w-4"></i>หน้าหลัก
+                    </a>
+                    <a href="index.html#journal" @click="mobileMenuOpen = false" class="flex items-center px-3 py-3 rounded-lg font-medium text-gray-600 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                        <i class="fas fa-journal-whills mr-3 w-4"></i>บันทึกความรู้สึก
+                    </a>
+                    <a href="index.html#articles" @click="mobileMenuOpen = false" class="flex items-center px-3 py-3 rounded-lg font-medium text-gray-600 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                        <i class="fas fa-book-open mr-3 w-4"></i>ความรู้เพื่อสุขภาพจิต
+                    </a>
+                    <a href="index.html#music" @click="mobileMenuOpen = false" class="flex items-center px-3 py-3 rounded-lg font-medium text-gray-600 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                        <i class="fas fa-headphones mr-3 w-4"></i>ผ่อนคลายด้วยเพลง
+                    </a>
+                    <a href="#" @click="mobileMenuOpen = false" class="flex items-center px-3 py-3 rounded-lg font-medium bg-primary-light text-white transition-colors">
+                        <i class="fas fa-lungs mr-3 w-4"></i>Breathing Buddy
+                    </a>
+                    <a href="index.html#assessments" @click="mobileMenuOpen = false" class="flex items-center px-3 py-3 rounded-lg font-medium text-gray-600 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                        <i class="fas fa-clipboard-list mr-3 w-4"></i>แบบทดสอบ
+                    </a>
+                    <a href="history.html" @click="mobileMenuOpen = false" class="flex items-center px-3 py-3 rounded-lg font-medium text-gray-600 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                        <i class="fas fa-chart-line mr-3 w-4"></i>ประวัติผลการทดสอบ
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-6">
+      <div class="flex flex-col lg:flex-row gap-6">
+        <!-- Left Column: Menu Bar (Desktop Only) -->
+        <aside class="lg:w-64 lg:flex-shrink-0 hidden lg:block">
+          <!-- Desktop Sidebar Navigation -->
+          <nav class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-4 sticky top-24 h-fit">
+            <!-- Logo Section -->
+            <div class="flex items-center justify-center gap-3 mb-6 pb-4 border-b border-gray-200 dark:border-gray-700">
+              <div class="text-3xl text-primary animate-pulse-slow">🌸</div>
+              <h3 class="text-xl font-bold text-primary">Cloudy-Puk-Jai</h3>
+            </div>
+            
+            <div class="space-y-2">
+              <a href="index.html" class="flex items-center px-3 py-2 rounded-lg font-medium text-gray-600 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                <i class="fas fa-home-alt mr-3 w-4"></i>หน้าหลัก
+              </a>
+              <a href="index.html#journal" class="flex items-center px-3 py-2 rounded-lg font-medium text-gray-600 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                <i class="fas fa-journal-whills mr-3 w-4"></i>บันทึกความรู้สึก
+              </a>
+              <a href="index.html#music" class="flex items-center px-3 py-2 rounded-lg font-medium text-gray-600 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                <i class="fas fa-headphones mr-3 w-4"></i>ผ่อนคลายด้วยเพลง
+              </a>
+              <a href="index.html#articles" class="flex items-center px-3 py-2 rounded-lg font-medium text-gray-600 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                <i class="fas fa-book-open mr-3 w-4"></i>ความรู้เพื่อสุขภาพจิต
+              </a>
+              <a href="index.html#assessments" class="flex items-center px-3 py-2 rounded-lg font-medium text-gray-600 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                <i class="fas fa-clipboard-list mr-3 w-4"></i>แบบทดสอบ
+              </a>
+              <a href="history.html" class="flex items-center px-3 py-2 rounded-lg font-medium text-gray-600 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                <i class="fas fa-chart-line mr-3 w-4"></i>ประวัติผลการทดสอบ
+              </a>
+              <a href="index.html#growth" class="flex items-center px-3 py-2 rounded-lg font-medium text-gray-600 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                <i class="fas fa-spa mr-3 w-4"></i>สวนแห่งใจ
+              </a>
+              <a href="#" class="flex items-center px-3 py-2 rounded-lg font-medium bg-primary-light text-white transition-colors">
+                <i class="fas fa-lungs mr-3 w-4"></i>เครื่องมือผ่อนคลาย
+              </a>
+              
+              <!-- Theme Toggle -->
+              <div class="pt-4 border-t border-gray-200 dark:border-gray-700">
+                <button @click="toggleDarkMode()" class="w-full flex items-center px-3 py-2 rounded-lg font-medium text-gray-600 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                  <i :class="darkMode ? 'fas fa-sun' : 'fas fa-moon'" class="mr-3 w-4"></i>
+                  <span x-text="darkMode ? 'โหมดสว่าง' : 'โหมดมืด'"></span>
+                </button>
               </div>
             </div>
+          </nav>
+        </aside>
+        
+        <!-- Right Column: Main Content -->
+        <div class="flex-1">
+          <!-- Breathing Circle Section -->
+          <div class="flex flex-col  gap-6 items-center justify-center">
+            <!-- Breathing Circle -->
+            <div class="breathing-circle-container">
+              <!-- Particle Effects -->
+              <div class="particles-container">
+                <div class="particle particle-1" :class="{ 'active': currentState === 'inhale' && isRunning }"></div>
+                <div class="particle particle-2" :class="{ 'active': currentState === 'hold' && isRunning }"></div>
+                <div class="particle particle-3" :class="{ 'active': currentState === 'exhale' && isRunning }"></div>
+                <div class="particle particle-4" :class="{ 'active': currentState === 'inhale' && isRunning }"></div>
+                <div class="particle particle-5" :class="{ 'active': currentState === 'hold' && isRunning }"></div>
+                <div class="particle particle-6" :class="{ 'active': currentState === 'exhale' && isRunning }"></div>
+              </div>
+
+              <!-- Ripple Effects -->
+              <div class="ripple-container">
+                <div class="ripple ripple-1" :class="{ 'active': isRunning }"></div>
+                <div class="ripple ripple-2" :class="{ 'active': isRunning }"></div>
+                <div class="ripple ripple-3" :class="{ 'active': isRunning }"></div>
+              </div>
+
+              <!-- Main Circle -->
+              <div class="breathing-circle shadow-2xl border-4 border-gray-300/50 dark:border-gray-600/50" :class="{
+                              'animate-breathe-in bg-gradient-to-br from-primary-600 to-primary-700': currentState === 'inhale' && isRunning,
+                              'animate-breathe-hold bg-gradient-to-br from-accent-500 to-accent-600': currentState === 'hold' && isRunning,
+                              'animate-breathe-out bg-gradient-to-br from-gray-600 to-gray-700': currentState === 'exhale' && isRunning,
+                              'bg-gradient-to-br from-primary-500 to-primary-700': !isRunning
+                           }">
+                <!-- Inner Glow -->
+                <div class="inner-glow" :class="{
+                              'bg-primary-400/20': currentState === 'inhale',
+                              'bg-accent-400/20': currentState === 'hold',
+                              'bg-gray-400/20': currentState === 'exhale'
+                            }"></div>
+
+                <!-- Wave Animation -->
+                <div class="wave-container">
+                  <div class="wave wave-1" :class="{ 'active': currentState === 'inhale' && isRunning }"></div>
+                  <div class="wave wave-2" :class="{ 'active': currentState === 'hold' && isRunning }"></div>
+                  <div class="wave wave-3" :class="{ 'active': currentState === 'exhale' && isRunning }"></div>
+                </div>
+
+                <div class="text-center relative z-10">
+                  <!-- Timer Display -->
+                  <div class="text-7xl font-black mb-2 transition-all duration-300" :class="{
+                                      'text-gray-50': currentState === 'inhale',
+                                      'text-gray-900 dark:text-gray-100': currentState === 'hold',
+                                      'text-gray-100': currentState === 'exhale',
+                                      'text-gray-100': !isRunning
+                                   }" x-text="currentTime"></div>
+                  <!-- State Label -->
+                  <div class="text-xl font-semibold tracking-wider flex items-center justify-center gap-2 transition-all duration-300" :class="{
+                                      'text-gray-200': currentState === 'inhale',
+                                      'text-gray-800 dark:text-gray-300': currentState === 'hold',
+                                      'text-gray-300': currentState === 'exhale',
+                                      'text-gray-200': !isRunning
+                                  }">
+                    <span x-text="currentStateText"></span>
+                    <span x-show="currentState === 'inhale'" class="text-3xl animate-bounce">🌬️</span>
+                    <span x-show="currentState === 'hold'" class="text-4xl animate-pulse">✨</span>
+                    <span x-show="currentState === 'exhale'" class="text-3xl animate-bounce">💨</span>
+                  </div>
+                  <!-- Progress Indicator -->
+                  <div class="absolute inset-0 flex items-center justify-center">
+                    <div class="progress-ring" :style="`background: conic-gradient(from 0deg, ${currentState === 'inhale' ? '#059467' : currentState === 'hold' ? '#14b8a5' : '#6b7280'} ${(currentTime / (currentState === 'inhale' ? 4 : currentState === 'hold' ? 7 : 8)) * 360}deg, transparent 0deg)`"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
             <!-- State Indicators -->
-            <div class="flex justify-between mt-8 px-4">
+            <div class="flex justify-between w-full max-w-md mx-auto mt-0 px-6">
               <div class="flex flex-col items-center">
                 <div class="w-4 h-4 rounded-full bg-primary-600 mb-2 animate-pulse" :class="{ 'ring-2 ring-primary-400 ring-offset-2': currentState === 'inhale' }"></div>
-                <span class="text-sm font-medium text-gray-700 dark:text-gray-300">หายใจเข้า</span>
+                <span class="text-base font-medium text-gray-700 dark:text-gray-300">หายใจเข้า</span>
               </div>
               <div class="flex flex-col items-center">
                 <div class="w-4 h-4 rounded-full bg-accent-500 mb-2 animate-pulse" :class="{ 'ring-2 ring-accent-400 ring-offset-2': currentState === 'hold' }"></div>
-                <span class="text-sm font-medium text-gray-700 dark:text-gray-300">กลั้นหายใจ</span>
+                <span class="text-base font-medium text-gray-700 dark:text-gray-300">กลั้นหายใจ</span>
               </div>
               <div class="flex flex-col items-center">
                 <div class="w-4 h-4 rounded-full bg-gray-600 mb-2 animate-pulse" :class="{ 'ring-2 ring-gray-500 ring-offset-2': currentState === 'exhale' }"></div>
-                <span class="text-sm font-medium text-gray-700 dark:text-gray-300">หายใจออก</span>
+                <span class="text-base font-medium text-gray-700 dark:text-gray-300">หายใจออก</span>
               </div>
+              <i> </i>
             </div>
           </div>
           <!-- Controls Section -->
-          <div class="w-full max-w-md space-y-8">
+          <div class="w-full max-w-md mx-auto space-y-8">
             <!-- Control Buttons -->
             <div class="flex flex-col sm:flex-row gap-4">
               <button @click="startBreathing()" x-show="!isRunning" class="btn-primary group flex-1">
@@ -446,24 +573,78 @@
                   <div class="text-2xl font-bold text-accent-600 dark:text-accent-400" x-text="totalMinutes"></div>
                   <div class="text-sm text-gray-600 dark:text-gray-400">นาทีทั้งหมด</div>
                 </div>
-              </div>
             </div>
           </div>
         </div>
     </main>
-    <!-- Footer -->
-    <footer class="glass-effect border-t border-gray-200/50 dark:border-gray-700/50 mt-16 py-8">
-      <div class="container mx-auto px-4">
-        <div class="flex flex-col items-center space-y-6">
-          <div class="flex items-center space-x-3">
-            <div class="text-2xl text-primary-600 dark:text-primary-400">🌸 </div>
-            <h2 class="text-xl font-bold text-primary-700 dark:text-primary-300">Cloudy-Puk-Jai</h2>
-          </div>
-          <p class="text-gray-600 dark:text-gray-400 text-center italic"> "ลมหายใจเดียวเปลี่ยนวัน... การฝึกสม่ำเสมอเปลี่ยนชีวิต" </p>
-          <p class="text-gray-500 dark:text-gray-500 text-sm text-center"> © 2026 Cloudy-Puk-Jai | ข้อมูลอ้างอิงจากงานวิจัยทางการแพทย์ </p>
+    <!-- Modern Footer -->
+    <footer class="mt-12 bg-gradient-to-br from-primary/5 via-primary/3 to-primary-light/5 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 border-t border-primary/10 dark:border-gray-700">
+        <!-- Floating Elements -->
+        <div class="absolute top-0 left-0 w-32 h-32 opacity-5">
+            <div class="absolute top-4 left-4 text-6xl text-primary animate-float">🌸</div>
         </div>
-      </div>
+        <div class="absolute bottom-0 right-0 w-24 h-24 opacity-5">
+            <div class="absolute bottom-4 right-4 text-4xl text-primary-light animate-float" style="animation-delay: 3s;">💚</div>
+        </div>
+        
+        <div class="container mx-auto px-4 py-8 relative z-10">
+            <!-- Main Footer Content -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
+                <!-- Brand Section -->
+                <div class="text-center md:text-left">
+                    <div class="flex items-center justify-center md:justify-start gap-3 mb-4">
+                        <div class="text-3xl text-primary animate-pulse-slow">🌸</div>
+                        <h3 class="text-xl font-bold text-gray-800 dark:text-white">Cloudy-Puk-Jai</h3>
+                    </div>
+                    <p class="text-gray-600 dark:text-gray-400 text-sm leading-relaxed">
+                        พื้นที่ดูแลสุขภาพใจของคุณ<br>
+                        พักผ่อนใจให้สดใส และเติบโตอย่างสมดุล
+                    </p>
+                </div>
+                
+                <!-- Quick Links -->
+                <div class="text-center md:text-left">
+                    <h4 class="font-semibold text-gray-700 dark:text-gray-300 mb-4">เมนูหลัก</h4>
+                    <nav class="space-y-2">
+                        <a href="index.html" class="text-gray-600 dark:text-gray-400 hover:text-primary transition-colors text-sm flex items-center justify-center md:justify-start gap-2">
+                            <i class="fas fa-home text-xs"></i>หน้าหลัก
+                        </a>
+                        <a href="history.html" class="text-gray-600 dark:text-gray-400 hover:text-primary transition-colors text-sm flex items-center justify-center md:justify-start gap-2">
+                            <i class="fas fa-history text-xs"></i>ประวัติ
+                        </a>
+                        <a href="tools.html" class="text-gray-600 dark:text-gray-400 hover:text-primary transition-colors text-sm flex items-center justify-center md:justify-start gap-2">
+                            <i class="fas fa-heart text-xs"></i>เครื่องมือ
+                        </a>
+                    </nav>
+                </div>
+                
+                <!-- Contact/Support -->
+                <div class="text-center md:text-left">
+                    <h4 class="font-semibold text-gray-700 dark:text-gray-300 mb-4">สนับสนุน</h4>
+                    <div class="space-y-2">
+                        <a href="tel:1323" class="text-gray-600 dark:text-gray-400 hover:text-primary transition-colors text-sm flex items-center justify-center md:justify-start gap-2">
+                            <i class="fas fa-phone-alt text-xs"></i>สายด่วนสุขภาพจิต 1323
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Bottom Bar -->
+            <div class="border-t border-gray-200 dark:border-gray-700 pt-6">
+                <div class="flex flex-col md:flex-row items-center justify-between gap-4">
+                    <div class="text-center md:text-left">
+                        <p class="text-gray-600 dark:text-gray-400 text-sm">
+                            2026 Cloudy-Puk-Jai. สร้างด้วย <span class="text-primary">❤️</span> เพื่อสุขภาพจิตของทุกคน
+                        </p>
+                    </div>
+                    <div class="flex items-center justify-center md:justify-end gap-4">
+                        <span class="text-gray-500 dark:text-gray-400 text-xs">สุขภาพใจที่ดีเริ่มต้นที่การดูแลตัวเอง</span>
+                    </div>
+                </div>
+            </div>
+        </div>
     </footer>
+
     <!-- Notification System -->
     <div class="notification-container">
       <template x-for="notification in notifications" :key="notification.id">

@@ -21,6 +21,7 @@ document.addEventListener('alpine:init', () => {
         totalSeconds: 0,
         
         // UI State
+        mobileMenuOpen: false,
         showModal: false,
         modalTitle: '',
         modalContent: '',
@@ -51,17 +52,33 @@ document.addEventListener('alpine:init', () => {
         },
         
        
-        
         get cycleCount() {
             return this.$store.breathing.cycleCount;
         },
         
         // Methods
         init() {
-            // Dark mode
+            // Dark mode - อ่านจาก localStorage เดียวกับ index.html
             this.darkMode = localStorage.getItem('darkMode') === 'true' || 
                            (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches);
             this.applyDarkMode();
+            
+            // ฟังการเปลี่ยนแปลง darkMode จากหน้าอื่น (เฉพาะเมื่อมีการเปลี่ยนแปลงจริง)
+            window.addEventListener('storage', (e) => {
+                if (e.key === 'darkMode' && e.oldValue !== e.newValue) {
+                    this.darkMode = e.newValue === 'true';
+                    this.applyDarkMode();
+                }
+            });
+            
+            // ตรวจสอบการเปลี่ยนแปลง darkMode ทุกๆ 500ms (fallback สำหรับข้ามแท็บ)
+            setInterval(() => {
+                const currentDarkMode = localStorage.getItem('darkMode') === 'true';
+                if (currentDarkMode !== this.darkMode) {
+                    this.darkMode = currentDarkMode;
+                    this.applyDarkMode();
+                }
+            }, 500);
             
             // Load progress
             this.loadProgress();

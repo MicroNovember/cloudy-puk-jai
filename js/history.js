@@ -92,6 +92,35 @@ function initDarkMode() {
             });
         }
         
+        // ฟังการเปลี่ยนแปลง darkMode จากหน้าอื่น (เฉพาะเมื่อมีการเปลี่ยนแปลงจริง)
+        window.addEventListener('storage', (e) => {
+            if (e.key === 'darkMode' && e.oldValue !== e.newValue) {
+                darkMode = e.newValue === 'true';
+                if (darkMode) {
+                    document.documentElement.classList.add('dark');
+                    document.getElementById('darkModeIcon').className = 'fas fa-sun text-lg';
+                } else {
+                    document.documentElement.classList.remove('dark');
+                    document.getElementById('darkModeIcon').className = 'fas fa-moon text-lg';
+                }
+            }
+        });
+        
+        // ตรวจสอบการเปลี่ยนแปลง darkMode ทุกๆ 500ms (fallback สำหรับข้ามแท็บ)
+        setInterval(() => {
+            const currentDarkMode = localStorage.getItem('darkMode') === 'true';
+            if (currentDarkMode !== darkMode) {
+                darkMode = currentDarkMode;
+                if (darkMode) {
+                    document.documentElement.classList.add('dark');
+                    document.getElementById('darkModeIcon').className = 'fas fa-sun text-lg';
+                } else {
+                    document.documentElement.classList.remove('dark');
+                    document.getElementById('darkModeIcon').className = 'fas fa-moon text-lg';
+                }
+            }
+        }, 500);
+        
         console.log('initDarkMode: สำเร็จ');
     } catch (error) {
         console.error('initDarkMode error:', error);
@@ -874,10 +903,23 @@ async function exportPDF() {
         if (pdfIcon) pdfIcon.className = 'fas fa-spinner fa-spin mr-1.5';
         if (pdfText) pdfText.textContent = 'กำลังสร้าง...';
         
-        // ตรวจสอบว่า html2pdf พร้อมใช้งาน
-        if (typeof html2pdf === 'undefined') {
-            throw new Error('html2pdf ไม่ได้โหลด โปรดรีเฟรชหน้าเว็บ');
+        // ตรวจสอบว่า html2pdf พร้อมใช้งาน (รอสักครู่ถ้ายังโหลดไม่เสร็จ)
+        let attempts = 0;
+        const maxAttempts = 10;
+        
+        while (typeof html2pdf === 'undefined' && attempts < maxAttempts) {
+            console.log(`รอ html2pdf... ครั้งที่ ${attempts + 1}`);
+            await new Promise(resolve => setTimeout(resolve, 500));
+            attempts++;
         }
+        
+        if (typeof html2pdf === 'undefined') {
+            console.warn('html2pdf ไม่พร้อมใช้งาน ใช้วิธี fallback');
+            fallbackPDFExport();
+            return;
+        }
+        
+        console.log('html2pdf พร้อมใช้งาน');
         
         // ตรวจสอบว่ามีข้อมูลหรือไม่
         if (historyData.length === 0) {
@@ -1306,11 +1348,46 @@ function loadLastTestDate() {
 
 // ==================== MODAL MANAGEMENT ====================
 
+function openHealthTipsModal() {
+    const modal = document.getElementById('healthOverviewTipsModal');
+    if (!modal) {
+        console.error('Health tips modal not found');
+        return;
+    }
+    
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+    document.body.style.overflow = 'hidden';
+    
+    // เพิ่ม animation เมื่อเปิด
+    modal.style.animation = 'fadeIn 0.3s ease-out';
+    
+    console.log('Health tips modal opened');
+}
+
+function closeHealthTipsModal() {
+    const modal = document.getElementById('healthOverviewTipsModal');
+    if (!modal) {
+        console.error('Health tips modal not found');
+        return;
+    }
+    
+    modal.style.animation = 'fadeOut 0.3s ease-out';
+    
+    setTimeout(() => {
+        modal.classList.remove('flex');
+        modal.classList.add('hidden');
+        document.body.style.overflow = '';
+        modal.style.animation = '';
+    }, 250);
+    
+    console.log('Health tips modal closed');
+}
+
 function initHealthOverviewTips() {
     const modal = document.getElementById('healthOverviewTipsModal');
     const openBtn = document.getElementById('healthOverviewTipsBtn');
-    const closeBtn = document.getElementById('closeHealthTipsBtn');
-    const closeModalBtn = document.getElementById('closeHealthTipsModalBtn');
+    const closeBtn = document.getElementById('closeHealthTipsModalBtn');
     
     if (!modal || !openBtn) {
         console.warn('Health overview tips modal elements not found');
@@ -1321,58 +1398,28 @@ function initHealthOverviewTips() {
     openBtn.addEventListener('click', function(e) {
         e.preventDefault();
         e.stopPropagation();
-        
-        modal.classList.remove('hidden');
-        modal.classList.add('flex');
-        document.body.style.overflow = 'hidden';
-        
-        // เพิ่ม animation เมื่อเปิด
-        modal.style.animation = 'fadeIn 0.3s ease-out';
-        
-        // Log สำหรับ debugging
-        console.log('Health tips modal opened');
+        openHealthTipsModal();
     });
     
     // ปิด Modal
-    function closeModal() {
-        modal.style.animation = 'fadeOut 0.3s ease-out';
-        
-        setTimeout(() => {
-            modal.classList.remove('flex');
-            modal.classList.add('hidden');
-            document.body.style.overflow = '';
-            modal.style.animation = '';
-        }, 250);
-        
-        console.log('Health tips modal closed');
-    }
-    
-    // เพิ่ม Event Listeners สำหรับปุ่มปิด
     if (closeBtn) {
         closeBtn.addEventListener('click', function(e) {
             e.preventDefault();
-            closeModal();
-        });
-    }
-    
-    if (closeModalBtn) {
-        closeModalBtn.addEventListener('click', function(e) {
-            e.preventDefault();
-            closeModal();
+            closeHealthTipsModal();
         });
     }
     
     // ปิดเมื่อคลิกนอก Modal
     modal.addEventListener('click', function(e) {
         if (e.target === modal) {
-            closeModal();
+            closeHealthTipsModal();
         }
     });
     
     // ปิดด้วยปุ่ม Escape
     document.addEventListener('keydown', function(e) {
         if (e.key === 'Escape' && modal.classList.contains('flex')) {
-            closeModal();
+            closeHealthTipsModal();
         }
     });
 }
@@ -1416,6 +1463,35 @@ function setupEventListeners() {
         if (clearHistoryBtn) {
             clearHistoryBtn.addEventListener('click', clearAllHistory);
             console.log('Clear history button listener added');
+        }
+        
+        // ปุ่มคู่มือสุขภาพจิตภาพรวม
+        const healthOverviewTipsBtn = document.getElementById('healthOverviewTipsBtn');
+        if (healthOverviewTipsBtn) {
+            healthOverviewTipsBtn.addEventListener('click', function() {
+                openHealthTipsModal();
+            });
+            console.log('Health tips button listener added');
+        }
+        
+        // ปุ่มปิด modal คู่มือ
+        const closeHealthTipsModalBtn = document.getElementById('closeHealthTipsModalBtn');
+        if (closeHealthTipsModalBtn) {
+            closeHealthTipsModalBtn.addEventListener('click', function() {
+                closeHealthTipsModal();
+            });
+            console.log('Close health tips modal button listener added');
+        }
+        
+        // คลิกนอก modal เพื่อปิด
+        const healthTipsModal = document.getElementById('healthOverviewTipsModal');
+        if (healthTipsModal) {
+            healthTipsModal.addEventListener('click', function(e) {
+                if (e.target === healthTipsModal) {
+                    closeHealthTipsModal();
+                }
+            });
+            console.log('Health tips modal backdrop click listener added');
         }
         
         // Quick access buttons

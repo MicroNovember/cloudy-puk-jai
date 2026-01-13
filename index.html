@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="th" x-data="mindbloomApp()" x-init="init()" :class="{ 'dark': darkMode }">
   <head>
@@ -12,8 +13,31 @@
 </script>
     <link rel="icon" type="image/png" href="image/favicon.png">
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cloudy-Puk-Jai</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="description" content="Cloudy-Puk-Jai - แอปพลิเคชันดูแลสุขภาพจิต พร้อมเครื่องมือผ่อนคลายและบันทึกความรู้สึก">
+    <meta name="keywords" content="สุขภาพจิต, ผ่อนคลาย, บันทึกความรู้สึก, ดูแลใจ, ความเครียด">
+    <meta name="author" content="Cloudy-Puk-Jai Team">
+    
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" content="Cloudy-Puk-Jai - ดูแลสุขภาพจิตของคุณ">
+    <meta property="og:description" content="แอปพลิเคชันดูแลสุขภาพจิต พร้อมเครื่องมือผ่อนคลายและบันทึกความรู้สึก">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="https://your-domain.com/image/og-image.jpg">
+    
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Cloudy-Puk-Jai - ดูแลสุขภาพจิตของคุณ">
+    <meta name="twitter:description" content="แอปพลิเคชันดูแลสุขภาพจิต พร้อมเครื่องมือผ่อนคลายและบันทึกความรู้สึก">
+    <meta name="twitter:image" content="https://your-domain.com/image/twitter-image.jpg">
+    
+    <!-- Apple Touch Icon -->
+    <link rel="apple-touch-icon" href="image/apple-touch-icon.png">
+    
+    <!-- Theme Color -->
+    <meta name="theme-color" content="#4ade80">
+    <meta name="msapplication-TileColor" content="#4ade80">
+    
+    <title>Cloudy-Puk-Jai - ดูแลสุขภาพจิตของคุณ</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Alpine.js -->
@@ -57,112 +81,201 @@
       }
     </script>
   </head>
-  <body class="bg-gray-50 text-gray-800 dark:bg-gray-900 dark:text-gray-500 transition-colors duration-300">
-    <!-- Header -->
-    <header class="sticky top-0 z-50 bg-white dark:bg-gray-800 shadow-md transition-colors duration-300">
-      <div class="container mx-auto px-4 py-3">
-        <div class="flex items-center justify-between">
-          <!-- Logo -->
-          <div class="flex items-center space-x-2">
-            <div class="text-2xl text-primary">🌸</div>
-            <h1 class="text-xl font-bold text-primary">Cloudy-Puk-Jai</h1>
-          </div>
-          <!-- Mobile Menu Button -->
-          <button @click="mobileMenuOpen = !mobileMenuOpen" class="md:hidden text-gray-600 dark:text-gray-500" aria-label="เมนู">
-            <i class="fas fa-bars text-xl"></i>
-          </button>
-          <!-- Desktop Navigation -->
-          <nav class="hidden md:flex items-center space-x-6">
-            <a href="#" @click="currentPage = 'home'" :class="currentPage === 'home' ? 'bg-primary-light text-white' : 'text-gray-600 dark:text-gray-500'" class="px-3 py-2 rounded-lg font-medium hover:bg-primary-light hover:text-white transition-colors">
-              <i class="fas fa-home mr-2"></i>หน้าหลัก </a>
-            <a href="#journal" @click="navigateTo('journal')" :class="currentPage === 'journal' ? 'bg-primary-light text-white' : 'text-gray-600 dark:text-gray-500'" class="px-3 py-2 rounded-lg font-medium hover:bg-primary-light hover:text-white transition-colors">
-              <i class="fas fa-book mr-2"></i>สมุดบันทึก </a>
-            <a href="#music" @click="navigateTo('music')" :class="currentPage === 'music' ? 'bg-primary-light text-white' : 'text-gray-600 dark:text-gray-500'" class="px-3 py-2 rounded-lg font-medium hover:bg-primary-light hover:text-white transition-colors">
-              <i class="fas fa-music mr-2"></i>เพลงและพอดแคสต์ </a>
-            <a href="#articles" @click="navigateTo('articles')" :class="currentPage === 'articles' ? 'bg-primary-light text-white' : 'text-gray-600 dark:text-gray-500'" class="px-3 py-2 rounded-lg font-medium hover:bg-primary-light hover:text-white transition-colors">
-              <i class="fas fa-newspaper mr-2"></i>บทความ </a>
-            <a href="#assessments" @click="navigateTo('assessments')" :class="currentPage === 'assessments' ? 'bg-primary-light text-white' : 'text-gray-600 dark:text-gray-500'" class="px-3 py-2 rounded-lg font-medium hover:bg-primary-light hover:text-white transition-colors">
-              <i class="fas fa-clipboard-check mr-2"></i>แบบทดสอบ </a>
-            <a href="history.html" @click="mobileMenuOpen = false" class="block px-3 py-2 rounded-lg font-medium text-gray-600 dark:text-gray-500 hover:bg-primary-light hover:text-white transition-colors">
-              <i class="fas fa-history mr-2"></i>ประวัติผลการทดสอบ </a>
-            <a href="#growth" @click="navigateTo('growth')" :class="currentPage === 'growth' ? 'bg-primary-light text-white' : 'text-gray-600 dark:text-gray-500'" class="px-3 py-2 rounded-lg font-medium hover:bg-primary-light hover:text-white transition-colors">
-              <i class="fas fa-seedling mr-2"></i>สวนแห่งใจ </a>
-            <a href="#" @click="navigateTo('tools')" class="px-3 py-2 rounded-lg font-medium text-gray-600 dark:text-gray-500 hover:bg-primary-light hover:text-white transition-colors">
-              <i class="fas fa-wind mr-2"></i>เครื่องมือผ่อนคลาย </a>
-            <!-- Theme Toggle -->
-            <button @click="toggleDarkMode()" class="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors" aria-label="สลับธีม">
-              <i :class="darkMode ? 'fas fa-sun' : 'fas fa-moon'" class="text-lg"></i>
-            </button>
-          </nav>
+  <body class="bg-gray-50 text-gray-800 dark:bg-gray-900 dark:text-gray-200 transition-colors duration-300" x-data="mindbloomApp()" x-init="init()">
+    <!-- Mobile Header -->
+    <header class="sticky top-0 z-50 bg-white dark:bg-gray-800 shadow-md lg:hidden">
+        <div class="container mx-auto px-4 py-3">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-2">
+                    <div class="text-2xl text-primary">🌸</div>
+                    <h1 class="text-xl font-bold text-primary">Cloudy-Puk-Jai</h1>
+                </div>
+                <div class="flex items-center space-x-3">
+                    <button @click="openModal('help')" class="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700">
+                        <i class="fas fa-hands-helping text-lg text-primary"></i>
+                    </button>
+                    <button @click="toggleDarkMode()" class="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700">
+                        <i :class="darkMode ? 'fas fa-sun' : 'fas fa-moon'" class="text-lg"></i>
+                    </button>
+                    <button @click="mobileMenuOpen = !mobileMenuOpen" class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700">
+                        <i class="fas fa-bars text-lg"></i>
+                    </button>
+                </div>
+            </div>
         </div>
-        <!-- Mobile Navigation -->
-        <div x-show="mobileMenuOpen" x-transition class="md:hidden mt-4 space-y-2">
-          <a href="#" @click="currentPage = 'home'; mobileMenuOpen = false" :class="currentPage === 'home' ? 'bg-primary-light text-white' : 'text-gray-600 dark:text-gray-500'" class="block px-3 py-2 rounded-lg font-medium hover:bg-primary-light hover:text-white transition-colors">
-            <i class="fas fa-home mr-2"></i>หน้าหลัก </a>
-          <a href="#journal" @click="navigateTo('journal'); mobileMenuOpen = false" :class="currentPage === 'journal' ? 'bg-primary-light text-white' : 'text-gray-600 dark:text-gray-500'" class="block px-3 py-2 rounded-lg font-medium hover:bg-primary-light hover:text-white transition-colors">
-            <i class="fas fa-book mr-2"></i>สมุดบันทึก </a>
-          <a href="#music" @click="navigateTo('music'); mobileMenuOpen = false" :class="currentPage === 'music' ? 'bg-primary-light text-white' : 'text-gray-600 dark:text-gray-500'" class="block px-3 py-2 rounded-lg font-medium hover:bg-primary-light hover:text-white transition-colors">
-            <i class="fas fa-music mr-2"></i>เพลงและพอดแคสต์ </a>
-          <a href="#articles" @click="navigateTo('articles'); mobileMenuOpen = false" :class="currentPage === 'articles' ? 'bg-primary-light text-white' : 'text-gray-600 dark:text-gray-500'" class="block px-3 py-2 rounded-lg font-medium hover:bg-primary-light hover:text-white transition-colors">
-            <i class="fas fa-newspaper mr-2"></i>บทความ </a>
-          <a href="#assessments" @click="navigateTo('assessments'); mobileMenuOpen = false" :class="currentPage === 'assessments' ? 'bg-primary-light text-white' : 'text-gray-600 dark:text-gray-500'" class="block px-3 py-2 rounded-lg font-medium hover:bg-primary-light hover:text-white transition-colors">
-            <i class="fas fa-clipboard-check mr-2"></i>แบบทดสอบ </a>
-          <a href="history.html" @click="mobileMenuOpen = false" class="block px-3 py-2 rounded-lg font-medium text-gray-600 dark:text-gray-500 hover:bg-primary-light hover:text-white transition-colors">
-            <i class="fas fa-history mr-2"></i>ประวัติผลการทดสอบ </a>
-          <a href="#growth" @click="navigateTo('growth'); mobileMenuOpen = false" :class="currentPage === 'growth' ? 'bg-primary-light text-white' : 'text-gray-600 dark:text-gray-500'" class="block px-3 py-2 rounded-lg font-medium hover:bg-primary-light hover:text-white transition-colors">
-            <i class="fas fa-seedling mr-2"></i>สวนแห่งใจ </a>
-          <a href="#" @click="navigateTo('tools'); mobileMenuOpen = false" class="block px-3 py-2 rounded-lg font-medium text-gray-600 dark:text-gray-500 hover:bg-primary-light hover:text-white transition-colors">
-            <i class="fas fa-wind mr-2"></i>เครื่องมือผ่อนคลาย </a>
-          <!-- Theme Toggle -->
-          <button @click="toggleDarkMode()" class="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors" aria-label="สลับธีม">
-            <i :class="darkMode ? 'fas fa-sun' : 'fas fa-moon'" class="text-lg"></i>
-          </button>
-        </div>
-      </div>
     </header>
+
+    <!-- Mobile Navigation Menu -->
+    <div x-show="mobileMenuOpen" x-transition class="fixed inset-0 z-40 lg:hidden" style="display: none;">
+        <div class="fixed inset-0 bg-black/50" @click="mobileMenuOpen = false"></div>
+        <div class="fixed right-0 top-0 h-full w-80 bg-white dark:bg-gray-800 shadow-xl overflow-y-auto" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="translate-x-full" x-transition:enter-end="translate-x-0" x-transition:leave="transition ease-in duration-200" x-transition:leave-start="translate-x-0" x-transition:leave-end="translate-x-full">
+            <div class="p-4">
+                <div class="flex items-center justify-between mb-6">
+                    <div class="flex items-center gap-3">
+                        <div class="text-3xl text-primary animate-pulse-slow">🌸</div>
+                        <h3 class="text-xl font-bold text-primary">Cloudy-Puk-Jai</h3>
+                    </div>
+                    <button @click="mobileMenuOpen = false" class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700">
+                        <i class="fas fa-times text-lg"></i>
+                    </button>
+                </div>
+                
+                <div class="space-y-2">
+                    <a href="#home" @click="navigateTo('home'); mobileMenuOpen = false" class="flex items-center px-3 py-3 rounded-lg font-medium text-gray-600 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                        <i class="fas fa-home-alt mr-3 w-4"></i>หน้าหลัก
+                    </a>
+                    <a href="#journal" @click="navigateTo('journal'); mobileMenuOpen = false" class="flex items-center px-3 py-3 rounded-lg font-medium text-gray-600 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                        <i class="fas fa-journal-whills mr-3 w-4"></i>บันทึกความรู้สึก
+                    </a>
+                    <a href="#articles" @click="navigateTo('articles'); mobileMenuOpen = false" class="flex items-center px-3 py-3 rounded-lg font-medium text-gray-600 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                        <i class="fas fa-book-open mr-3 w-4"></i>ความรู้เพื่อสุขภาพจิต
+                    </a>
+                    <a href="#music" @click="navigateTo('music'); mobileMenuOpen = false" class="flex items-center px-3 py-3 rounded-lg font-medium text-gray-600 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                        <i class="fas fa-headphones mr-3 w-4"></i>ผ่อนคลายด้วยเพลง
+                    </a>
+                    <a href="#tools" @click="navigateTo('tools'); mobileMenuOpen = false" class="flex items-center px-3 py-3 rounded-lg font-medium text-gray-600 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                        <i class="fas fa-lungs mr-3 w-4"></i>Breathing Buddy
+                    </a>
+                    <a href="#assessments" @click="navigateTo('assessments'); mobileMenuOpen = false" class="flex items-center px-3 py-3 rounded-lg font-medium text-gray-600 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                        <i class="fas fa-clipboard-list mr-3 w-4"></i>แบบทดสอบ
+                    </a>
+                    <a href="history.html" @click="mobileMenuOpen = false" class="flex items-center px-3 py-3 rounded-lg font-medium text-gray-600 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                        <i class="fas fa-chart-line mr-3 w-4"></i>ประวัติผลการทดสอบ
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
     <!-- Main Content -->
     <main class="container mx-auto px-4 py-6">
-      <!-- Home Page -->
-      <div x-show="currentPage === 'home'" x-transition class="space-y-8">
-        <!-- Welcome Card -->
-        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 md:p-8">
-          <h2 class="text-2xl md:text-3xl font-bold text-primary mb-4">สวัสดี! วันนี้คุณเป็นอย่างไรบ้าง?</h2>
-          <p class="text-gray-600 dark:text-gray-500 mb-6">เลือกอารมณ์ของคุณในวันนี้ แล้วเราจะช่วยให้คุณรู้สึกดีขึ้น</p>
-          <!-- Mood Selector -->
-          <div class="flex flex-wrap justify-center gap-4 md:gap-6 my-8">
-            <template x-for="(mood, index) in moods" :key="mood.id">
-              <button @click="selectMood(mood)" :class="{ 'ring-4 ring-primary scale-105': selectedMood === mood.id }" class="w-16 h-16 md:w-20 md:h-20 rounded-full flex flex-col items-center justify-center transition-all duration-300" :style="`background-color: ${mood.color}`" :id="`mood-${mood.id}`" :name="`mood-${mood.id}`" :aria-label="`อารมณ์: ${mood.label}`">
-                <span class="text-2xl md:text-3xl" x-text="mood.emoji"></span>
-                <span class="text-xs md:text-sm font-medium mt-1 text-gray-500" x-text="mood.label"></span>
-              </button>
-            </template>
-          </div>
-          <!-- Mood Response -->
-          <div class="mt-8 p-4 rounded-lg bg-gray-50 dark:bg-gray-700">
-            <template x-if="selectedMood">
-              <div>
-                <p class="font-semibold text-lg mb-2" x-text="moodResponses[selectedMood].message"></p>
-                <p class="text-gray-600 dark:text-gray-500" x-text="moodResponses[selectedMood].suggestion"></p>
+      <!-- Desktop Layout: 2 Columns -->
+      <div class="flex flex-col lg:flex-row gap-6">
+        <!-- Left Column: Menu Bar (Desktop Only) -->
+        <aside class="lg:w-64 lg:flex-shrink-0 hidden lg:block">
+          <!-- Desktop Sidebar Navigation -->
+          <nav class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-4 sticky top-24 h-fit">
+            <!-- Logo Section -->
+            <div class="flex items-center justify-center gap-3 mb-6 pb-4 border-b border-gray-200 dark:border-gray-700">
+              <div class="text-3xl text-primary animate-pulse-slow">🌸</div>
+              <h3 class="text-xl font-bold text-primary">Cloudy-Puk-Jai</h3>
+            </div>
+            
+            <div class="space-y-2">
+              <a href="#" @click="currentPage = 'home'" :class="currentPage === 'home' ? 'bg-primary-light text-white' : 'text-gray-600 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700'" class="flex items-center px-3 py-2 rounded-lg font-medium transition-colors">
+                <i class="fas fa-home-alt mr-3 w-4"></i>หน้าหลัก
+              </a>
+              <a href="#journal" @click="navigateTo('journal')" :class="currentPage === 'journal' ? 'bg-primary-light text-white' : 'text-gray-600 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700'" class="flex items-center px-3 py-2 rounded-lg font-medium transition-colors">
+                <i class="fas fa-journal-whills mr-3 w-4"></i>บันทึกความรู้สึก
+              </a>
+              <a href="#articles" @click="navigateTo('articles')" :class="currentPage === 'articles' ? 'bg-primary-light text-white' : 'text-gray-600 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700'" class="flex items-center px-3 py-2 rounded-lg font-medium transition-colors">
+                <i class="fas fa-book-open mr-3 w-4"></i>ความรู้เพื่อสุขภาพจิต
+              </a>
+              <a href="#music" @click="navigateTo('music')" :class="currentPage === 'music' ? 'bg-primary-light text-white' : 'text-gray-600 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700'" class="flex items-center px-3 py-2 rounded-lg font-medium transition-colors">
+                <i class="fas fa-headphones mr-3 w-4"></i>ผ่อนคลายด้วยเพลง
+              </a>
+              <a href="#" @click="navigateTo('tools')" class="flex items-center px-3 py-2 rounded-lg font-medium text-gray-600 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                <i class="fas fa-lungs mr-3 w-4"></i>Breathing Buddy
+              </a>
+              <a href="#assessments" @click="navigateTo('assessments')" :class="currentPage === 'assessments' ? 'bg-primary-light text-white' : 'text-gray-600 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700'" class="flex items-center px-3 py-2 rounded-lg font-medium transition-colors">
+                <i class="fas fa-clipboard-list mr-3 w-4"></i>แบบทดสอบ
+              </a>
+              <a href="history.html" class="flex items-center px-3 py-2 rounded-lg font-medium text-gray-600 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                <i class="fas fa-chart-line mr-3 w-4"></i>ประวัติผลการทดสอบ
+              </a>
+              
+              <!-- Help Section -->
+              <div class="pt-4 border-t border-gray-200 dark:border-gray-700">
+                <button @click="openModal('help')" class="w-full flex items-center px-3 py-2 rounded-lg font-medium text-gray-600 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                  <i class="fas fa-hands-helping mr-3 w-4 text-primary"></i>
+                  <span>หน่วยงานช่วยเหลือ</span>
+                </button>
               </div>
-            </template>
-            <template x-if="!selectedMood">
-              <p class="text-gray-600 dark:text-gray-500">เลือกอารมณ์เพื่อดูคำแนะนำพิเศษสำหรับคุณ</p>
-            </template>
+              
+              <!-- Theme Toggle -->
+              <div class="pt-4 border-t border-gray-200 dark:border-gray-700">
+                <button @click="toggleDarkMode()" class="w-full flex items-center px-3 py-2 rounded-lg font-medium text-gray-600 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                  <i :class="darkMode ? 'fas fa-sun' : 'fas fa-moon'" class="mr-3 w-4"></i>
+                  <span x-text="darkMode ? 'โหมดสว่าง' : 'โหมดมืด'"></span>
+                </button>
+              </div>
+            </div>
+          </nav>
+        </aside>
+        
+        <!-- Right Column: Main Content -->
+        <div class="flex-1">
+          <!-- Home Page -->
+          <div x-show="currentPage === 'home'" x-transition class="space-y-8">
+        <!-- Welcome Card -->
+        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 md:p-8 relative overflow-hidden animate-slide-up">
+          <!-- Animated Background -->
+          <div class="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-primary/10 to-primary-light/10 rounded-full blur-3xl animate-float"></div>
+          <div class="absolute bottom-0 left-0 w-24 h-24 bg-gradient-to-tr from-secondary/10 to-secondary/20 rounded-full blur-2xl animate-float" style="animation-delay: 1s;"></div>
+          
+          <div class="relative z-10">
+            <h2 class="text-2xl md:text-3xl font-bold text-primary mb-2 animate-fade-in text-center" x-text="timeGreeting + '!'"></h2>
+            <p class="text-xl md:text-2xl font-medium text-gray-600 dark:text-gray-500 mb-6 animate-fade-in text-center" style="animation-delay: 0.1s;">วันนี้คุณเป็นอย่างไรบ้าง?</p>
+            <p class="text-gray-600 dark:text-gray-500 mb-6 animate-fade-in" style="animation-delay: 0.1s;">เลือกอารมณ์ของคุณในวันนี้ แล้วเราจะช่วยให้คุณรู้สึกดีขึ้น</p>
+            
+            <!-- Mood Selector with Enhanced Design -->
+            <div class="flex flex-wrap justify-center gap-4 md:gap-6 my-8">
+              <template x-for="(mood, index) in moods" :key="mood.id">
+                <button @click="selectMood(mood)" 
+                        :class="{ 'ring-4 ring-primary scale-105 shadow-lg': selectedMood === mood.id }"
+                        class="w-16 h-16 md:w-20 md:h-20 rounded-full flex flex-col items-center justify-center transition-all duration-300 hover:scale-110 hover:shadow-xl relative group menu-item animate-slide-up"
+                        :style="`background: linear-gradient(135deg, ${mood.color}, ${mood.color}dd); animation-delay: ${index * 0.1}s;`" 
+                        :id="`mood-${mood.id}`" 
+                        :name="`mood-${mood.id}`" 
+                        :aria-label="`อารมณ์: ${mood.label}`">
+                  <!-- Animated Emoji -->
+                  <span class="text-2xl md:text-3xl transition-transform duration-300 group-hover:scale-125" x-text="mood.emoji"></span>
+                  <span class="text-xs md:text-sm font-medium mt-1 text-gray-800" x-text="mood.label"></span>
+                  <!-- Pulse Effect for Selected Mood -->
+                  <div x-show="selectedMood === mood.id" class="absolute inset-0 rounded-full animate-ping bg-primary/20"></div>
+                </button>
+              </template>
+            </div>
+            
+            <!-- Enhanced Mood Response -->
+            <div class="mt-8 p-4 rounded-lg bg-gray-50 dark:bg-gray-700 relative animate-slide-up" style="animation-delay: 0.5s;">
+              <template x-if="selectedMood">
+                <div class="animate-fade-in">
+                  <div class="flex items-start space-x-3">
+                    <div class="flex-shrink-0 w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center animate-bounce-subtle">
+                      <span class="text-lg" x-text="moods.find(m => m.id === selectedMood)?.emoji"></span>
+                    </div>
+                    <div class="flex-1">
+                      <p class="font-semibold text-lg mb-2 animate-fade-in" x-text="moodResponses[selectedMood].message"></p>
+                      <p class="text-gray-600 dark:text-gray-500 animate-fade-in" style="animation-delay: 0.2s;" x-text="moodResponses[selectedMood].suggestion"></p>
+                    </div>
+                  </div>
+                </div>
+              </template>
+              <template x-if="!selectedMood">
+                <div class="text-center">
+                  <div class="inline-flex items-center space-x-2 text-gray-600 dark:text-gray-500">
+                    <i class="fas fa-hand-pointer animate-bounce"></i>
+                    <p>เลือกอารมณ์เพื่อดูคำแนะนำพิเศษสำหรับคุณ</p>
+                  </div>
+                </div>
+              </template>
+            </div>
           </div>
         </div>
         <!-- Daily Quote -->
-        <div class="bg-gradient-to-r from-green-300 to-emerald-200 rounded-xl shadow p-4 relative overflow-hidden h-[130px]">
+        <div class="bg-gradient-to-r from-green-300 to-emerald-200 rounded-xl shadow p-4 relative overflow-hidden h-[130px] animate-slide-up" style="animation-delay: 0.2s;">
           <div class="absolute top-0 right-0 w-12 h-12">
-            <div class="absolute top-1 right-1 text-2xl opacity-30">✨</div>
+            <div class="absolute top-1 right-1 text-2xl opacity-30 animate-pulse">✨</div>
           </div>
           <div class="relative z-10 h-full flex flex-col">
             <div class="flex-1 flex items-center justify-center">
-              <p class="text-[28px] leading-tight font-bold text-gray-700 line-clamp-3 text-center" x-text="randomQuote ? randomQuote.text : '✨กำลังโหลดคำคม...'" :title="randomQuote ? randomQuote.text : ''"></p>
+              <p class="text-[28px] leading-tight font-bold text-gray-700 line-clamp-3 text-center animate-fade-in" x-text="randomQuote ? randomQuote.text : '✨กำลังโหลดคำคม...'" :title="randomQuote ? randomQuote.text : ''"></p>
             </div>
             <div class="flex items-center justify-between mt-auto pt-2">
               <div class="w-10 sm:w-16"></div>
-              <p class="text-[16px] text-gray-600 truncate font-medium" x-text="randomQuote ? '💕 ' + randomQuote.author : ''"></p>
-              <button @click="showRandomQuote()" class="flex items-center gap-1 px-3 py-1 bg-green-200/50 hover:bg-green-300/80 rounded-full text-gray-700 text-[13px] font-medium transition-all duration-200 active:scale-95" aria-label="สุ่มคำคมใหม่">
+              <p class="text-[16px] text-gray-600 truncate font-medium animate-fade-in" x-text="randomQuote ? '💕 ' + randomQuote.author : ''"></p>
+              <button @click="showRandomQuote()" class="flex items-center gap-1 px-3 py-1 bg-green-200/50 hover:bg-green-300/80 rounded-full text-gray-700 text-[13px] font-medium transition-all duration-200 active:scale-95 menu-item" aria-label="สุ่มคำคมใหม่">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
                 </svg>
@@ -171,10 +284,103 @@
             </div>
           </div>
         </div>
+
+        <!-- สวนแห่งใจ - การเจริญตัว -->
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 animate-slide-up" style="animation-delay: 0.3s;">
+          <h3 class="text-xl font-bold text-primary mb-4 flex items-center animate-fade-in">
+            <i class="fas fa-seedling mr-3 text-primary animate-pulse-slow"></i>
+            สวนแห่งใจ - พื้นที่เจริญตัวของคุณ
+          </h3>
+          
+          <!-- คำอธิบายสวนแห่งใจ -->
+          <div class="mb-6 p-4 bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 rounded-lg border border-green-200 dark:border-green-800">
+            <div class="flex items-start space-x-3">
+              <div class="w-8 h-8 rounded-full bg-green-100 dark:bg-green-800/30 flex items-center justify-center flex-shrink-0">
+                <span class="text-lg">🌱</span>
+              </div>
+              <div>
+                <h4 class="font-semibold text-green-800 dark:text-green-200 mb-2">อะไรคือสวนแห่งใจ?</h4>
+                <p class="text-sm text-green-700 dark:text-green-300">
+                  สวนแห่งใจคือพื้นที่ส่วนตัวสำหรับการเจริญตัว เหมือนต้นไม้ที่เติบโตไปพร้อมกับการดูแลสุขภาพจิตของคุณ 
+                  ยิ่งคุณดูแลใจดี ต้นไม้ก็จะยิ่งเติบโตและแสดงถึงความแข็งแกร่งของจิตใจ
+                </p>
+              </div>
+            </div>
+          </div>
+          
+          <div class="grid grid-cols-1 gap-4">
+            <!-- ต้นไม้ของคุณ -->
+            <div class="text-center p-4 bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 rounded-lg animate-slide-up" style="animation-delay: 0.4s;">
+              <div class="text-5xl mb-3 animate-pulse" x-text="tree.icon"></div>
+              <div class="text-lg font-semibold text-primary mb-1 animate-fade-in" x-text="tree.name"></div>
+              <div class="text-sm text-gray-600 dark:text-gray-400 mb-2 animate-fade-in" style="animation-delay: 0.1s;">ระดับ <span x-text="tree.level"></span></div>
+              <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2 mb-2">
+                <div class="bg-gradient-to-r from-green-400 to-green-600 h-2 rounded-full transition-all duration-500 animate-slide-right" 
+                     :style="`width: ${(tree.progress % 100)}%`"></div>
+              </div>
+              <div class="text-xs text-gray-500 dark:text-gray-400 animate-fade-in" style="animation-delay: 0.2s;">
+                คะแนน: <span x-text="tree.points"></span> | 
+                จุดความเจริญ: <span x-text="tree.progress"></span>
+              </div>
+            </div>
+
+            <!-- สถิติการเจริญตัว -->
+            <div class="space-y-3">
+              <div class="flex items-center justify-between p-3 bg-gradient-to-r from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/20 rounded-lg animate-slide-up menu-item" style="animation-delay: 0.5s;">
+                <div class="flex items-center space-x-2">
+                  <span class="text-2xl animate-bounce-subtle">🔥</span>
+                  <div>
+                    <div class="text-sm font-medium text-blue-800 dark:text-blue-200">ติดตามอารมณ์</div>
+                    <div class="text-xs text-blue-600 dark:text-blue-400">ติดต่อ <span x-text="getMoodStreak()"></span> วัน</div>
+                  </div>
+                </div>
+                <div class="text-lg font-bold text-blue-600 dark:text-blue-400 animate-fade-in" x-text="getMoodStreak()"></div>
+              </div>
+
+              <div class="flex items-center justify-between p-3 bg-gradient-to-r from-purple-50 to-purple-100 dark:from-purple-900/20 dark:to-purple-800/20 rounded-lg animate-slide-up menu-item" style="animation-delay: 0.6s;">
+                <div class="flex items-center space-x-2">
+                  <span class="text-2xl animate-bounce-subtle" style="animation-delay: 0.1s;">🌟</span>
+                  <div>
+                    <div class="text-sm font-medium text-purple-800 dark:text-purple-200">ความสำเร็จ</div>
+                    <div class="text-xs text-purple-600 dark:text-purple-400">ได้รับแล้ว</div>
+                  </div>
+                </div>
+                <div class="text-lg font-bold text-purple-600 dark:text-purple-400 animate-fade-in" x-text="personalGrowth.achievements.length"></div>
+              </div>
+
+              <div class="flex items-center justify-between p-3 bg-gradient-to-r from-orange-50 to-orange-100 dark:from-orange-900/20 dark:to-orange-800/20 rounded-lg animate-slide-up menu-item" style="animation-delay: 0.7s;">
+                <div class="flex items-center space-x-2">
+                  <span class="text-2xl animate-bounce-subtle" style="animation-delay: 0.2s;">📝</span>
+                  <div>
+                    <div class="text-sm font-medium text-orange-800 dark:text-orange-200">บันทึกวันนี้</div>
+                    <div class="text-xs text-orange-600 dark:text-orange-400">เขียนแล้ว</div>
+                  </div>
+                </div>
+                <div class="text-lg font-bold text-orange-600 dark:text-orange-400 animate-fade-in" x-text="journalEntries.length"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ความสำเร็จล่าสุด -->
+          <template x-if="personalGrowth.achievements.length > 0">
+            <div class="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700 animate-slide-up" style="animation-delay: 0.8s;">
+              <h4 class="text-sm font-semibold text-primary mb-2 animate-fade-in">🏆 ความสำเร็จล่าสุด</h4>
+              <div class="flex flex-wrap gap-2">
+                <template x-for="(achievement, index) in personalGrowth.achievements.slice(-3)" :key="achievement.id">
+                  <div class="flex items-center space-x-1 px-2 py-1 bg-gradient-to-r from-yellow-100 to-yellow-200 dark:from-yellow-900/30 dark:to-yellow-800/30 rounded-full border border-yellow-300 dark:border-yellow-600 animate-slide-up menu-item" 
+                       :style="`animation-delay: ${0.9 + index * 0.1}s;`">
+                    <span class="text-sm animate-bounce-subtle" x-text="achievement.icon"></span>
+                    <span class="text-xs font-medium text-yellow-800 dark:text-yellow-200 animate-fade-in" x-text="achievement.title"></span>
+                  </div>
+                </template>
+              </div>
+            </div>
+          </template>
+        </div>
         <!-- Features Grid -->
         <div>
           <h3 class="text-2xl font-bold text-primary mb-6 flex items-center">
-            <i class="fas fa-magic mr-3"></i>ฟีเจอร์เพื่อสุขภาพใจ
+            <i class="fas fa-heart mr-3"></i>เครื่องมือดูแลใจ
           </h3>
           <div class="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
             <template x-for="(feature, index) in features" :key="feature.id">
@@ -188,19 +394,6 @@
         </div>
       </div>
       <!-- ปิด Features Grid -->
-      <!-- Quick Help Section -->
-      <div x-show="agreedToTerms && currentPage === 'home'" class="mt-8 pt-6 border-t border-gray-200 dark:border-gray-700">
-        <div class="bg-gradient-to-r from-primary/5 to-primary-light/5 rounded-xl p-5 text-center">
-          <div class="max-w-md mx-auto">
-            <div class="text-3xl mb-3">🌸</div>
-            <h4 class="text-base font-bold text-primary mb-2">ต้องการดูคำแนะนำอีกครั้ง?</h4>
-            <p class="text-gray-600 dark:text-gray-500 mb-4 text-sm"> สามารถเปิด "คำแนะนำในการดูแลใจ" ได้ตลอดเวลา </p>
-            <button @click="modalOpen = 'welcome'" class="inline-flex items-center gap-2 bg-primary hover:bg-primary-dark text-white 
-                           font-medium px-4 py-2.5 rounded-lg transition-colors">
-              <i class="fas fa-book-open"></i> คำแนะนำในการดูแลใจ </button>
-          </div>
-        </div>
-      </div>
       </div>
       <!-- ปิดหน้า Home -->
       <!-- Journal Page -->
@@ -209,71 +402,70 @@
           <i class="fas fa-book mr-3"></i>สมุดบันทึก
         </h2>
         <!-- คำแนะนำสำหรับสมุดบันทึก -->
-        <div class="mb-8">
-          <div class="bg-gradient-to-r from-primary/5 to-primary-light/5 border-l-4 border-primary rounded-r-lg p-5">
-            <div class="flex items-center justify-between mb-4 cursor-pointer" @click="journalTipsOpen = !journalTipsOpen">
+        <div class="mb-6">
+          <div class="bg-gradient-to-r from-primary/5 to-primary-light/5 border-l-4 border-primary rounded-lg p-4">
+            <div class="flex items-center justify-between mb-3 cursor-pointer" @click="journalTipsOpen = !journalTipsOpen">
               <div class="flex items-center">
-                <i class="fas fa-book-open text-xl text-primary mr-3"></i>
-                <h3 class="text-lg font-bold text-primary">คำแนะนำการเขียนบันทึกสุขภาพใจ</h3>
+                <i class="fas fa-book-open text-lg text-primary mr-2"></i>
+                <h3 class="text-base font-bold text-primary">คำแนะนำการเขียนบันทึก</h3>
               </div>
               <i class="fas fa-chevron-down text-primary transition-transform duration-300" :class="{'rotate-180': journalTipsOpen}"></i>
             </div>
-            <div x-show="journalTipsOpen" x-transition class="space-y-5">
+            <div x-show="journalTipsOpen" x-transition class="space-y-3">
               <!-- ทำไมต้องเขียนบันทึก -->
               <div class="flex items-start">
-                <div class="bg-primary/10 p-2 rounded-lg mr-4">
-                  <i class="fas fa-brain text-primary text-lg"></i>
+                <div class="bg-primary/10 p-2 rounded-lg mr-3">
+                  <i class="fas fa-brain text-primary text-sm"></i>
                 </div>
                 <div>
-                  <h4 class="font-bold text-primary mb-1">📝 พลังของการระบายความรู้สึกผ่านตัวอักษร</h4>
-                  <ul class="text-sm text-gray-700 dark:text-gray-500 space-y-1 list-disc pl-5">
-                    <li><strong>ลดความว้าวุ่น:</strong> ปลดปล่อยความเครียดด้วยการระบายความคิดที่ค้างคาออกมาเป็นข้อความ</li>
-                    <li><strong>เข้าใจใจตัวเอง:</strong> การทบทวนเหตุการณ์ผ่านการเขียนช่วยให้คุณเห็นมุมมองใหม่ๆ ที่อาจมองข้ามไป</li>
-                    <li><strong>เฝ้าดูการเติบโต:</strong> ติดตามพัฒนาการทางอารมณ์และค้นพบรูปแบบความคิดที่ส่งผลต่อใจเรา</li>
+                  <h4 class="font-bold text-primary mb-1 text-sm">📝 พลังของการระบายความรู้สึก</h4>
+                  <ul class="text-xs text-gray-700 dark:text-gray-500 space-y-1 list-disc pl-4">
+                    <li><strong>ลดความเครียด:</strong> ระบายความคิดที่ค้างคา</li>
+                    <li><strong>เข้าใจใจตัวเอง:</strong> เห็นมุมมองใหม่ๆ ที่อาจมองข้าม</li>
+                    <li><strong>ติดตามการเติบโต:</strong> ค้นพบรูปแบบความคิดที่ส่งผล</li>
                   </ul>
                 </div>
               </div>
               <!-- คำแนะนำการเขียน -->
               <div class="flex items-start">
-                <div class="bg-primary/10 p-2 rounded-lg mr-4">
-                  <i class="fas fa-lightbulb text-primary text-lg"></i>
+                <div class="bg-primary/10 p-2 rounded-lg mr-3">
+                  <i class="fas fa-lightbulb text-primary text-sm"></i>
                 </div>
                 <div>
-                  <h4 class="font-bold text-primary mb-1">💡 เริ่มต้นเขียนบันทึกอย่างเป็นมิตรต่อตัวเอง</h4>
-                  <ul class="text-sm text-gray-700 dark:text-gray-500 space-y-1 list-disc pl-5">
-                    <li><strong>เขียนอย่างอิสระ:</strong> ไม่ต้องกังวลเรื่องภาษาหรือการสะกดคำ ให้ปลายนิ้วนำทางใจไปได้เลย</li>
-                    <li><strong>ซื่อสัตย์ต่ออารมณ์:</strong> ถามตัวเองว่า "วันนี้ใจเป็นอย่างไรบ้าง?" โดยไม่ต้องตัดสินว่าดีหรือร้าย</li>
-                    <li><strong>บันทึกเรื่องราวดีๆ:</strong> ขอบคุณเรื่องเล็กน้อยในวันนั้น เพื่อสะสมพลังบวกไว้ในใจ</li>
-                    <li><strong>ไม่ต้องกดดัน:</strong> แค่ประโยคสั้นๆ หรือคำคำเดียว ก็เป็นจุดเริ่มต้นของการเยียวยาที่มีค่าแล้ว</li>
+                  <h4 class="font-bold text-primary mb-1 text-sm">💡 เริ่มต้นเขียนบันทึก</h4>
+                  <ul class="text-xs text-gray-700 dark:text-gray-500 space-y-1 list-disc pl-4">
+                    <li><strong>เขียนอย่างอิสระ:</strong> ไม่ต้องกังวลเรื่องภาษา</li>
+                    <li><strong>ซื่อสัตย์ต่ออารมณ์:</strong> ถามตัวเองว่า "วันนี้ใจเป็นอย่างไร?"</li>
+                    <li><strong>บันทึกเรื่องดีๆ:</strong> ขอบคุณเรื่องเล็กๆ ในวันนั้น</li>
+                    <li><strong>ไม่ต้องกดดัน:</strong> แค่ประโยคสั้นๆ ก็เป็นจุดเริ่มต้น</li>
                   </ul>
                 </div>
               </div>
               <!-- ความเป็นส่วนตัว -->
               <div class="flex items-start">
-                <div class="bg-primary/10 p-2 rounded-lg mr-4">
-                  <i class="fas fa-lock text-primary text-lg"></i>
+                <div class="bg-primary/10 p-2 rounded-lg mr-3">
+                  <i class="fas fa-lock text-primary text-sm"></i>
                 </div>
                 <div>
-                  <h4 class="font-bold text-primary mb-1">🔒 พื้นที่ส่วนตัวที่ปลอดภัยที่สุดของคุณ</h4>
-                  <ul class="text-sm text-gray-700 dark:text-gray-500 space-y-1 list-disc pl-5">
-                    <li><strong>เก็บไว้ที่นี่เท่านั้น:</strong> บันทึกทั้งหมดจะถูกเก็บไว้ใน <strong>อุปกรณ์ของคุณ</strong> ไม่มีการส่งออกไปภายนอก</li>
-                    <li><strong>มั่นใจและอุ่นใจ:</strong> ไม่มีใครเข้าถึงบันทึกของคุณได้ แม้แต่ทีมงานผู้พัฒนา</li>
-                    <li><strong>ข้อมูลไม่สูญหาย:</strong> บันทึกจะยังคงอยู่จนกว่าคุณจะเลือกกดลบด้วยตนเอง</li>
-                    <li><strong>อิสระในการจัดการ:</strong> คุณสามารถลบข้อมูลทั้งหมดได้ทุกเมื่อที่ต้องการความสบายใจ</li>
+                  <h4 class="font-bold text-primary mb-1 text-sm">🔒 ความเป็นส่วนตัว</h4>
+                  <ul class="text-xs text-gray-700 dark:text-gray-500 space-y-1 list-disc pl-4">
+                    <li><strong>เก็บไว้ที่นี่เท่านั้น:</strong> บันทึกอยู่ในอุปกรณ์ของคุณ</li>
+                    <li><strong>มั่นใจและอุ่นใจ:</strong> ไม่มีใครเข้าถึงได้</li>
+                    <li><strong>ข้อมูลไม่สูญหาย:</strong> จะอยู่จนกว่าคุณจะลบเอง</li>
                   </ul>
                 </div>
               </div>
               <!-- ตัวอย่างการเขียน -->
-              <div class="bg-white dark:bg-gray-800 rounded-lg p-4 border border-primary/20">
-                <h4 class="font-bold text-primary mb-2 text-sm">📌 ตัวอย่างพื้นที่ระบายความในใจ:</h4>
-                <p class="text-sm text-gray-600 dark:text-gray-400 italic"> "วันนี้รู้สึกเหนื่อยจากการทำงาน แต่ก็ภูมิใจที่ส่งโปรเจกต์เสร็จแล้ว... สิ่งที่ขอบคุณวันนี้คือ 1) เพื่อนซื้อกาแฟมาฝาก 2) ท้องฟ้าตอนเย็นสวยมาก 3) น้องแมวที่บ้านเดินมาคลอเคลียทำให้หายเหนื่อย" </p>
+              <div class="bg-white dark:bg-gray-800 rounded-lg p-3 border border-primary/20">
+                <h4 class="font-bold text-primary mb-1 text-xs">📌 ตัวอย่าง:</h4>
+                <p class="text-xs text-gray-600 dark:text-gray-400 italic"> "วันนี้เหนื่อยจากงาน แต่ภูมิใจส่งโปรเจกต์เสร็จ... ขอบคุณเพื่อนซื้อกาแฟ ท้องฟ้าตอนเย็นสวย และน้องแมวที่บ้าน" </p>
               </div>
             </div>
             <!-- ปุ่ม toggle สำหรับมือถือ -->
-            <div class="mt-4 pt-4 border-t border-primary/20 text-center">
-              <button @click="journalTipsOpen = !journalTipsOpen" class="text-primary hover:text-primary-dark text-sm font-medium flex items-center justify-center mx-auto">
-                <span x-text="journalTipsOpen ? 'ซ่อนคำแนะนำ' : 'แสดงคำแนะนำทั้งหมด'"></span>
-                <i class="fas fa-chevron-down ml-2 text-xs transition-transform duration-300" :class="{'rotate-180': journalTipsOpen}"></i>
+            <div class="mt-3 pt-3 border-t border-primary/20 text-center">
+              <button @click="journalTipsOpen = !journalTipsOpen" class="text-primary hover:text-primary-dark text-xs font-medium flex items-center justify-center mx-auto">
+                <span x-text="journalTipsOpen ? 'ซ่อนคำแนะนำ' : 'แสดงคำแนะนำ'"></span>
+                <i class="fas fa-chevron-down ml-1 text-xs transition-transform duration-300" :class="{'rotate-180': journalTipsOpen}"></i>
               </button>
             </div>
           </div>
@@ -834,7 +1026,7 @@
         </div>
         <!-- Grid แนวนอนหลายแถว -->
         <div class="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2">
-          <template x-for="(article, index) in articlesData.articles" :key="article.id">
+          <template x-for="(article, index) in articlesData" :key="article.id">
             <div @click="openArticleModal(article)" class="group bg-white dark:bg-gray-800 rounded-lg overflow-hidden hover:shadow-md transition-all duration-200 cursor-pointer flex flex-col border border-gray-200 dark:border-gray-700 hover:border-primary/30 hover:bg-gray-50 dark:hover:bg-gray-750" :id="`article-${article.id}`" tabindex="0" @keydown.enter="openArticleModal(article)" role="button" aria-label="อ่านบทความ: {{ article.title }}">
               <!-- รูปภาพเล็ก แบบแอปดูหนัง -->
               <div class="w-full aspect-[16/9] relative overflow-hidden">
@@ -865,7 +1057,7 @@
           </template>
         </div>
       </div>
-      <!-- Assessments Page -->
+      <!-- assessments Page -->
       <div x-show="currentPage === 'assessments'" x-transition class="space-y-8">
         <h2 class="text-2xl md:text-3xl font-bold text-primary mb-6 flex items-center">
           <i class="fas fa-clipboard-check mr-3"></i>แบบทดสอบสุขภาพจิต
@@ -883,17 +1075,32 @@
         </div>
         <!-- คำแนะนำการใช้แบบทดสอบ -->
         <div class="mb-8">
-          <div class="bg-gradient-to-r from-primary/5 to-primary-light/5 border-l-4 border-primary rounded-r-lg p-5">
-            <!-- Header with toggle -->
+          <div class="bg-gradient-to-r from-primary/5 to-primary-light/5 border-l-4 border-primary rounded-lg p-5 shadow-md ring-1 ring-primary/30">
+            <!-- Header -->
             <div class="flex items-center justify-between mb-4 cursor-pointer" @click="assessmentTipsOpen = !assessmentTipsOpen">
               <div class="flex items-center">
-                <i class="fas fa-clipboard-check text-xl text-primary mr-3"></i>
-                <h3 class="text-lg font-bold text-primary">คำแนะนำการใช้งานแบบทดสอบ Cloudy-Puk-Jai</h3>
+                <i class="fas fa-lightbulb text-lg text-primary mr-3"></i>
+                <h3 class="text-lg font-bold text-primary">แสดงคำแนะนำทั้งหมด</h3>
               </div>
               <i class="fas fa-chevron-down text-primary transition-transform duration-300" :class="{'rotate-180': assessmentTipsOpen}"></i>
             </div>
             <!-- Content -->
             <div x-show="assessmentTipsOpen" x-transition class="space-y-4">
+              <!-- คำแนะนำก่อนเริ่ม -->
+              <div class="flex items-start">
+                <div class="bg-primary/10 p-2 rounded-lg mr-3">
+                  <i class="fas fa-lightbulb text-primary text-sm"></i>
+                </div>
+                <div>
+                  <h4 class="font-bold text-primary mb-1">💡 คำแนะนำก่อนเริ่ม</h4>
+                  <ul class="text-sm text-gray-700 dark:text-gray-500 space-y-1 list-disc pl-4">
+                    <li>อยู่ในสภาพจิตที่สงบและเป็นธรรมชาติมากที่สุด</li>
+                    <li>ตอบคำถามด้วยความซื่อสัตย์ต่อตัวเอง</li>
+                    <li>ไม่ต้องคิดมาก - เลือกคำตอบที่ตรงกับความรู้สึกในปัจจุบัน</li>
+                    <li>แบบทดสอบนี้เป็นเพียงเครื่องมือช่วยในการสังเกตตนเอง</li>
+                  </ul>
+                </div>
+              </div>
               <!-- ปรัชญา -->
               <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4">
                 <div class="flex">
@@ -1007,8 +1214,6 @@
               </div>
               <!-- ปุ่มสำคัญ -->
               <div class="flex flex-col sm:flex-row gap-3 pt-2">
-                <a href="https://checkin.dmh.go.th" target="_blank" class="inline-flex items-center justify-center px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors text-sm">
-                  <i class="fas fa-hospital mr-2"></i>Mental Health Check In (กรมสุขภาพจิต) </a>
                 <button @click="openModal('crisis')" class="inline-flex items-center justify-center px-4 py-2 bg-error-soft hover:bg-error-soft text-white rounded-lg transition-colors text-sm">
                   <i class="fas fa-phone-alt mr-2"></i>สายด่วนสุขภาพจิต 1323 </button>
               </div>
@@ -1029,7 +1234,8 @@
           <button @click="assessmentTab = 'personality'" :class="{ 'border-b-2 border-primary text-primary': assessmentTab === 'personality' }" class="flex-1 py-3 font-medium text-center" id="personalityTab" name="assessmentTab" value="personality">
             <i class="fas fa-user mr-2"></i>บุคลิกภาพ </button>
         </div>
-        <!-- Mental Health Tests -->
+        
+                <!-- Mental Health Tests -->
         <!-- Mental Health Tests -->
         <div x-show="assessmentTab === 'mental'" class="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-4 gap-2">
           <template x-for="(assessment, index) in mentalAssessments" :key="assessment.id">
@@ -1124,7 +1330,7 @@
                         <li>ผลลัพธ์เป็นเพียง <strong>แนวโน้ม</strong> ไม่ใช่การวินิจฉัย </li>
                         <li>ข้อมูลเก็บในอุปกรณ์คุณ <strong>ไม่มีการส่งออกไปภายนอก</strong>
                         </li>
-                        <li>หากต้องการการประเมินทางการแพทย์: <a href="https://checkin.dmh.go.th" target="_blank" class="underline font-semibold"> Mental Health Check In </a>
+                        <li>หากต้องการความช่วยเหลือเร่งด่วน: <strong>สายด่วนสุขภาพจิต 1323</strong>
                         </li>
                       </ul>
                     </div>
@@ -1259,7 +1465,7 @@
                 <i class="fas fa-redo mr-2"></i>ทำแบบทดสอบอีกครั้ง </button>
               <button @click="saveAssessmentResult()" class="flex-1 bg-accent hover:bg-yellow-500 text-gray-800 font-medium py-3 px-6 rounded-lg transition-colors flex items-center justify-center" id="saveResultBtn" name="saveResultBtn">
                 <i class="fas fa-save mr-2"></i>บันทึกผล </button>
-              <button @click="currentPage = 'assessments'" class="flex-1 bg-primary hover:bg-primary-dark text-white font-medium py-3 px-6 rounded-lg transition-colors flex items-center justify-center" id="backToAssessmentsBtn" name="backToAssessmentsBtn">
+              <button @click="currentPage = 'assessments'" class="flex-1 bg-primary hover:bg-primary-dark text-white font-medium py-3 px-6 rounded-lg transition-colors flex items-center justify-center" id="backToassessmentsBtn" name="backToassessmentsBtn">
                 <i class="fas fa-list mr-2"></i>แบบทดสอบทั้งหมด </button>
             </div>
           </div>
@@ -1267,111 +1473,31 @@
       </div>
       <!-- Growth Page -->
       <div x-show="currentPage === 'growth'" x-transition class="space-y-8">
-        <h2 class="text-2xl md:text-3xl font-bold text-primary mb-6 flex items-center">
-          <i class="fas fa-seedling mr-3"></i>สวนแห่งใจ
-        </h2>
-        <!-- คำแนะนำสวนแห่งใจ -->
-        <div class="mb-6">
-          <div class="bg-gradient-to-r from-primary/5 to-primary-light/5 border-l-4 border-primary rounded-r-lg p-5">
-            <div class="flex items-center justify-between mb-4 cursor-pointer" @click="growthTipsOpen = !growthTipsOpen">
-              <div class="flex items-center">
-                <i class="fas fa-seedling text-xl text-primary mr-3"></i>
-                <h3 class="text-lg font-bold text-primary">คำแนะนำการเติบโตในสวนแห่งใจ</h3>
-              </div>
-              <i class="fas fa-chevron-down text-primary transition-transform duration-300" :class="{'rotate-180': growthTipsOpen}"></i>
-            </div>
-            <div x-show="growthTipsOpen" x-transition class="space-y-4">
-              <!-- วิธีเติบโต -->
-              <div class="flex items-start">
-                <div class="bg-primary/10 p-2 rounded-lg mr-4">
-                  <i class="fas fa-leaf text-primary"></i>
-                </div>
-                <div>
-                  <h4 class="font-bold text-primary mb-1">🌱 วิธีทำให้ต้นไม้เติบโต</h4>
-                  <ul class="text-sm text-gray-700 dark:text-gray-500 space-y-1">
-                    <li>
-                      <strong>บันทึกประจำวัน</strong> = +1 ความคืบหน้า
-                    </li>
-                    <li>
-                      <strong>ทำแบบทดสอบ</strong> = +30 คะแนน
-                    </li>
-                    <li>
-                      <strong>อ่านบทความ</strong> = ไม่มีคะแนนแต่ได้ความรู้
-                    </li>
-                  </ul>
-                </div>
-              </div>
-              <!-- ระดับต้นไม้ -->
-              <div class="flex items-start">
-                <div class="bg-primary/10 p-2 rounded-lg mr-4">
-                  <i class="fas fa-tree text-primary"></i>
-                </div>
-                <div>
-                  <h4 class="font-bold text-primary mb-1">🌳 ระดับของต้นไม้คุณ</h4>
-                  <ul class="text-sm text-gray-700 dark:text-gray-500 space-y-1">
-                    <li>
-                      <strong>เมล็ดพันธุ์</strong> (0-6 บันทึก)
-                    </li>
-                    <li>
-                      <strong>ต้นกล้า</strong> (7-13 บันทึก)
-                    </li>
-                    <li>
-                      <strong>ต้นไม้เบิกบาน</strong> (14+ บันทึก)
-                    </li>
-                  </ul>
-                </div>
-              </div>
-              <!-- Badge -->
-              <div class="flex items-start">
-                <div class="bg-primary/10 p-2 rounded-lg mr-4">
-                  <i class="fas fa-award text-primary"></i>
-                </div>
-                <div>
-                  <h4 class="font-bold text-primary mb-1">🏆 Badge ที่จะได้รับ</h4>
-                  <p class="text-sm text-gray-700 dark:text-gray-500"> Badge แสดงความสำเร็จเล็กๆ ในแต่ละกิจกรรม เช่น บันทึกต่อเนื่อง 7 วัน, ทำแบบทดสอบครบทุกประเภท </p>
-                </div>
-              </div>
-            </div>
-            <!-- ปุ่ม toggle -->
-            <div class="mt-4 pt-4 border-t border-primary/20 text-center">
-              <button @click="growthTipsOpen = !growthTipsOpen" class="text-primary hover:text-primary-dark text-sm font-medium">
-                <span x-text="growthTipsOpen ? 'ซ่อนคำแนะนำ' : 'แสดงคำแนะนำ'"></span>
-              </button>
-            </div>
+        <!-- Hero Section -->
+        <div class="relative overflow-hidden rounded-3xl bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50 dark:from-green-900/20 dark:via-emerald-900/20 dark:to-teal-900/20 p-8 md:p-12 shadow-xl">
+          <!-- Floating Elements -->
+          <div class="absolute top-4 right-8 text-6xl opacity-20 animate-float">🌸</div>
+          <div class="absolute bottom-4 left-8 text-4xl opacity-20 animate-float" style="animation-delay: 1s;">🌿</div>
+          <div class="absolute top-1/2 right-1/4 text-5xl opacity-20 animate-float" style="animation-delay: 2s;">🍃</div>
+          
+          <div class="relative z-10 text-center">
+            <h2 class="text-3xl md:text-4xl font-bold text-primary mb-4 animate-fade-in">
+              <i class="fas fa-seedling mr-3"></i>สวนแห่งใจ
+            </h2>
+            <p class="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto animate-fade-in" style="animation-delay: 0.1s;">
+              พื้นที่เจริญตัวของคุณ - เติบโตไปพร้อมกับต้นไม้แห่งจิตใจ
+            </p>
           </div>
         </div>
-        <!-- Tree Stats -->
-        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 md:p-8">
+
+        <!-- Main Tree Display -->
+        <div class="bg-white dark:bg-gray-800 rounded-3xl shadow-xl p-8 md:p-12">
           <div class="text-center mb-8">
-            <div class="text-8xl mb-6 tree-transition animate-pulse-slow" :class="tree.animation" x-text="tree.icon"></div>
-            <h3 class="text-2xl font-bold text-primary mb-2" x-text="tree.name"></h3>
-            <p class="text-gray-600 dark:text-gray-500" x-text="`บันทึกอีก ${7 - tree.progress} ครั้งเพื่อให้ต้นไม้เติบโต!`"></p>
-          </div>
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div class="text-center p-4 bg-gray-50 dark:bg-gray-700 rounded-xl">
-              <div class="text-3xl text-primary mb-2">🔥</div>
-              <div class="font-bold mb-1">Streak</div>
-              <div class="text-2xl" x-text="`${tree.streak} วัน`"></div>
-            </div>
-            <div class="text-center p-4 bg-gray-50 dark:bg-gray-700 rounded-xl">
-              <div class="text-3xl text-primary mb-2">⭐</div>
-              <div class="font-bold mb-1">คะแนน</div>
-              <div class="text-2xl" x-text="`${tree.points} คะแนน`"></div>
-            </div>
-            <div class="text-center p-4 bg-gray-50 dark:bg-gray-700 rounded-xl">
-              <div class="text-3xl text-primary mb-2">🏆</div>
-              <div class="font-bold mb-1">Badge</div>
-              <div class="text-2xl" x-text="`${tree.badges} อัน`"></div>
-            </div>
-          </div>
-        </div>
-        <!-- Badges -->
-        <div>
-          <h3 class="text-xl font-bold text-primary mb-6 flex items-center">
-            <i class="fas fa-award mr-3"></i>Badge ของคุณ
-          </h3>
-          <div class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-4">
-            <template x-for="(badge, index) in badges" :key="badge.id">
+            <div class="relative inline-block">
+              <!-- Tree Container -->
+              <div class="w-32 h-32 md:w-40 md:h-40 rounded-full bg-gradient-to-br from-green-100 to-emerald-100 dark:from-green-800/30 dark:to-emerald-800/30 flex items-center justify-center shadow-lg animate-pulse-slow">
+                <div class="text-6xl md:text-8xl tree-transition" :class="tree.animation" x-text="tree.icon"></div>
+              <template x-for="badge in badges">
               <div :class="{ 'ring-4 ring-accent scale-105': badge.earned }" class="w-20 h-20 rounded-full flex items-center justify-center text-3xl bg-gray-100 dark:bg-gray-700 transition-all" :id="`badge-${badge.id}`" :aria-label="badge.earned ? 'ได้รับ badge นี้แล้ว' : 'ยังไม่ได้รับ badge นี้'">
                 <i :class="badge.icon"></i>
               </div>
@@ -1379,26 +1505,11 @@
           </div>
         </div>
       </div>
-    </main>
-    <!-- Footer -->
-    <footer class="bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 mt-12 py-8">
-      <div class="container mx-auto px-4">
-        <div class="flex flex-col items-center space-y-6">
-          <div class="flex items-center space-x-2">
-            <div class="text-2xl text-primary">🌸</div>
-            <h2 class="text-xl font-bold text-primary">Cloudy-Puk-Jai</h2>
-          </div>
-          <p class="text-gray-600 dark:text-gray-500 text-center">"พื้นที่พักใจที่คนอยากกลับมาใช้ทุกวัน"</p>
-          <div class="flex flex-wrap justify-center gap-6">
-            <button @click="openModal('crisis')" class="text-gray-600 dark:text-gray-500 hover:text-primary dark:hover:text-primary-light transition-colors" id="crisisBtn" name="crisisBtn"> แหล่งช่วยเหลือ </button>
-            <button @click="openModal('privacy')" class="text-gray-600 dark:text-gray-500 hover:text-primary dark:hover:text-primary-light transition-colors" id="privacyBtn" name="privacyBtn"> ความเป็นส่วนตัว </button>
-            <button @click="openModal('about')" class="text-gray-600 dark:text-gray-500 hover:text-primary dark:hover:text-primary-light transition-colors" id="aboutBtn" name="aboutBtn"> เกี่ยวกับเรา </button>
-            <a href="https://forms.gle/XSqb8nqh2gWgLKwu6" target="_blank" class="text-gray-600 dark:text-gray-500 hover:text-primary dark:hover:text-primary-light transition-colors" id="feedbackBtn" name="feedbackBtn"> "บอกความรู้สึกกับเรา"</a>
-          </div>
-          <p class="text-gray-5000 dark:text-gray-400 text-center">© 2026 Cloudy-Puk-Jai. พัฒนาด้วยความห่วงใย</p>
-        </div>
       </div>
-    </footer>
+      <!-- End Desktop Layout -->
+    </main>
+
+    
     <!-- Modals -->
     <!-- Crisis Resources Modal -->
     <div x-show="modalOpen === 'crisis'" x-transition class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
@@ -1549,33 +1660,239 @@
         <div class="p-6">
           <div class="text-center">
             <i class="fas fa-external-link-alt text-4xl text-primary mb-4"></i>
-            <h3 class="text-xl font-bold text-primary mb-2" x-text="currentArticle.title"></h3>
-            <p class="text-gray-600 dark:text-gray-500 mb-6">บทความนี้จะเปิดในแท็บใหม่ เนื่องจากอยู่บนเว็บไซต์อื่น</p>
+            <h3 class="text-xl font-bold text-primary mb-2 line-clamp-2" x-text="currentArticle.title"></h3>
+            <p class="text-gray-600 dark:text-gray-500 mb-6 text-sm">บทความนี้จะเปิดในแท็บใหม่ เนื่องจากอยู่บนเว็บไซต์อื่น</p>
           </div>
           <div class="space-y-3">
             <div class="flex items-center p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
-              <i class="fas fa-globe text-primary mr-3"></i>
-              <div>
-                <p class="font-semibold">แหล่งที่มา</p>
-                <p class="text-sm text-gray-600 dark:text-gray-500" x-text="currentArticle.author || 'The Standard'"></p>
+              <i class="fas fa-globe text-primary mr-3 flex-shrink-0"></i>
+              <div class="min-w-0 flex-1">
+                <p class="font-semibold text-sm">แหล่งที่มา</p>
+                <p class="text-xs text-gray-600 dark:text-gray-500 truncate" x-text="currentArticle.author || 'The Standard'"></p>
               </div>
             </div>
             <div class="flex items-center p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
-              <i class="fas fa-shield-alt text-primary mr-3"></i>
-              <div>
-                <p class="font-semibold">ความปลอดภัย</p>
-                <p class="text-sm text-gray-600 dark:text-gray-500">ลิงก์นี้จะเปิดในแท็บใหม่เพื่อความปลอดภัย</p>
+              <i class="fas fa-shield-alt text-primary mr-3 flex-shrink-0"></i>
+              <div class="min-w-0 flex-1">
+                <p class="font-semibold text-sm">ความปลอดภัย</p>
+                <p class="text-xs text-gray-600 dark:text-gray-500 line-clamp-2">ลิงก์นี้จะเปิดในแท็บใหม่เพื่อความปลอดภัย</p>
               </div>
             </div>
           </div>
           <div class="flex gap-3 mt-6">
-            <button @click="closeModal()" class="flex-1 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-500 font-medium py-3 px-6 rounded-lg transition-colors"> ยกเลิก </button>
-            <button @click="openExternalArticle(currentArticle.externalUrl || 'https://thestandard.co/life/4-7-8-breathing-exercise/')" class="flex-1 bg-primary hover:bg-primary-dark text-white font-medium py-3 px-6 rounded-lg transition-colors flex items-center justify-center">
-              <i class="fas fa-external-link-alt mr-2"></i>เปิดบทความ </button>
+            <button @click="closeModal()" class="flex-1 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-500 font-medium py-3 px-4 rounded-lg transition-colors text-sm"> ยกเลิก </button>
+            <button @click="openExternalArticle(currentArticle.externalUrl || 'https://thestandard.co/life/4-7-8-breathing-exercise/')" class="flex-1 bg-primary hover:bg-primary-dark text-white font-medium py-3 px-4 rounded-lg transition-colors flex items-center justify-center text-sm">
+              <i class="fas fa-external-link-alt mr-2 text-xs"></i>เปิดบทความ </button>
           </div>
         </div>
       </div>
     </div>
+
+    <!-- Help Modal - หน่วยงานช่วยเหลือ -->
+    <div x-show="modalOpen === 'help'" x-transition class="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center p-4 z-50">
+      <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+        <div class="p-6">
+          <div class="text-center mb-6">
+            <div class="text-4xl mb-4">🆘</div>
+            <h3 class="text-2xl font-bold text-primary">หน่วยงานช่วยเหลือ</h3>
+            <p class="text-sm text-gray-600 dark:text-gray-500 mt-2">ไม่ว่าคุณจะเผชิญปัญหาอะไร มีคนพร้อมรับฟังเสมอ</p>
+          </div>
+
+          <div class="space-y-6 mb-6">
+            <!-- Emergency Section -->
+            <div class="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 p-4 rounded-lg border border-blue-200 dark:border-blue-800">
+              <h4 class="font-bold text-blue-700 dark:text-blue-300 mb-3">หากคุณต้องการความช่วยเหลือเร่งด่วน</h4>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="flex items-center gap-3">
+                  <div class="w-12 h-12 bg-blue-100 dark:bg-blue-800 rounded-full flex items-center justify-center">
+                    <span class="text-xl">🧠</span>
+                  </div>
+                  <div>
+                    <p class="font-semibold text-gray-800 dark:text-gray-200">สายด่วนสุขภาพจิต</p>
+                    <p class="text-sm text-gray-600 dark:text-gray-400">กรมสุขภาพจิต กระทรวงสาธารณสุข</p>
+                    <p class="text-sm text-gray-600 dark:text-gray-400">ตลอด 24 ชั่วโมง</p>
+                    <div class="flex items-center gap-2">
+                      <p class="text-lg font-bold text-primary">1323</p>
+                      <a href="https://checkin.dmh.go.th" target="_blank" class="p-1 rounded-full hover:bg-blue-100 dark:hover:bg-blue-800 transition-colors" title="เปิดเว็บไซต์">
+                        <i class="fas fa-external-link-alt text-blue-600 dark:text-blue-400 text-sm"></i>
+                      </a>
+                    </div>
+                  </div>
+                </div>
+                <div class="flex items-center gap-3">
+                  <div class="w-12 h-12 bg-blue-100 dark:bg-blue-800 rounded-full flex items-center justify-center">
+                    <span class="text-xl">🆘</span>
+                  </div>
+                  <div>
+                    <p class="font-semibold text-gray-800 dark:text-gray-200">สายด่วนป้องกันการฆ่าตัวตาย</p>
+                    <p class="text-sm text-gray-600 dark:text-gray-400">สำหรับผู้มีความคิดทำร้ายตัวเอง</p>
+                    <p class="text-sm text-gray-600 dark:text-gray-400">ตลอด 24 ชั่วโมง</p>
+                    <p class="text-lg font-bold text-primary">1323 กด 1</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Other Hotlines -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div class="bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 p-4 rounded-lg border border-green-200 dark:border-green-800">
+                <div class="flex items-center gap-3">
+                  <div class="w-12 h-12 bg-green-100 dark:bg-green-800 rounded-full flex items-center justify-center">
+                    <span class="text-xl">👦</span>
+                  </div>
+                  <div>
+                    <p class="font-semibold text-gray-800 dark:text-gray-200">สายด่วนเด็กและเยาวชน</p>
+                    <p class="text-sm text-gray-600 dark:text-gray-400">มูลนิธิสายเด็ก</p>
+                    <p class="text-sm text-gray-600 dark:text-gray-400">ตลอด 24 ชั่วโมง</p>
+                    <div class="flex items-center gap-2">
+                      <p class="text-lg font-bold text-green-600 dark:text-green-400">1387</p>
+                      <a href="https://www.sahathai.com" target="_blank" class="p-1 rounded-full hover:bg-green-100 dark:hover:bg-green-800 transition-colors" title="เปิดเว็บไซต์">
+                        <i class="fas fa-external-link-alt text-green-600 dark:text-green-400 text-sm"></i>
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 p-4 rounded-lg border border-purple-200 dark:border-purple-800">
+                <div class="flex items-center gap-3">
+                  <div class="w-12 h-12 bg-purple-100 dark:bg-purple-800 rounded-full flex items-center justify-center">
+                    <span class="text-xl">🏥</span>
+                  </div>
+                  <div>
+                    <p class="font-semibold text-gray-800 dark:text-gray-200">สายด่วนสุขภาพ</p>
+                    <p class="text-sm text-gray-600 dark:text-gray-400">สำนักงานหลักประกันสุขภาพแห่งชาติ</p>
+                    <p class="text-sm text-gray-600 dark:text-gray-400">ตลอด 24 ชั่วโมง</p>
+                    <div class="flex items-center gap-2">
+                      <p class="text-lg font-bold text-purple-600 dark:text-purple-400">1478</p>
+                      <a href="https://www.nhso.go.th" target="_blank" class="p-1 rounded-full hover:bg-purple-100 dark:hover:bg-purple-800 transition-colors" title="เปิดเว็บไซต์">
+                        <i class="fas fa-external-link-alt text-purple-600 dark:text-purple-400 text-sm"></i>
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="bg-gradient-to-r from-orange-50 to-yellow-50 dark:from-orange-900/20 dark:to-yellow-900/20 p-4 rounded-lg border border-orange-200 dark:border-orange-800">
+                <div class="flex items-center gap-3">
+                  <div class="w-12 h-12 bg-orange-100 dark:bg-orange-800 rounded-full flex items-center justify-center">
+                    <span class="text-xl">🤝</span>
+                  </div>
+                  <div>
+                    <p class="font-semibold text-gray-800 dark:text-gray-200">ศูนย์ช่วยเหลือสังคม</p>
+                    <p class="text-sm text-gray-600 dark:text-gray-400">กระทรวงการพัฒนาสังคมฯ</p>
+                    <p class="text-sm text-gray-600 dark:text-gray-400">ตลอด 24 ชั่วโมง</p>
+                    <div class="flex items-center gap-2">
+                      <p class="text-lg font-bold text-orange-600 dark:text-orange-400">1300</p>
+                      <a href="https://www.m-society.go.th" target="_blank" class="p-1 rounded-full hover:bg-orange-100 dark:hover:bg-orange-800 transition-colors" title="เปิดเว็บไซต์">
+                        <i class="fas fa-external-link-alt text-orange-600 dark:text-orange-400 text-sm"></i>
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="bg-gradient-to-r from-red-50 to-pink-50 dark:from-red-900/20 dark:to-pink-900/20 p-4 rounded-lg border border-red-200 dark:border-red-800">
+                <div class="flex items-center gap-3">
+                  <div class="w-12 h-12 bg-red-100 dark:bg-red-800 rounded-full flex items-center justify-center">
+                    <span class="text-xl">👨‍👩‍👧</span>
+                  </div>
+                  <div>
+                    <p class="font-semibold text-gray-800 dark:text-gray-200">สายด่วนครอบครัว</p>
+                    <p class="text-sm text-gray-600 dark:text-gray-400">กรมกิจการสตรีและสถาบันครอบครัว</p>
+                    <p class="text-sm text-gray-600 dark:text-gray-400">08:30 - 16:30 น.</p>
+                    <div class="flex items-center gap-2">
+                      <p class="text-lg font-bold text-red-600 dark:text-red-400">1129</p>
+                      <a href="https://www.women.go.th" target="_blank" class="p-1 rounded-full hover:bg-red-100 dark:hover:bg-red-800 transition-colors" title="เปิดเว็บไซต์">
+                        <i class="fas fa-external-link-alt text-red-600 dark:text-red-400 text-sm"></i>
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Counseling Services -->
+            <div class="bg-gradient-to-r from-indigo-50 to-blue-50 dark:from-indigo-900/20 dark:to-blue-900/20 p-4 rounded-lg border border-indigo-200 dark:border-indigo-800">
+              <h4 class="font-bold text-indigo-700 dark:text-indigo-300 mb-3">หน่วยงานให้คำปรึกษา</h4>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="flex items-center gap-3">
+                  <div class="w-12 h-12 bg-indigo-100 dark:bg-indigo-800 rounded-full flex items-center justify-center">
+                    <span class="text-xl">💙</span>
+                  </div>
+                  <div>
+                    <p class="font-semibold text-gray-800 dark:text-gray-200">สมาริตันส์แห่งประเทศไทย</p>
+                    <p class="text-sm text-gray-600 dark:text-gray-400">รับฟังปัญหาและให้กำลังใจ ไม่ตัดสิน</p>
+                    <p class="text-sm text-gray-600 dark:text-gray-400">12:00 - 22:00 น.</p>
+                    <div class="flex items-center gap-2">
+                      <p class="text-lg font-bold text-indigo-600 dark:text-indigo-400">02-713-6793</p>
+                      <a href="https://www.samaritan.or.th" target="_blank" class="p-1 rounded-full hover:bg-indigo-100 dark:hover:bg-indigo-800 transition-colors" title="เปิดเว็บไซต์">
+                        <i class="fas fa-external-link-alt text-indigo-600 dark:text-indigo-400 text-sm"></i>
+                      </a>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="flex items-center gap-3">
+                  <div class="w-12 h-12 bg-indigo-100 dark:bg-indigo-800 rounded-full flex items-center justify-center">
+                    <span class="text-xl">💜</span>
+                  </div>
+                  <div>
+                    <p class="font-semibold text-gray-800 dark:text-gray-200">มูลนิธิหญิงชายก้าวไกล</p>
+                    <p class="text-sm text-gray-600 dark:text-gray-400">ช่วยเหลือผู้หญิงที่ประสบปัญหาความรุนแรง</p>
+                    <p class="text-sm text-gray-600 dark:text-gray-400">จันทร์-ศุกร์ 09:00 - 17:00 น.</p>
+                    <div class="flex items-center gap-2">
+                      <p class="text-lg font-bold text-indigo-600 dark:text-indigo-400">02-513-1001</p>
+                      <a href="https://www.friendstothefriend.org" target="_blank" class="p-1 rounded-full hover:bg-indigo-100 dark:hover:bg-indigo-800 transition-colors" title="เปิดเว็บไซต์">
+                        <i class="fas fa-external-link-alt text-indigo-600 dark:text-indigo-400 text-sm"></i>
+                      </a>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="flex items-center gap-3">
+                  <div class="w-12 h-12 bg-indigo-100 dark:bg-indigo-800 rounded-full flex items-center justify-center">
+                    <span class="text-xl">🛡️</span>
+                  </div>
+                  <div>
+                    <p class="font-semibold text-gray-800 dark:text-gray-200">ศูนย์พิทักษ์สิทธิเด็ก</p>
+                    <p class="text-sm text-gray-600 dark:text-gray-400">มูลนิธิศูนย์พิทักษ์สิทธิเด็ก</p>
+                    <p class="text-sm text-gray-600 dark:text-gray-400">จันทร์-ศุกร์ 08:30 - 17:00 น.</p>
+                    <div class="flex items-center gap-2">
+                      <p class="text-lg font-bold text-indigo-600 dark:text-indigo-400">02-412-1196</p>
+                      <a href="https://www.childprotection.org" target="_blank" class="p-1 rounded-full hover:bg-indigo-100 dark:hover:bg-indigo-800 transition-colors" title="เปิดเว็บไซต์">
+                        <i class="fas fa-external-link-alt text-indigo-600 dark:text-indigo-400 text-sm"></i>
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Encouragement Message -->
+            <div class="bg-gradient-to-r from-teal-50 to-cyan-50 dark:from-teal-900/20 dark:to-cyan-900/20 p-4 rounded-lg border border-teal-200 dark:border-teal-800">
+              <div class="flex items-center gap-3">
+                <div class="w-12 h-12 bg-teal-100 dark:bg-teal-800 rounded-full flex items-center justify-center">
+                  <span class="text-xl">💪</span>
+                </div>
+                <div>
+                  <p class="font-bold text-teal-700 dark:text-teal-300">คุณไม่ได้อยู่คนเดียว</p>
+                  <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">การขอความช่วยเหลือคือความกล้าหาญ ไม่ใช่ความอ่อนแอ</p>
+                  <p class="text-sm text-gray-600 dark:text-gray-400">ทุกปัญหามีทางออก และมีคนพร้อมช่วยคุณเสมอ</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="flex gap-3">
+            <button @click="closeModal()" class="flex-1 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-500 font-medium py-3 px-4 rounded-lg transition-colors">
+              ปิด
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- Welcome/Intro Modal สำหรับผู้ใช้ใหม่ -->
 
     <div x-show="modalOpen === 'welcome'" x-transition class="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center p-4 z-50">
@@ -1735,6 +2052,63 @@
         </div>
       </div>
     </div>
+
+    
+    <!-- Footer -->
+    <footer class="mt-12 bg-gradient-to-br from-primary/5 via-primary/3 to-primary-light/5 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 border-t border-primary/10 dark:border-gray-700">
+        <!-- Floating Elements -->
+        <div class="absolute top-0 left-0 w-32 h-32 opacity-5">
+            <div class="absolute top-4 left-4 text-6xl text-primary animate-float">🌸</div>
+        </div>
+        <div class="absolute bottom-0 right-0 w-24 h-24 opacity-5">
+            <div class="absolute bottom-4 right-4 text-4xl text-primary-light animate-float" style="animation-delay: 3s;">💚</div>
+        </div>
+        
+        <div class="container mx-auto px-4 py-8 relative z-10">
+            <!-- Main Footer Content -->
+            <div class="flex flex-col items-center space-y-6">
+                <!-- Brand Section -->
+                <div class="text-center">
+                    <div class="flex items-center justify-center gap-3 mb-4">
+                        <div class="text-3xl text-primary animate-pulse-slow">🌸</div>
+                        <h3 class="text-xl font-bold text-gray-800 dark:text-white">Cloudy-Puk-Jai</h3>
+                    </div>
+                    <p class="text-gray-600 dark:text-gray-400 text-sm leading-relaxed">
+                        "พื้นที่พักใจที่คนอยากกลับมาใช้ทุกวัน"
+                    </p>
+                </div>
+                
+                <!-- All Links in One Row -->
+                <div class="flex flex-wrap justify-center gap-6">
+                    <!-- Modal Links -->
+                    <button @click="openModal('crisis')" class="text-gray-600 dark:text-gray-400 hover:text-primary transition-colors text-sm flex items-center gap-2">
+                        <i class="fas fa-hands-helping text-xs"></i>แหล่งช่วยเหลือ
+                    </button>
+                    <button @click="openModal('privacy')" class="text-gray-600 dark:text-gray-400 hover:text-primary transition-colors text-sm flex items-center gap-2">
+                        <i class="fas fa-shield-alt text-xs"></i>ความเป็นส่วนตัว
+                    </button>
+                    <button @click="openModal('about')" class="text-gray-600 dark:text-gray-400 hover:text-primary transition-colors text-sm flex items-center gap-2">
+                        <i class="fas fa-info-circle text-xs"></i>เกี่ยวกับเรา
+                    </button>
+                    
+                    <!-- External Links -->
+                    <a href="https://forms.gle/XSqb8nqh2gWgLKwu6" target="_blank" class="text-gray-600 dark:text-gray-400 hover:text-primary transition-colors text-sm flex items-center gap-2">
+                        <i class="fas fa-comment-dots text-xs"></i>บอกความรู้สึกกับเรา
+                    </a>
+                    <a href="tel:1323" class="text-gray-600 dark:text-gray-400 hover:text-primary transition-colors text-sm flex items-center gap-2">
+                        <i class="fas fa-phone-alt text-xs"></i>สายด่วนสุขภาพจิต 1323
+                    </a>
+                </div>
+                
+                <!-- Copyright -->
+                <div class="text-center">
+                    <p class="text-gray-500 dark:text-gray-400 text-sm">
+                        © 2026 Cloudy-Puk-Jai. พัฒนาด้วยความห่วงใย
+                    </p>
+                </div>
+            </div>
+        </div>
+    </footer>
 
     
     <!-- Custom JavaScript -->

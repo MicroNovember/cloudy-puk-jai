@@ -10,25 +10,25 @@
 
 :root {
   /* ============================================
-     🍃 PRIMARY PALETTE - Nature Green
+     PRIMARY PALETTE - Soft Green Pastel
      ============================================ */
-  --color-primary-50: #e8fcf3;
-  --color-primary-100: #d0f9e7;
-  --color-primary-200: #a8f4d0;
-  --color-primary-300: #80efb9;
-  --color-primary-400: #58e9a2;
-  --color-primary-500: #059467;
-  --color-primary-600: #047a56;
-  --color-primary-700: #036045;
-  --color-primary-800: #024634;
-  --color-primary-900: #012c23;
+  --color-primary-50: #f0fdf4;
+  --color-primary-100: #dcfce7;
+  --color-primary-200: #bbf7d0;
+  --color-primary-300: #86efac;
+  --color-primary-400: #4ade80;
+  --color-primary-500: #22c55e;
+  --color-primary-600: #16a34a;
+  --color-primary-700: #15803d;
+  --color-primary-800: #166534;
+  --color-primary-900: #14532d;
   
-  --color-primary: var(--color-primary-500);
+  --color-primary: var(--color-primary-400);
   --color-primary-light: var(--color-primary-300);
-  --color-primary-dark: var(--color-primary-700);
+  --color-primary-dark: var(--color-primary-600);
   
   /* ============================================
-     🏔️ SECONDARY PALETTE - Gray
+     SECONDARY PALETTE - Gray
      ============================================ */
   --color-secondary-50: #fafafa;
   --color-secondary-100: #f5f5f5;
@@ -66,27 +66,27 @@
   --color-mood-neutral: #F5F5F5;    /* เทาอ่อน */
   
   /* ============================================
-     🚨 FEEDBACK PALETTE - Mental Health Friendly
+     🚨 FEEDBACK PALETTE - Mental Health Friendly (Soft Tones)
      ============================================ */
-  --color-feedback-success-soft: #d1fae5;
-  --color-feedback-success: #10b981;
-  --color-feedback-success-dark: #059669;
-  --color-feedback-success-text: #065f46;
+  --color-feedback-success-soft: #dcfce7;
+  --color-feedback-success: #22c55e;
+  --color-feedback-success-dark: #16a34a;
+  --color-feedback-success-text: #14532d;
   
   --color-feedback-warning-soft: #fef3c7;
   --color-feedback-warning: #f59e0b;
   --color-feedback-warning-dark: #d97706;
   --color-feedback-warning-text: #92400e;
   
-  --color-feedback-error-soft: #ffa2a2;
-  --color-feedback-error: #db2424;
-  --color-feedback-error-dark: #b91c1c;
-  --color-feedback-error-text: #7f1d1d;
+  --color-feedback-error-soft: #fecaca;
+  --color-feedback-error: #f87171;
+  --color-feedback-error-dark: #ef4444;
+  --color-feedback-error-text: #991b1b;
   
-  --color-feedback-info-soft: #e0f2fe;
-  --color-feedback-info: #0ea5e9;
-  --color-feedback-info-dark: #0284c7;
-  --color-feedback-info-text: #0369a1;
+  --color-feedback-info-soft: #dbeafe;
+  --color-feedback-info: #60a5fa;
+  --color-feedback-info-dark: #3b82f6;
+  --color-feedback-info-text: #1e3a8a;
   
   /* ============================================
      📝 TEXT PALETTE
@@ -515,6 +515,10 @@ strong, b {
   display: -webkit-box;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 1;
+  display: -moz-box;
+  -moz-box-orient: vertical;
+  -moz-line-clamp: 1;
+  line-clamp: 1;
 }
 
 .line-clamp-2 {
@@ -522,6 +526,10 @@ strong, b {
   display: -webkit-box;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
+  display: -moz-box;
+  -moz-box-orient: vertical;
+  -moz-line-clamp: 2;
+  line-clamp: 2;
 }
 
 .line-clamp-3 {
@@ -529,6 +537,10 @@ strong, b {
   display: -webkit-box;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 3;
+  display: -moz-box;
+  -moz-box-orient: vertical;
+  -moz-line-clamp: 3;
+  line-clamp: 3;
 }
 
 /* Opacity */
@@ -563,6 +575,177 @@ strong, b {
 .-translate-y-1 { transform: translateY(-0.25rem); }
 .-translate-y-2 { transform: translateY(-0.5rem); }
 .translate-y-0 { transform: translateY(0); }
+
+.group:hover .group-hover\:scale-110 {
+  transform: scale(1.1);
+}
+
+.group:hover .group-hover\:scale-125 {
+  transform: scale(1.25);
+}
+
+.group:hover .group-hover\:scale-105 {
+  transform: scale(1.05);
+}
+
+/* Enhanced Button Interactions */
+button {
+  transition: all var(--transition-base) ease;
+  will-change: transform, box-shadow;
+}
+
+button:hover {
+  transform: translateY(-2px);
+}
+
+button:active {
+  transform: translateY(0);
+  transition: all var(--transition-fast) ease;
+}
+
+/* Health Overview Card Animations */
+.health-overview-card {
+  position: relative;
+  overflow: hidden;
+}
+
+.health-overview-card::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(45deg, transparent, rgba(109, 159, 113, 0.1), transparent);
+  animation: shimmer 3s infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%) translateY(-100%) rotate(45deg);
+  }
+  100% {
+    transform: translateX(100%) translateY(100%) rotate(45deg);
+  }
+}
+
+/* Floating Icons */
+.floating-icon-1 {
+  animation: float-up 4s ease-in-out infinite;
+}
+
+.floating-icon-2 {
+  animation: float-down 5s ease-in-out infinite;
+  animation-delay: 1s;
+}
+
+@keyframes float-up {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes float-down {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(10px);
+  }
+}
+
+/* Pulse Glow for Stats */
+.pulse-glow {
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+@keyframes pulse-glow {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(109, 159, 113, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 0 8px rgba(109, 159, 113, 0.2);
+  }
+}
+
+/* Button Hover Effects */
+.btn-gradient {
+  position: relative;
+  overflow: hidden;
+  transition: all var(--transition-base) ease;
+}
+
+.btn-gradient::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left var(--transition-slow) ease;
+}
+
+.btn-gradient:hover::before {
+  left: 100%;
+}
+
+/* Icon Hover Animations */
+.icon-hover {
+  transition: all var(--transition-base) ease;
+}
+
+.icon-hover:hover {
+  transform: scale(1.1) rotate(5deg);
+}
+
+/* Responsive Text Sizes */
+.text-responsive {
+  font-size: clamp(1rem, 2.5vw, 1.5rem);
+}
+
+/* Mobile Optimizations */
+@media (max-width: 640px) {
+  .health-overview-card {
+    padding: 1rem;
+  }
+  
+  .btn-gradient {
+    min-width: auto;
+    width: 100%;
+  }
+  
+  .floating-icon-1,
+  .floating-icon-2 {
+    width: 60px;
+    height: 60px;
+  }
+}
+
+/* Tablet Optimizations */
+@media (min-width: 641px) and (max-width: 1024px) {
+  .health-overview-card {
+    padding: 1.5rem;
+  }
+  
+  .btn-gradient {
+    min-width: 200px;
+  }
+}
+
+/* Desktop Optimizations */
+@media (min-width: 1025px) {
+  .health-overview-card {
+    padding: 2rem;
+  }
+  
+  .btn-gradient {
+    min-width: 280px;
+  }
+}
 
 /* ============================================================================
    PART 6: ANIMATIONS & TRANSITIONS
@@ -739,7 +922,8 @@ strong, b {
   background-color: var(--color-surface);
   border-radius: var(--radius-lg);
   border: 1px solid var(--color-border-light);
-  padding: var(--space-6);
+  padding: var(--space-4);
+  box-shadow: var(--shadow-md);
   transition: all var(--transition-base);
 }
 
@@ -758,6 +942,177 @@ strong, b {
   margin-top: var(--space-4);
   padding-top: var(--space-2);
   border-top: 1px solid var(--color-border-light);
+}
+
+/* Guidance Card */
+.guidance-card {
+  background-color: var(--color-surface);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-border-light);
+  box-shadow: var(--shadow-md);
+  transition: all var(--transition-base);
+}
+
+/* Instruction Cards */
+.instruction-card {
+  background-color: var(--color-surface);
+  border-radius: var(--radius-lg);
+  padding: var(--space-4);
+  text-align: center;
+  box-shadow: var(--shadow-md);
+  cursor: pointer;
+  transition: all var(--transition-base);
+  border: 1px solid transparent;
+  position: relative;
+  overflow: hidden;
+}
+
+.instruction-card:hover {
+  transform: translateY(-8px);
+  box-shadow: var(--shadow-lg);
+  border-color: var(--color-primary-light);
+}
+
+.instruction-number {
+  font-size: 4rem;
+  font-weight: 900;
+  margin-bottom: var(--space-2);
+  line-height: 1;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.instruction-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: var(--space-2);
+}
+
+.instruction-text {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--color-text-secondary);
+}
+
+/* Benefit Items */
+.benefit-item {
+  display: flex;
+  gap: var(--space-3);
+  padding: var(--space-3);
+  background-color: var(--color-surface);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-border-light);
+  transition: all var(--transition-base);
+}
+
+.benefit-item:hover {
+  border-color: var(--color-primary-light);
+  box-shadow: var(--shadow-md);
+}
+
+.benefit-icon {
+  width: 3rem;
+  height: 3rem;
+  border-radius: var(--radius-lg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  flex-shrink: 0;
+}
+
+.benefit-title {
+  font-weight: 600;
+  margin-bottom: var(--space-1);
+  color: var(--color-text-primary);
+}
+
+.benefit-text {
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: var(--color-text-secondary);
+  margin-bottom: var(--space-2);
+}
+
+.reference-tag {
+  font-size: 0.75rem;
+  color: var(--color-text-tertiary);
+  background-color: var(--color-surface);
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border-light);
+}
+
+/* Stat Benefits */
+.stat-benefit {
+  text-align: center;
+  padding: var(--space-3);
+  background-color: var(--color-surface);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-border-light);
+  transition: all var(--transition-base);
+}
+
+.stat-benefit:hover {
+  border-color: var(--color-primary-light);
+  box-shadow: var(--shadow-md);
+}
+
+.stat-number {
+  font-size: 2rem;
+  font-weight: 900;
+  margin-bottom: var(--space-1);
+  color: var(--color-primary);
+}
+
+.stat-label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--color-text-secondary);
+  margin-bottom: var(--space-1);
+}
+
+.stat-reference {
+  font-size: 0.75rem;
+  color: var(--color-text-tertiary);
+}
+
+/* Tip Items */
+.tip-item {
+  display: flex;
+  gap: var(--space-3);
+  padding: var(--space-3);
+  background-color: var(--color-surface);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-border-light);
+  transition: all var(--transition-base);
+}
+
+.tip-item:hover {
+  border-color: var(--color-primary-light);
+  box-shadow: var(--shadow-md);
+}
+
+.tip-icon {
+  width: 3rem;
+  height: 3rem;
+  border-radius: var(--radius-lg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  flex-shrink: 0;
+}
+
+.tip-title {
+  font-weight: 600;
+  margin-bottom: var(--space-1);
+  color: var(--color-text-primary);
+}
+
+.tip-text {
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: var(--color-text-secondary);
 }
 
 /* Forms */
