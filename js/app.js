@@ -238,7 +238,9 @@ document.addEventListener('alpine:init', () => {
         
         // Journal Entry Management
         toggleEntryMenu(entryId) {
+            console.log('toggleEntryMenu called with:', entryId);
             this.activeEntryMenu = this.activeEntryMenu === entryId ? null : entryId;
+            console.log('activeEntryMenu set to:', this.activeEntryMenu);
         },
 
         getMoodLabel(moodId) {
@@ -247,15 +249,20 @@ document.addEventListener('alpine:init', () => {
         },
 
         deleteJournalEntry(entryId) {
+            console.log('deleteJournalEntry called with:', entryId);
             this.activeEntryMenu = null;
 
             const entry = this.journalEntries.find(e => e.id === entryId);
             const date = entry ? this.formatDate(entry.date) : '';
 
+            console.log('Entry found:', entry);
+            console.log('Date:', date);
+
             this.showConfirmModal(
                 'ยืนยันการลบบันทึก',
                 `คุณต้องการลบบันทึกวันที่ ${date} จริงหรือไม่?\n\nการกระทำนี้ไม่สามารถย้อนกลับได้`,
                 () => {
+                    console.log('Confirm delete clicked');
                     const index = this.journalEntries.findIndex(e => e.id === entryId);
 
                     if (index !== -1) {
@@ -265,10 +272,12 @@ document.addEventListener('alpine:init', () => {
                         this.updateTreeAnimation();
                         this.saveData();
                         this.showNotification('ลบบันทึกเรียบร้อยแล้ว ✓', 'success');
+                        console.log('Entry deleted successfully');
                     }
                 },
                 () => {
                     this.showNotification('ยกเลิกการลบบันทึกแล้ว', 'info');
+                    console.log('Delete cancelled');
                 }
             );
         },
@@ -460,8 +469,9 @@ document.addEventListener('alpine:init', () => {
         },
 
         showConfirmModal(title, message, onConfirm, onCancel = null) {
+            console.log('showConfirmModal called');
             const modal = document.createElement('div');
-            modal.className = 'fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center p-4 z-50';
+            modal.className = 'fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center p-4 z-[9999]';
             modal.innerHTML = `
                 <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl max-w-md w-full">
                     <div class="p-6">
@@ -487,16 +497,21 @@ document.addEventListener('alpine:init', () => {
             `;
 
             document.body.appendChild(modal);
+            console.log('Modal added to DOM');
 
             const cancelBtn = modal.querySelector('#confirmCancelBtn');
             const okBtn = modal.querySelector('#confirmOkBtn');
 
+            console.log('Buttons found:', cancelBtn, okBtn);
+
             cancelBtn.addEventListener('click', () => {
+                console.log('Cancel button clicked');
                 document.body.removeChild(modal);
                 if (onCancel) onCancel();
             });
 
             okBtn.addEventListener('click', () => {
+                console.log('OK button clicked');
                 document.body.removeChild(modal);
                 onConfirm();
             });

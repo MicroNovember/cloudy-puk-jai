@@ -463,7 +463,6 @@
         </div>
       </div>
       <!-- ปิด Features Grid -->
-      </div>
       <!-- ปิดหน้า Home -->
       <!-- Journal Page -->
       <div x-show="currentPage === 'journal'" x-transition class="space-y-8">
@@ -651,16 +650,16 @@
                   <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-4 relative group">
                     <!-- เมนูสามจุด -->
                     <div class="absolute top-3 right-3">
-                      <button @click="toggleEntryMenu(entry.id)" class="text-gray-5000 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-500 
+                      <button @click="console.log('Menu button clicked, entry ID:', entry.id); toggleEntryMenu(entry.id)" class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-500 
                                p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors" :id="'menu-btn-' + entry.id" aria-label="เมนูการจัดการบันทึก">
                         <i class="fas fa-ellipsis-v"></i>
                       </button>
                       <!-- Dropdown เมนู -->
                       <div x-show="activeEntryMenu === entry.id" x-transition class="absolute right-0 top-full mt-1 bg-white dark:bg-gray-800 
-                            rounded-lg shadow-lg z-10 border border-gray-200 dark:border-gray-700
+                            rounded-lg shadow-lg z-[9999] border border-gray-200 dark:border-gray-700
                             min-w-[140px]" @click.outside="activeEntryMenu = null">
                         <!-- ปุ่มลบ -->
-                        <button @click="deleteJournalEntry(entry.id)" class="w-full text-left px-4 py-3 text-red-600 dark:text-red-400 
+                        <button @click="console.log('Delete button clicked, entry ID:', entry.id); deleteJournalEntry(entry.id)" class="w-full text-left px-4 py-3 text-red-600 dark:text-red-400 
                                    hover:bg-red-50 dark:hover:bg-red-300/20 flex items-center gap-3 
                                    rounded-t-lg">
                           <i class="fas fa-trash-alt w-4 text-center"></i>
@@ -1312,7 +1311,7 @@
         
                 <!-- Mental Health Tests -->
         <!-- Mental Health Tests -->
-        <div x-show="assessmentTab === 'mental'" class="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-4 gap-2">
+        <div x-show="assessmentTab === 'mental'" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
           <template x-for="(assessment, index) in mentalAssessments" :key="assessment.id">
             <div @click="startAssessment(assessment)" class="bg-white dark:bg-gray-800 rounded-lg overflow-hidden hover:shadow-md transition-all duration-200 cursor-pointer flex flex-col border border-gray-200 dark:border-gray-700 hover:border-primary/30" :id="`assessment-${assessment.id}`" tabindex="0" @keydown.enter="startAssessment(assessment)" role="button" aria-label="เริ่มแบบทดสอบ: {{ assessment.title }}">
               <!-- หัวข้อแบบทดสอบ (ด้านบน) -->
@@ -1345,7 +1344,7 @@
           </template>
         </div>
         <!-- Personality Tests -->
-        <div x-show="assessmentTab === 'personality'" class="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-4 gap-2">
+        <div x-show="assessmentTab === 'personality'" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
           <template x-for="(assessment, index) in personalityAssessments" :key="assessment.id">
             <div @click="startAssessment(assessment)" class="bg-white dark:bg-gray-800 rounded-lg overflow-hidden hover:shadow-md transition-all duration-200 cursor-pointer flex flex-col border border-gray-200 dark:border-gray-700 hover:border-accent/30" :id="`assessment-${assessment.id}`" tabindex="0" @keydown.enter="startAssessment(assessment)" role="button" aria-label="เริ่มแบบทดสอบ: {{ assessment.title }}">
               <!-- หัวข้อแบบทดสอบ (ด้านบน) -->

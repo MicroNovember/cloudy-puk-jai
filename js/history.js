@@ -134,15 +134,12 @@ function loadHistoryData() {
     console.log('loadHistoryData: กำลังโหลดข้อมูล...');
     
     try {
-        const savedData = localStorage.getItem('mindbloomData');
-        console.log('savedData จาก localStorage:', savedData ? 'พบข้อมูล' : 'ไม่พบข้อมูล');
+        // ดึงข้อมูลจาก Alpine.js
+        const app = Alpine.store('mindbloomApp') || Alpine.$data(document.querySelector('[x-data*="mindbloomApp"]'));
         
-        if (savedData) {
-            const data = JSON.parse(savedData);
-            console.log('ข้อมูลที่ parse แล้ว:', data);
-            
-            historyData = data.assessmentHistory || [];
-            console.log('historyData ที่ได้:', historyData.length, 'รายการ');
+        if (app && app.assessmentHistory) {
+            historyData = app.assessmentHistory;
+            console.log('โหลดข้อมูลจาก Alpine.js:', historyData.length, 'รายการ');
             
             // เรียงจากใหม่ไปเก่า
             historyData.sort((a, b) => {
@@ -155,8 +152,18 @@ function loadHistoryData() {
             updateUI();
             
         } else {
-            console.log('ไม่พบข้อมูลประวัติใน localStorage');
-            showEmptyState();
+            console.log('ไม่พบข้อมูลจาก Alpine.js, ลองโหลดจาก localStorage');
+            // Fallback: โหลดจาก localStorage
+            const savedData = localStorage.getItem('mindbloomData');
+            if (savedData) {
+                const data = JSON.parse(savedData);
+                historyData = data.assessmentHistory || [];
+                console.log('โหลดจาก localStorage fallback:', historyData.length, 'รายการ');
+                updateUI();
+            } else {
+                console.log('ไม่พบข้อมูลประวัติใน localStorage');
+                showEmptyState();
+            }
         }
     } catch (error) {
         console.error('Error loading history data:', error);
@@ -169,6 +176,14 @@ function loadHistoryData() {
 // บันทึกข้อมูลประวัติ
 function saveHistoryData() {
     try {
+        // อัปเดตข้อมูลใน Alpine.js
+        const app = Alpine.store('mindbloomApp') || Alpine.$data(document.querySelector('[x-data*="mindbloomApp"]'));
+        if (app) {
+            app.assessmentHistory = historyData;
+            app.saveData(); // เรียกใช้ฟังก์ชัน saveData ของ Alpine.js
+        }
+        
+        // Fallback: บันทึกใน localStorage สำหรับความเข้ากัน
         let data = {};
         const savedData = localStorage.getItem('mindbloomData');
         
@@ -830,12 +845,25 @@ function deleteItem(index) {
             return;
         }
         
-        if (confirm('คุณแน่ใจหรือไม่ว่าต้องการลบประวัตินี้?')) {
-            historyData.splice(index, 1);
-            saveHistoryData();
-            updateUI();
-            showNotification('ลบประวัติเรียบร้อยแล้ว', 'success');
-        }
+        const item = historyData[index];
+        
+        // สร้าง popup แจ้งเตือนสำหรับมือถือ
+        showConfirmDialog(
+            '⚠️ ยืนยันการลบข้อมูล',
+            `คุณแน่ใจหรือไม่ว่าต้องการลบประวัติการทดสอบนี้?\n\n📝 แบบทดสอบ: ${item.title || 'ไม่มีชื่อ'}\n📅 วันที่: ${formatDate(item.date)}\n\nการดำเนินการนี้ไม่สามารถย้อนกลับได้`,
+            'ลบรายการ',
+            'ยกเลิก',
+            () => {
+                // ลบข้อมูล
+                historyData.splice(index, 1);
+                saveHistoryData();
+                updateUI();
+                showNotification('ลบประวัติเรียบร้อยแล้ว', 'success');
+            },
+            () => {
+                showNotification('ยกเลิกการลบประวัติ', 'info');
+            }
+        );
     } catch (error) {
         console.error('deleteItem error:', error);
         showNotification('เกิดข้อผิดพลาดในการลบประวัติ', 'error');
@@ -849,16 +877,116 @@ function clearAllHistory() {
             return;
         }
         
-        if (confirm('คุณแน่ใจหรือไม่ว่าต้องการล้างประวัติทั้งหมด?\nการดำเนินการนี้ไม่สามารถย้อนกลับได้')) {
-            historyData = [];
-            saveHistoryData();
-            updateUI();
-            showNotification('ล้างประวัติทั้งหมดเรียบร้อยแล้ว', 'success');
-        }
+        // สร้าง popup แจ้งเตือนสำหรับมือถือ
+        showConfirmDialog(
+            '⚠️ ยืนยันการลบข้อมูล',
+            'คุณแน่ใจหรือไม่ว่าต้องการลบประวัติการทดสอบทั้งหมด?\n\nการดำเนินการนี้ไม่สามารถย้อนกลับได้',
+            'ลบทั้งหมด',
+            'ยกเลิก',
+            () => {
+                // ลบข้อมูล
+                historyData = [];
+                saveHistoryData();
+                updateUI();
+                showNotification('ลบประวัติทั้งหมดเรียบร้อยแล้ว', 'success');
+            },
+            () => {
+                showNotification('ยกเลิกการลบประวัติ', 'info');
+            }
+        );
     } catch (error) {
         console.error('clearAllHistory error:', error);
         showNotification('เกิดข้อผิดพลาดในการล้างประวัติ', 'error');
     }
+}
+
+// ฟังก์ชันสร้าง popup แจ้งเตือน
+function showConfirmDialog(title, message, confirmText, cancelText, onConfirm, onCancel) {
+    // สร้าง overlay
+    const overlay = document.createElement('div');
+    overlay.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4';
+    overlay.style.backdropFilter = 'blur(4px)';
+    
+    // สร้าง popup container
+    const popup = document.createElement('div');
+    popup.className = 'bg-white dark:bg-gray-800 rounded-2xl shadow-2xl max-w-md w-full p-6 transform transition-all duration-300 scale-95';
+    
+    popup.innerHTML = `
+        <div class="text-center">
+            <!-- Icon -->
+            <div class="mx-auto w-16 h-16 bg-red-100 dark:bg-red-900/30 rounded-full flex items-center justify-center mb-4">
+                <i class="fas fa-exclamation-triangle text-2xl text-red-600 dark:text-red-400"></i>
+            </div>
+            
+            <!-- Title -->
+            <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-3">${title}</h3>
+            
+            <!-- Message -->
+            <p class="text-gray-600 dark:text-gray-300 mb-6 text-sm leading-relaxed">${message}</p>
+            
+            <!-- Buttons -->
+            <div class="flex gap-3 justify-center">
+                <button id="cancelBtn" class="px-6 py-2.5 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200 rounded-lg font-medium transition-all duration-200 flex items-center">
+                    <i class="fas fa-times mr-2"></i>
+                    ${cancelText}
+                </button>
+                <button id="confirmBtn" class="px-6 py-2.5 bg-red-500 hover:bg-red-600 text-white rounded-lg font-medium transition-all duration-200 flex items-center">
+                    <i class="fas fa-trash-alt mr-2"></i>
+                    ${confirmText}
+                </button>
+            </div>
+        </div>
+    `;
+    
+    // เพิ่ม popup ไปยัง overlay
+    overlay.appendChild(popup);
+    document.body.appendChild(overlay);
+    
+    // แสดง popup ด้วย animation
+    setTimeout(() => {
+        popup.classList.remove('scale-95');
+        popup.classList.add('scale-100');
+    }, 10);
+    
+    // Event listeners
+    const cancelBtn = document.getElementById('cancelBtn');
+    const confirmBtn = document.getElementById('confirmBtn');
+    
+    cancelBtn.addEventListener('click', () => {
+        closeConfirmDialog(overlay, onCancel);
+    });
+    
+    confirmBtn.addEventListener('click', () => {
+        closeConfirmDialog(overlay, onConfirm);
+    });
+    
+    // ปิด popup เมื่อคลิก overlay
+    overlay.addEventListener('click', (e) => {
+        if (e.target === overlay) {
+            closeConfirmDialog(overlay, onCancel);
+        }
+    });
+    
+    // ปิด popup เมื่อกด Escape
+    const handleEscape = (e) => {
+        if (e.key === 'Escape') {
+            closeConfirmDialog(overlay, onCancel);
+            document.removeEventListener('keydown', handleEscape);
+        }
+    };
+    document.addEventListener('keydown', handleEscape);
+}
+
+// ฟังก์ชันปิด popup
+function closeConfirmDialog(overlay, callback) {
+    const popup = overlay.querySelector('div');
+    popup.classList.remove('scale-100');
+    popup.classList.add('scale-95');
+    
+    setTimeout(() => {
+        document.body.removeChild(overlay);
+        if (callback) callback();
+    }, 300);
 }
 
 // ==================== EXPORT FUNCTIONS ====================
