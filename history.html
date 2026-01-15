@@ -1,15 +1,6 @@
 <!DOCTYPE html>
 <html lang="th" x-data="mindbloomApp()">
 <head>
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XGTHRX1XR2"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-
-      gtag('config', 'G-XGTHRX1XR2');
-    </script>
     <link rel="icon" type="image/png" href="image/favicon.png">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -21,7 +12,7 @@
     <meta name="theme-color" content="#6D9F71">
     
     <!-- Tailwind CSS -->
-    <link rel="stylesheet" href="css/tailwind.css">
+    <script src="https://cdn.tailwindcss.com"></script>
     
     <!-- Alpine.js -->
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
@@ -54,6 +45,26 @@
     
     <!-- html2pdf Library for PDF Export -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#6D9F71',
+                        'primary-light': '#8FBC8F',
+                        'primary-dark': '#4A7C59',
+                        secondary: '#FFB6C1',
+                        accent: '#FFD166',
+                    },
+                    fontFamily: {
+                        'sans': ['Anuphan', 'Noto Sans Thai', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
     
     <link rel="stylesheet" href="css/history.css">
 </head>

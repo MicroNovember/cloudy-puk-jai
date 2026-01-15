@@ -975,8 +975,6 @@ document.addEventListener('alpine:init', () => {
                     loginTime: new Date().toISOString()
                 };
                 
-                console.log('Creating guest user:', guestUser);
-                
                 // Save guest data to localStorage
                 localStorage.setItem('guestMode', 'true');
                 localStorage.setItem('guestData', JSON.stringify(guestUser));
@@ -1175,16 +1173,9 @@ document.addEventListener('alpine:init', () => {
         },
 
         calculateQuizResult() {
-            console.log('calculateQuizResult() called');
-            console.log('Current quiz:', this.currentQuiz);
-            console.log('Quiz answers:', this.quizAnswers);
-            console.log('Current question index:', this.currentQuestionIndex);
-            console.log('Total questions:', this.currentQuiz.questions?.length);
-            
             try {
                 // ตรวจสอบว่าตอบคำถามครบทุกข้อหรือไม่
                 if (!this.quizAnswers || this.quizAnswers.length !== this.currentQuiz.questions.length) {
-                    console.error('Quiz answers incomplete');
                     this.showNotification('กรุณาตอบคำถามให้ครบทุกข้อ', 'warning');
                     return;
                 }
@@ -1192,7 +1183,6 @@ document.addEventListener('alpine:init', () => {
                 // ตรวจสอบว่าทุกข้อมีคำตอบหรือไม่
                 const hasUnanswered = this.quizAnswers.some(answer => answer === undefined || answer === null || answer === '');
                 if (hasUnanswered) {
-                    console.error('Some questions are unanswered');
                     this.showNotification('กรุณาตอบคำถามให้ครบทุกข้อ', 'warning');
                     return;
                 }
@@ -1202,18 +1192,15 @@ document.addEventListener('alpine:init', () => {
                 this.quizAnswers.forEach(answer => {
                     totalScore += answer || 0;
                 });
-                console.log('Total score:', totalScore);
 
-                // แปลงเป็นเปอร์เซ็นต์ (สูงสุดคือคะแนนเต็ม)
+                // แปลงเปอร์เซ็นต์ (สูงสุดคือคะแนนเต็ม)
                 const maxScore = this.currentQuiz.questions.length * 5; // สมมติว่าคะแนนสูงสุดต่อข้อคือ 5
                 this.quizScore = Math.round((totalScore / maxScore) * 100);
-                console.log('Quiz score percentage:', this.quizScore);
 
                 // หาผลลัพธ์จาก assessments.json
                 this.quizResult = this.currentQuiz.results.find(result => {
                     return this.quizScore >= result.min && this.quizScore <= result.max;
                 }) || this.currentQuiz.results[0];
-                console.log('Quiz result:', this.quizResult);
 
                 // บันทึกประวัติ
                 const assessmentEntry = {
@@ -1226,17 +1213,14 @@ document.addEventListener('alpine:init', () => {
                     answers: this.quizAnswers
                 };
                 
-                console.log('Adding to assessment history:', assessmentEntry);
                 this.assessmentHistory.unshift(assessmentEntry);
 
                 // อัพเดทต้นไม้
                 this.tree.points += 5;
                 this.tree.progress += 1;
                 this.updateTreeAnimation();
-                console.log('Tree updated:', this.tree);
 
                 // บันทึกข้อมูล
-                console.log('Saving data...');
                 this.saveData();
 
                 // แสดง notification
@@ -1248,7 +1232,6 @@ document.addEventListener('alpine:init', () => {
                 }, 1000);
                 
             } catch (error) {
-                console.error('Error in calculateQuizResult:', error);
                 this.showNotification('เกิดข้อผิดพลาดในการคำนวณผลลัพธ์: ' + error.message, 'error');
             }
         },
@@ -1337,58 +1320,42 @@ document.addEventListener('alpine:init', () => {
 
         // Dark mode functions
         initDarkMode() {
-            console.log('initDarkMode called');
-            
             // ตรวจสอบว่ามีการตั้งค่า darkMode ใน localStorage หรือไม่
             const savedDarkMode = localStorage.getItem('darkMode');
             const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
             
             this.darkMode = savedDarkMode === 'true' || prefersDark;
-            
-            console.log('Dark mode initialized:', this.darkMode);
         },
 
         setupDarkModeListener() {
-            console.log('setupDarkModeListener called');
-            
             // ฟังการเปลี่ยนแปลงจาก localStorage
             window.addEventListener('storage', (e) => {
                 if (e.key === 'darkMode' && e.oldValue !== e.newValue) {
                     this.darkMode = e.newValue === 'true';
-                    console.log('Dark mode updated from storage event');
                 }
             });
         },
 
         setupStorageListener() {
-            console.log('setupStorageListener called');
             // สำหรับฟังการเปลี่ยนแปลงข้อมูลอื่นๆ ถ้าจำเป็น
         },
 
         setupAuthListener() {
-            console.log('setupAuthListener called');
-            
             // ฟังการเปลี่ยนแปลง auth state
             if (typeof window.AuthUtils !== 'undefined' && typeof window.AuthUtils.onAuthStateChanged === 'function') {
                 window.AuthUtils.onAuthStateChanged((user) => {
-                    console.log('Auth state changed:', user);
                     if (user) {
                         this.user = user;
                         this.isAuthenticated = true;
-                        this.isGuest = user.isGuest || false;
                     } else {
                         this.user = null;
                         this.isAuthenticated = false;
-                        this.isGuest = false;
                     }
                 });
-            } else {
-                console.log('onAuthStateChanged not available in AuthUtils');
             }
         },
 
         setupAutoUpdate() {
-            console.log('setupAutoUpdate called');
             // สำหรับการอัปเดตอัตโนมัติอื่นๆ ถ้าจำเป็น
         },
         openArticleModal(article) {
@@ -1435,19 +1402,13 @@ document.addEventListener('alpine:init', () => {
 
         // Quiz functions
         selectQuizAnswer(value) {
-            console.log('selectQuizAnswer called with value:', value);
             this.quizAnswers[this.currentQuestionIndex] = value;
         },
 
         // ฟังก์ชันสำหรับส่งคำตอบ (ปุ่มส่งคำตอบ)
         submitQuiz() {
-            console.log('submitQuiz() called');
-            console.log('Current question index:', this.currentQuestionIndex);
-            console.log('Total questions:', this.currentQuiz.questions?.length);
-            
-            // ตรวจสอบว่าตอบคำถามปัจจุบันหรือยัง
+            // ตรวจสอบว่าตอบคำถามครบทุกข้อหรือไม่
             if (this.quizAnswers[this.currentQuestionIndex] === undefined || this.quizAnswers[this.currentQuestionIndex] === null || this.quizAnswers[this.currentQuestionIndex] === '') {
-                console.log('Current question not answered, showing warning');
                 this.showNotification('กรุณาเลือกคำตอบก่อนส่ง', 'warning');
                 return;
             }
@@ -1458,33 +1419,24 @@ document.addEventListener('alpine:init', () => {
             });
             
             if (hasUnanswered) {
-                console.log('Some questions are unanswered');
                 this.showNotification('กรุณาตอบคำถามให้ครบทุกข้อ', 'warning');
                 return;
             }
             
-            console.log('All questions answered, calculating result');
             this.calculateQuizResult();
         },
 
         nextQuestion() {
-            console.log('nextQuestion() called');
-            console.log('Current question index:', this.currentQuestionIndex);
-            console.log('Total questions:', this.currentQuiz.questions?.length);
-            
-            // ตรวจสอบว่าตอบคำถามปัจจุบันหรือยัง
+            // ตรวจสอบว่าตอบคำถามครบทุกข้อหรือไม่
             if (this.quizAnswers[this.currentQuestionIndex] === undefined || this.quizAnswers[this.currentQuestionIndex] === null || this.quizAnswers[this.currentQuestionIndex] === '') {
-                console.log('Current question not answered, showing warning');
                 this.showNotification('กรุณาเลือกคำตอบก่อนไปข้อถัดไป', 'warning');
                 return;
             }
             
             // ตรวจสอบว่าเป็นข้อสุดท้ายหรือไม่
             if (this.currentQuestionIndex < this.currentQuiz.questions.length - 1) {
-                console.log('Moving to next question');
                 this.currentQuestionIndex++;
             } else {
-                console.log('Last question reached, calculating result');
                 this.calculateQuizResult();
             }
         },

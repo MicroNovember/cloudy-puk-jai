@@ -44,7 +44,7 @@
     
     <title>Cloudy・Puk・Jai - ดูแลสุขภาพจิตของคุณ</title>
     <!-- Tailwind CSS -->
-    <link rel="stylesheet" href="css/tailwind.css">
+    <script src="https://cdn.tailwindcss.com?plugins=forms,typography,aspect-ratio"></script>
     <!-- Alpine.js -->
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <!-- Font Awesome -->
@@ -59,6 +59,36 @@
     <link rel="stylesheet" href="assets/css/icons.css">
     <!-- Logo CSS -->
     <link rel="stylesheet" href="assets/css/logo.css">
+    <script>
+      // กำหนดค่า Tailwind
+      tailwind.config = {
+        darkMode: 'class',
+        theme: {
+          extend: {
+            colors: {
+              primary: '#6D9F71',
+              'primary-light': '#8FBC8F',
+              'primary-dark': '#4A7C59',
+              secondary: '#FFB6C1',
+              accent: '#FFD166',
+              happy: '#FFEAA7',
+              calm: '#A7E6FF',
+              sad: '#D8C3FF',
+              anxious: '#FFB8B8',
+              energetic: '#C5FFB8',
+              neutral: '#F0F0F0',
+            },
+            fontFamily: {
+              'sans': ['Anuphan', 'Noto Sans Thai', 'sans-serif'],
+            },
+            animation: {
+              'pulse-slow': 'pulse 3s ease-in-out infinite',
+              'bounce-slow': 'bounce 2s infinite',
+            }
+          }
+        }
+      }
+    </script>
     
     <!-- Firebase -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>

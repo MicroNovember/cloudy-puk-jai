@@ -1,15 +1,6 @@
 <!DOCTYPE html>
 <html lang="th" x-data="mindbloomApp()">
   <head>
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XGTHRX1XR2"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-
-      gtag('config', 'G-XGTHRX1XR2');
-    </script>
     <link rel="icon" type="image/png" href="image/favicon.png">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -20,7 +11,7 @@
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="theme-color" content="#6D9F71">
     <!-- Tailwind CSS -->
-    <link rel="stylesheet" href="css/tailwind.css">
+    <script src="https://cdn.tailwindcss.com"></script>
     <!-- Alpine.js -->
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <!-- Font Awesome -->
@@ -39,6 +30,132 @@
     <link rel="stylesheet" href="assets/css/icons.css">
     <!-- Logo CSS -->
     <link rel="stylesheet" href="assets/css/logo.css">
+    <script>
+      tailwind.config = {
+        darkMode: 'class',
+        theme: {
+          extend: {
+            colors: {
+              primary: {
+                50: '#f0fdf8',
+                100: '#dcfcec',
+                200: '#bbf7d6',
+                300: '#86efb3',
+                400: '#4ade8c',
+                500: '#059467', // primary main
+                600: '#047a56',
+                700: '#036045',
+                800: '#024d37',
+                900: '#023a29',
+              },
+              accent: {
+                50: '#f0fdfa',
+                100: '#ccfbef',
+                200: '#99f6e4',
+                300: '#5eead4',
+                400: '#2dd4bf',
+                500: '#14b8a5', // accent main
+                600: '#0d9488',
+                700: '#0f766e',
+                800: '#115e59',
+                900: '#134e4a',
+              },
+              secondary: {
+                50: '#f9fafb',
+                100: '#f3f4f6',
+                200: '#e5e7eb',
+                300: '#d1d5db',
+                400: '#9ca3af',
+                500: '#6b7280',
+                600: '#4b5563',
+                700: '#374151',
+                800: '#1f2937',
+                900: '#111827',
+              },
+              success: '#10b981',
+              warning: '#f59e0b',
+              info: '#3b82f6',
+              error: '#ef4444',
+            },
+            fontFamily: {
+              'sans': ['Anuphan', 'Noto Sans Thai', 'sans-serif'],
+            },
+            animation: {
+              'breathe-in': 'breatheIn 4s cubic-bezier(0.4, 0, 0.2, 1) infinite',
+              'breathe-hold': 'breatheHold 7s ease-in-out infinite',
+              'breathe-out': 'breatheOut 8s cubic-bezier(0.4, 0, 0.2, 1) infinite',
+              'pulse-glow': 'pulseGlow 2s ease-in-out infinite',
+              'notification-slide': 'notificationSlide 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55)',
+              'slide-down': 'slideDown 0.3s ease-out',
+            },
+            keyframes: {
+              breatheIn: {
+                '0%': {
+                  transform: 'scale(0.95)',
+                  opacity: '0.9'
+                },
+                '50%': {
+                  transform: 'scale(1.05)',
+                  opacity: '1'
+                },
+                '100%': {
+                  transform: 'scale(0.95)',
+                  opacity: '0.9'
+                }
+              },
+              breatheHold: {
+                '0%, 100%': {
+                  transform: 'scale(1.03)',
+                  filter: 'brightness(1.05)'
+                },
+                '50%': {
+                  transform: 'scale(1)',
+                  filter: 'brightness(0.95)'
+                }
+              },
+              breatheOut: {
+                '0%': {
+                  transform: 'scale(1.05)',
+                  opacity: '1'
+                },
+                '100%': {
+                  transform: 'scale(0.95)',
+                  opacity: '0.9'
+                }
+              },
+              pulseGlow: {
+                '0%, 100%': {
+                  boxShadow: '0 0 15px rgba(5, 148, 103, 0.2)'
+                },
+                '50%': {
+                  boxShadow: '0 0 30px rgba(5, 148, 103, 0.3)'
+                }
+              },
+              notificationSlide: {
+                '0%': {
+                  transform: 'translateX(100%) scale(0.8)',
+                  opacity: '0'
+                },
+                '100%': {
+                  transform: 'translateX(0) scale(1)',
+                  opacity: '1'
+                }
+              },
+              slideDown: {
+                '0%': {
+                  transform: 'translateY(-8px)',
+                  opacity: '0'
+                },
+                '100%': {
+                  transform: 'translateY(0)',
+                  opacity: '1'
+                }
+              }
+            }
+          }
+        }
+      }
+    </script>
   </head>
   <body class="bg-gradient-to-br from-gray-100 via-gray-50 to-gray-200 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 text-gray-800 dark:text-gray-200 min-h-screen transition-colors duration-300" x-data="breathingApp()" x-init="init()" :class="{ 'dark': darkMode, mobileMenuOpen: false }">
     <!-- Mobile Header -->

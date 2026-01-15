@@ -363,11 +363,6 @@ document.addEventListener('alpine:init', () => {
                 return;
             }
             
-            if (this.registerForm.password.length < 6) {
-                this.error = 'รหัสผ่านต้องมีอย่างน้อย 6 ตัวอักษร';
-                return;
-            }
-            
             if (!this.registerForm.agreedToTerms) {
                 this.error = 'กรุณายอมรับเงื่อนไขการใช้งาน';
                 return;
@@ -382,7 +377,7 @@ document.addEventListener('alpine:init', () => {
                     this.registerForm.password
                 );
                 
-                const newUser = userCredential.user;
+                const user = userCredential.user;
                 
                 // ไม่ต้องอัปเดต profile ด้วย displayName ใช้ email แทน
                 this.success = 'สมัครสมาชิกสำเร็จ! กำลังนำคุณไปยังหน้าหลัก...';
@@ -391,263 +386,19 @@ document.addEventListener('alpine:init', () => {
                 setTimeout(() => {
                     this.redirectToApp();
                 }, 2000);
-                
-            } catch (error) {
-                this.handleAuthError(error);
-            } finally {
-                this.loading = false;
-            }
-        },
-        
-        // Register with Google
-        async registerWithGoogle() {
-            this.loading = true;
-            this.error = '';
-            this.success = '';
-            
-            try {
-                const provider = new firebase.auth.GoogleAuthProvider();
-                provider.addScope('email');
+// ...
+
                 provider.addScope('profile');
                 
                 const result = await auth.signInWithPopup(provider);
-                const googleUser = result.user;
+                const user = result.user;
                 
                 this.success = 'เชื่อมต่อ Google สำเร็จ! กำลังนำคุณไปยังหน้าหลัก...';
                 
                 setTimeout(() => {
                     this.redirectToApp();
                 }, 2000);
-                
-            } catch (error) {
-                this.handleAuthError(error);
-            } finally {
-                this.loading = false;
-            }
-        },
-        
-        // Login with Email/Password
-        async login() {
-            if (!this.form.email || !this.form.password) {
-                this.error = 'กรุณากรอกอีเมลและรหัสผ่าน';
-                return;
-            }
-            
-            this.loading = true;
-            this.error = '';
-            
-            try {
-                // Clear any existing guest data
-                this.clearGuestData();
-                
-                // Sign in with Firebase
-                await auth.signInWithEmailAndPassword(this.form.email, this.form.password);
-                
-                // Remember me functionality
-                if (this.form.remember) {
-                    localStorage.setItem('rememberUser', this.form.email);
-                } else {
-                    localStorage.removeItem('rememberUser');
-                }
-                
-                this.redirectToApp();
-                
-            } catch (error) {
-                this.handleAuthError(error);
-            } finally {
-                this.loading = false;
-            }
-        },
-        
-        // Login with Google
-        async loginWithGoogle() {
-            this.loading = true;
-            this.error = '';
-            
-            try {
-                // Clear any existing guest data
-                this.clearGuestData();
-                
-                const provider = new firebase.auth.GoogleAuthProvider();
-                provider.addScope('email');
-                provider.addScope('profile');
-                
-                await auth.signInWithPopup(provider);
-                
-                this.redirectToApp();
-            } catch (error) {
-                this.handleAuthError(error);
-            } finally {
-                this.loading = false;
-            }
-        },
-        
-        // Redirect to App
-        redirectToApp() {
-            // รอให้ auth state อัปเดตก่อน redirect
-            setTimeout(() => {
-                if (auth.currentUser || window.currentUser) {
-                    // Only redirect if not already on index page
-                    if (!window.location.pathname.includes('index.html')) {
-                        window.location.href = 'index.html';
-                    }
-                } else {
-                    // รออีกครั้ง
-                    setTimeout(() => {
-                        if (auth.currentUser || window.currentUser) {
-                            if (!window.location.pathname.includes('index.html')) {
-                                window.location.href = 'index.html';
-                            }
-                        } else {
-                            if (!window.location.pathname.includes('index.html')) {
-                                window.location.href = 'index.html';
-                            }
-                        }
-                    }, 1000);
-                }
-            }, 1000);
-        },
-        
-        // Validate Journal Entry
-        validateJournalEntry() {
-            this.validation.title = !this.journalEntry.title || this.journalEntry.title.length < 3;
-            this.validation.content = !this.journalEntry.content || this.journalEntry.content.length < 10;
-            this.validation.mood = !this.journalEntry.mood;
-            this.validation.tags = !this.journalEntry.tags;
-            
-            // Check for inappropriate content
-            const inappropriateWords = ['คำหยาบ', 'คำไม่สุภาพ', 'คำหยาม', 'ขาย', 'โง่', 'เหี้ยน', 'fuck', 'shit', 'damn'];
-            const hasInappropriateContent = inappropriateWords.some(word => 
-                this.journalEntry.title.toLowerCase().includes(word) || 
-                this.journalEntry.content.toLowerCase().includes(word)
-            );
-            
-            if (hasInappropriateContent) {
-                this.validation.title = true;
-                this.validation.content = true;
-                this.error = '⚠️ กรุณากรอกข้อมูลที่เหมาะสม ไม่เหมาะสม หรือมีคำที่ไม่เหมาะสม';
-                return false;
-            }
-            
-            return !this.validation.title && !this.validation.content && this.validation.mood;
-        },
-        
-        // Save Journal Entry
-        saveJournalEntry() {
-            if (!this.validateJournalEntry()) {
-                return;
-            }
-            
-            this.loading = true;
-            this.error = '';
-            
-            try {
-                // Get existing journal entries
-                const existingEntries = JSON.parse(localStorage.getItem('journalEntries') || '[]');
-                
-                // Create new entry
-                const newEntry = {
-                    id: Date.now().toString(),
-                    title: this.journalEntry.title.trim(),
-                    content: this.journalEntry.content.trim(),
-                    mood: this.journalEntry.mood,
-                    tags: this.journalEntry.tags.split(',').map(tag => tag.trim()).filter(tag => tag),
-                    isPrivate: this.journalEntry.isPrivate,
-                    createdAt: new Date().toISOString(),
-                    updatedAt: new Date().toISOString()
-                };
-                
-                // Add to entries array
-                existingEntries.unshift(newEntry);
-                
-                // Keep only last 100 entries
-                if (existingEntries.length > 100) {
-                    existingEntries.splice(100);
-                }
-                
-                // Save to localStorage
-                localStorage.setItem('journalEntries', JSON.stringify(existingEntries));
-                
-                // Clear form
-                this.journalEntry = {
-                    title: '',
-                    content: '',
-                    mood: '',
-                    tags: '',
-                    isPrivate: false
-                };
-                
-                this.validation = {
-                    title: false,
-                    content: false,
-                    mood: false,
-                    tags: false
-                };
-                
-                this.success = '✅ บันทึกข้อมูลสำเร็จแล้ว';
-                setTimeout(() => {
-                    this.success = '';
-                }, 3000);
-                
-            } catch (error) {
-                this.error = '❌ เกิดข้อผิดพลาดในการบันทึกข้อมูล: ' + error.message;
-            } finally {
-                this.loading = false;
-            }
-        },
-        
-        // Clear Guest Data
-        clearGuestData() {
-            localStorage.removeItem('guestMode');
-            localStorage.removeItem('guestData');
-            localStorage.removeItem('userType');
-            localStorage.removeItem('guestLoginTime');
-        },
-        
-        // Clear All Auth Data
-        clearAllAuthData() {
-            this.clearGuestData();
-            localStorage.removeItem('rememberUser');
-        },
-        
-        // Handle Authentication Errors
-        handleAuthError(error) {
-            const errorMessages = {
-                'auth/user-not-found': 'ไม่พบบัญชีผู้ใช้นี้ กรุณาตรวจสอบอีเมล',
-                'auth/wrong-password': 'รหัสผ่านไม่ถูกต้อง กรุณาลองใหม่',
-                'auth/invalid-email': 'อีเมลไม่ถูกต้อง กรุณาตรวจสอบรูปแบบ',
-                'auth/user-disabled': 'บัญชีผู้ใช้ถูกระงับการใช้งาน',
-                'auth/too-many-requests': 'พยายามเข้าสู่ระบบหลายครั้งเกินไป กรุณารอสักครู่',
-                'auth/network-request-failed': 'การเชื่อมต่อล้มเหลว กรุณาตรวจสอบอินเทอร์เน็ต',
-                'auth/invalid-credential': 'ข้อมูลรับรองไม่ถูกต้อง กรุณาลองใหม่'
-            };
-            
-            this.error = errorMessages[error.code] || 'เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง';
-        },
-        
-        // Toggle Dark Mode
-        toggleDarkMode() {
-            this.darkMode = !this.darkMode;
-            localStorage.setItem('darkMode', this.darkMode);
-        },
-        
-        // Utility: Format date
-        formatDate(date) {
-            return new Intl.DateTimeFormat('th-TH', {
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit'
-            }).format(new Date(date));
-        }
-    };
-        
-        window.authApp = authAppInstance;
-        
-        return authAppInstance;
-    });
-});
+// ...
 
 // Utility functions for auth management
 window.AuthUtils = {
@@ -687,14 +438,14 @@ window.AuthUtils = {
         
         // Return Firebase user if available
         if (auth.currentUser) {
-            const firebaseUser = auth.currentUser;
+            const user = auth.currentUser;
             
             // สำหรับผู้ใช้ Firebase ให้ใช้ email เป็น displayName เสมอ
-            const displayName = firebaseUser.email || 'User';
+            const displayName = user.email || 'User';
             
             return {
-                uid: firebaseUser.uid,
-                email: firebaseUser.email,
+                uid: user.uid,
+                email: user.email,
                 displayName: displayName,
                 isGuest: false
             };
@@ -705,7 +456,7 @@ window.AuthUtils = {
     
     // Login with Email/Password
     async login(email, password) {
-        try {
+// ...
             // Check if Firebase is available
             if (!auth) {
                 throw new Error('Firebase auth not initialized');

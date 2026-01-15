@@ -21,6 +21,7 @@
     
     // Skip auth check for public pages
     if (PUBLIC_PAGES.includes(currentPage)) {
+        console.log('Public page detected, skipping auth check');
         return;
     }
     

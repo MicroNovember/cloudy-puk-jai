@@ -1714,3 +1714,26 @@ button:active {
 /* ============================================================================
    END OF CLOUDY-PUK-JAI CSS SYSTEM
    ============================================================================ */
+
+/* ============================================================================
+   DESKTOP SIDEBAR FIX - Force visibility on large screens
+   ============================================================================ */
+@media (min-width: 1024px) {
+  aside.lg\:w-64 {
+    display: block !important;
+    width: 16rem !important;
+    flex-shrink: 0 !important;
+  }
+  
+  .hidden.lg\:block {
+    display: block !important;
+  }
+  
+  .lg\:flex-shrink-0 {
+    flex-shrink: 0 !important;
+  }
+  
+  .lg\:w-64 {
+    width: 16rem !important;
+  }
+}
