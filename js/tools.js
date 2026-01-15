@@ -74,6 +74,38 @@ document.addEventListener('alpine:init', () => {
             this.loadProgress();
         },
         
+        checkCurrentSession() {
+            // ตรวจสอบ session ปัจจุบัน - สำหรับ breathing app
+            const lastSession = this.$store.breathing.lastSessionDate;
+            if (lastSession) {
+                const lastDate = new Date(lastSession);
+                const today = new Date();
+                
+                // ถ้าไม่ใช่วันเดียวกัน ให้ reset daily progress
+                if (lastDate.getDate() !== today.getDate() || 
+                    lastDate.getMonth() !== today.getMonth() || 
+                    lastDate.getFullYear() !== today.getFullYear()) {
+                    this.$store.breathing.dailyProgress = 0;
+                }
+            }
+        },
+        
+        updateTime() {
+            const now = new Date();
+            this.totalTime = this.formatTime(this.totalSeconds);
+        },
+        
+        updateDailyProgress() {
+            // อัปเดต progress รายวัน - มีการคำนวณใน loadProgress แล้ว
+            this.saveProgress();
+        },
+        
+        formatTime(seconds) {
+            const mins = Math.floor(seconds / 60);
+            const secs = seconds % 60;
+            return `${mins}:${secs.toString().padStart(2, '0')}`;
+        },
+        
         loadProgress() {
             try {
                 const saved = localStorage.getItem('breathingProgress');
