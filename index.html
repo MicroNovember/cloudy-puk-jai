@@ -13,8 +13,13 @@
     <link rel="icon" type="image/png" href="image/favicon.png">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="description" content="Cloudy-Puk-Jai - แอปพลิเคชันดูแลสุขภาพจิต พร้อมเครื่องมือผ่อนคลายและบันทึกความรู้สึก">
-    <meta name="keywords" content="สุขภาพจิต, ผ่อนคลาย, บันทึกความรู้สึก, ดูแลใจ, ความเครียด">
+    <meta name="description" content="เว็บแอปพลิเคชันเพื่อสุขภาพจิตที่ออกแบบมาสำหรับคนไทย พัฒนาด้วยเทคโนโลยีสมัยใหม่และออกแบบด้วยหลักจิตวิทยา">
+    <meta name="keywords" content="สุขภาพจิต, ดูแลใจ, บันทึกอารมณ์, คำแนะนำใจ, breathing, ฝึกหายใจ, ความเครียด, ความสุข">
+    <meta name="author" content="Cloudy-Puk-Jai Team">
+    <meta name="theme-color" content="#6D9F71">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Cloudy-Puk-Jai">
     <meta name="author" content="Cloudy-Puk-Jai Team">
     
     <!-- Open Graph Meta Tags -->
@@ -39,7 +44,7 @@
     
     <title>Cloudy・Puk・Jai - ดูแลสุขภาพจิตของคุณ</title>
     <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,typography,aspect-ratio"></script>
     <!-- Alpine.js -->
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <!-- Font Awesome -->
@@ -99,7 +104,7 @@
         <div class="container mx-auto px-4 py-3">
             <div class="flex items-center justify-between">
                 <div class="flex items-center space-x-2">
-                    <div class="logo logo-cloudy-puk-jai-small animate-pulse-slow"></div>
+                    <div class="feature-icon logo-cloudy-puk-jai-small"></div>
                     <div>
                         <h1 class="text-xl font-bold text-primary">Cloudy・Puk・Jai</h1>
                     </div>
@@ -140,10 +145,10 @@
             <div class="p-4">
                 <div class="flex items-center justify-between mb-6">
                     <div class="flex items-center gap-3">
-                        <div class="logo logo-cloudy-puk-jai-small animate-pulse-slow"></div>
-                        <div>
-                            <h3 class="text-xl font-bold text-primary">Cloudy・Puk・Jai</h3>
-                        </div>
+                    <div class="logo logo-cloudy-puk-jai-small animate-pulse-slow"></div>
+                    <div>
+                        <h3 class="text-xl font-bold text-primary">Cloudy・Puk・Jai</h3>
+                    </div>
                     </div>
                     <button @click="mobileMenuOpen = false" class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700">
                         <i class="fas fa-times text-lg"></i>
@@ -1552,7 +1557,9 @@
         <!-- Hero Section -->
         <div class="relative overflow-hidden rounded-3xl bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50 dark:from-green-900/20 dark:via-emerald-900/20 dark:to-teal-900/20 p-8 md:p-12 shadow-xl">
           <!-- Floating Elements -->
-          <div class="absolute top-4 right-8 text-6xl opacity-20 animate-float">🌸</div>
+          <div class="absolute top-4 right-8 text-6xl opacity-20 animate-float">
+            <div class="logo logo-cloudy-puk-jai-medium"></div>
+          </div>
           <div class="absolute bottom-4 left-8 text-4xl opacity-20 animate-float" style="animation-delay: 1s;">🌿</div>
           <div class="absolute top-1/2 right-1/4 text-5xl opacity-20 animate-float" style="animation-delay: 2s;">🍃</div>
           
@@ -1976,8 +1983,8 @@
         <div class="p-6">
 
           <div class="text-center mb-6">
-            <div class="text-4xl mb-4">🌸</div>
-            <h3 class="text-xl font-bold text-primary">ยินดีต้อนรับสู่พื้นที่พักใจ Cloudy-Puk-Jai 🌸</h3>
+            <div class="logo logo-cloudy-puk-jai-large animate-pulse-slow mb-4"></div>
+            <h3 class="text-xl font-bold text-primary">ยินดีต้อนรับสู่พื้นที่พักใจ Cloudy-Puk-Jai 💕</h3>
             <p class="text-sm text-gray-600 dark:text-gray-500 mt-2">คำแนะนำการใช้งานและนโยบายความเป็นส่วนตัว</p>
           </div>
 

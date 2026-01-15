@@ -317,8 +317,11 @@ html {
 body {
   font-family: 'Anuphan', 'Noto Sans Thai', 'Segoe UI', system-ui, sans-serif;
   font-size: 1rem;
-  line-height: 1.5;
+  line-height: 1.6;
   color: var(--color-text-primary);
+  font-weight: 400;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
   background-color: var(--color-bg-primary);
   transition: background-color var(--transition-base), color var(--transition-base);
   min-height: 100vh;

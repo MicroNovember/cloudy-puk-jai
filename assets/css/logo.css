@@ -40,6 +40,38 @@
   height: 80px;
 }
 
+/* Feature icon class for x-text */
+.feature-icon {
+  display: inline-block;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-color: transparent;
+  min-width: 40px;
+  min-height: 40px;
+}
+
+.feature-icon.logo-cloudy-puk-jai-small {
+  background-image: url('../logos/logo-cloudy-puk-jai-small.png');
+  width: 40px;
+  height: 40px;
+  font-size: 0;
+  line-height: 0;
+  text-indent: -9999px;
+}
+
+.feature-icon.logo-cloudy-puk-jai-medium {
+  background-image: url('../logos/logo-cloudy-puk-jai-medium.png');
+  width: 120px;
+  height: 40px;
+}
+
+.feature-icon.logo-cloudy-puk-jai-large {
+  background-image: url('../logos/logo-cloudy-puk-jai-large.png');
+  width: 250px;
+  height: 80px;
+}
+
 /* Dark mode - ใช้รูปเดิมเพราะเป็น transparent */
 /* ไม่ต้องมีไฟล์ white version ถ้ารูปเป็น transparent แล้ว */
 
