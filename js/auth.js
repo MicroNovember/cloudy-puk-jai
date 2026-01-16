@@ -819,12 +819,16 @@ window.AuthUtils = {
             // Clear remember me
             localStorage.removeItem('rememberUser');
             
-            // Redirect to login
-            window.location.href = 'login.html';
+            // Redirect to login with small delay to ensure cleanup
+            setTimeout(() => {
+                window.location.href = 'login.html';
+            }, 100);
         } catch (error) {
             console.error('Logout error:', error);
             // Force redirect even on error
-            window.location.href = 'login.html';
+            setTimeout(() => {
+                window.location.href = 'login.html';
+            }, 100);
         }
     },
     
