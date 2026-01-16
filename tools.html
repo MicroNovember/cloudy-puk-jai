@@ -5,13 +5,28 @@
     <script>
         // Set dark mode immediately to prevent flash
         (function() {
-            const savedDarkMode = localStorage.getItem('darkMode');
-            // Default to dark mode if no preference saved
-            if (savedDarkMode === null) {
-                localStorage.setItem('darkMode', 'true');
-                document.documentElement.classList.add('dark');
-            } else if (savedDarkMode === 'true') {
-                document.documentElement.classList.add('dark');
+            // Wait for DOM to be ready
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', function() {
+                    const savedDarkMode = localStorage.getItem('darkMode');
+                    // Default to dark mode if no preference saved
+                    if (savedDarkMode === null) {
+                        localStorage.setItem('darkMode', 'true');
+                        document.documentElement.classList.add('dark');
+                    } else if (savedDarkMode === 'true') {
+                        document.documentElement.classList.add('dark');
+                    }
+                });
+            } else {
+                // DOM already loaded, run immediately
+                const savedDarkMode = localStorage.getItem('darkMode');
+                // Default to dark mode if no preference saved
+                if (savedDarkMode === null) {
+                    localStorage.setItem('darkMode', 'true');
+                    document.documentElement.classList.add('dark');
+                } else if (savedDarkMode === 'true') {
+                        document.documentElement.classList.add('dark');
+                }
             }
         })();
     </script>
