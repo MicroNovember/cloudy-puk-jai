@@ -22,14 +22,12 @@ const GUEST_SESSION_DAYS = 7;
 
 // Test Firebase functionality
 auth.onAuthStateChanged((user) => {
-    // Auth state change detected
-    console.log('🔥 Firebase Auth State Changed:', user ? 'User logged in' : 'User logged out');
-    console.log('🔥 Firebase User:', user ? {
+    // อัปเดต currentUser ทั่วโลก
+    window.currentUser = user ? {
         uid: user.uid,
         email: user.email,
         displayName: user.displayName
-    } : null);
-    
+    } : null;  // Updating AuthUtils with new user
     if (user) {
         // ทำให้ผู้ใช้พร้อมใช้งานทั่วโลก
         window.currentUser = user;
@@ -37,12 +35,16 @@ auth.onAuthStateChanged((user) => {
         // อัปเดต AuthUtils
         if (window.AuthUtils) {
             // Updating AuthUtils with new user
-            console.log('🔥 Updating AuthUtils with Firebase user');
         }
     } else {
         // No user in auth state change
         window.currentUser = null;
-        console.log('🔥 Firebase: No user, window.currentUser set to null');
+        
+        // Clear AuthUtils cache when user logs out
+        if (window.AuthUtils) {
+            window.AuthUtils._userCache = null;
+            window.AuthUtils._lastCheck = 0;
+        }
     }
 });
 
@@ -58,6 +60,10 @@ document.addEventListener('alpine:init', () => {
                 password: '',
                 remember: false
             },
+            
+            // Internal state
+            _initialized: false,
+            _isRedirecting: false, // ป้องกันการ redirect ซ้ำ
         
         // Journal Entry Form
         journalEntry: {
@@ -96,7 +102,7 @@ document.addEventListener('alpine:init', () => {
         showLegalModal: false,
         legalTab: 'terms',
         guestAgreed: false,
-        darkMode: false,
+        darkMode: true,
         
                 
         // Tab State
@@ -149,7 +155,11 @@ document.addEventListener('alpine:init', () => {
         
         // Initialize Firebase and check auth state
         init() {
-            console.log('🔧 Initializing auth app...');
+            // ป้องกันการเรียก init() ซ้ำ
+            if (this._initialized) {
+                return;
+            }
+            this._initialized = true;
 
             try {
                 const last = sessionStorage.getItem('authGuard:lastRedirect');
@@ -176,11 +186,11 @@ document.addEventListener('alpine:init', () => {
                 auth.onAuthStateChanged((user) => {
                     try {
                         const currentPage = (window.location.pathname.split('/').pop() || '').toLowerCase();
-                        const isLoginPage = currentPage === 'login.html' || currentPage === '';
+                        const isLoginPage = currentPage === 'index.html' || currentPage === '';
                         const isSuppressed = suppressUntil && Date.now() < suppressUntil;
                         if (isLoginPage && user && !isSuppressed) {
                             console.log('🔥 User already logged in, redirecting...');
-                            window.location.href = 'index.html';
+                            window.location.href = 'main-menu.html';
                         }
                     } catch (e) {
                         // ignore
@@ -188,8 +198,17 @@ document.addEventListener('alpine:init', () => {
                 });
             }
             
-            // Load dark mode preference
-            this.darkMode = localStorage.getItem('darkMode') === 'true';
+            // Load dark mode preference - default to true, but respect HTML class
+            const hasHtmlClass = document.documentElement.classList.contains('dark');
+            if (hasHtmlClass) {
+                this.darkMode = true;
+                // Save default preference if not set
+                if (localStorage.getItem('darkMode') === null) {
+                    localStorage.setItem('darkMode', 'true');
+                }
+            } else {
+                this.darkMode = localStorage.getItem('darkMode') === 'true' || localStorage.getItem('darkMode') === null;
+            }
             
             // Load remembered email
             const rememberedEmail = localStorage.getItem('rememberUser');
@@ -275,7 +294,7 @@ document.addEventListener('alpine:init', () => {
                 this.loading = false;
                 
                 // Redirect to main app
-                this.redirectToApp();
+                window.location.href = 'main-menu.html';
                 
             } catch (error) {
                 this.error = 'เกิดข้อผิดพลาดในการเข้าใช้งานแบบ Guest: ' + error.message;
@@ -370,12 +389,12 @@ document.addEventListener('alpine:init', () => {
                 const newUser = userCredential.user;
                 
                 // ไม่ต้องอัปเดต profile ด้วย displayName ใช้ email แทน
-                this.success = 'สมัครสมาชิกสำเร็จ! กำลังนำคุณไปยังหน้าหลัก...';
+                this.success = '✅ สมัครสมาชิกสำเร็จแล้ว! กรุณากลับไปหน้า login เพื่อเข้าสู่ระบบ';
                 
                 // Redirect after successful registration
                 setTimeout(() => {
-                    this.redirectToApp();
-                }, 2000);
+                    window.location.href = 'index.html';
+                }, 3000);
                 
             } catch (error) {
                 this.handleAuthError(error);
@@ -398,11 +417,11 @@ document.addEventListener('alpine:init', () => {
                 const result = await auth.signInWithPopup(provider);
                 const googleUser = result.user;
                 
-                this.success = 'เชื่อมต่อ Google สำเร็จ! กำลังนำคุณไปยังหน้าหลัก...';
+                this.success = '✅ เชื่อมต่อ Google สำเร็จแล้ว! กรุณากลับไปหน้า login เพื่อเข้าสู่ระบบ';
                 
                 setTimeout(() => {
-                    this.redirectToApp();
-                }, 2000);
+                    window.location.href = 'index.html';
+                }, 3000);
                 
             } catch (error) {
                 this.handleAuthError(error);
@@ -466,7 +485,64 @@ document.addEventListener('alpine:init', () => {
                 }
                 
                 console.log('🔐 Redirecting to app...');
-                this.redirectToApp();
+                
+                // ป้องกันการ redirect ซ้ำ
+                if (this._isRedirecting) {
+                    console.log('🚫 Already redirecting, skipping...');
+                    return;
+                }
+                this._isRedirecting = true;
+                
+                // Block all UI interactions while waiting for Firebase
+                document.body.style.pointerEvents = 'none';
+                document.body.style.opacity = '0.7';
+                
+                // Show loading animation while waiting for Firebase auth state
+                this.loading = true;
+                this.success = 'กำลังตรวจสอบข้อมูลผู้ใช้... กรุณารอสักครู่';
+                
+                // Wait for Firebase auth state to be ready before redirecting
+                const waitForAuthState = () => {
+                    return new Promise((resolve) => {
+                        const unsubscribe = auth.onAuthStateChanged((user) => {
+                            unsubscribe(); // Stop listening
+                            console.log('🔐 Firebase auth state ready:', user ? user.email : 'No user');
+                            resolve(user);
+                        });
+                    });
+                };
+                
+                // Wait for auth state then redirect
+                waitForAuthState().then((user) => {
+                    // Restore UI interactions
+                    document.body.style.pointerEvents = '';
+                    document.body.style.opacity = '';
+                    
+                    this.loading = false;
+                    this.success = '';
+                    this._isRedirecting = false; // Reset flag
+                    
+                    if (user) {
+                        console.log('🚀 Firebase user confirmed, checking if ready for main-menu...');
+                        
+                        // ตรวจสอบว่ามีค่าจาก Firebase อย่างแน่นอน
+                        const checkFirebaseReady = () => {
+                            const currentUser = auth.currentUser;
+                            if (currentUser && currentUser.uid) {
+                                console.log('✅ Firebase is ready, redirecting to main-menu...');
+                                window.location.href = 'main-menu.html';
+                            } else {
+                                console.log('⏳ Firebase not ready yet, waiting...');
+                                setTimeout(checkFirebaseReady, 500);
+                            }
+                        };
+                        
+                        checkFirebaseReady();
+                    } else {
+                        console.log('❌ No Firebase user found, staying on login page');
+                        this.error = 'ไม่พบข้อมูลผู้ใช้ กรุณาลองใหม่';
+                    }
+                });
                 
             } catch (error) {
                 console.error('🔐 Login error:', error);
@@ -492,7 +568,7 @@ document.addEventListener('alpine:init', () => {
                 
                 await auth.signInWithPopup(provider);
                 
-                this.redirectToApp();
+                window.location.href = 'index.html';
             } catch (error) {
                 this.handleAuthError(error);
             } finally {
@@ -508,7 +584,7 @@ document.addEventListener('alpine:init', () => {
             // Add a small delay to ensure Firebase state is ready
             setTimeout(() => {
                 console.log('🚀 Actually redirecting now...');
-                window.location.href = 'index.html';
+                window.location.href = 'main-menu.html';
             }, 100);
         },
         
@@ -612,6 +688,14 @@ document.addEventListener('alpine:init', () => {
         clearAllAuthData() {
             this.clearGuestData();
             localStorage.removeItem('rememberUser');
+            // Clear Firebase user
+            if (typeof auth !== 'undefined') {
+                auth.signOut().catch(() => {
+                    // Ignore sign out errors
+                });
+            }
+            // Clear global user reference
+            window.currentUser = null;
         },
         
         // Handle Authentication Errors
@@ -655,16 +739,22 @@ document.addEventListener('alpine:init', () => {
 
 // Utility functions for auth management
 window.AuthUtils = {
+    // Cache for user state to prevent repeated calls
+    _userCache: null,
+    _lastCheck: 0,
+    
     // Get current user info
     getCurrentUser() {
-        console.log('🔍 AuthUtils: Getting current user...');
+        const now = Date.now();
+        
+        // Cache user state for 3 seconds to prevent repeated calls
+        if (this._userCache && (now - this._lastCheck) < 3000) {
+            return this._userCache;
+        }
         
         // ตรวจสอบ Guest Mode ก่อน
         const guestMode = localStorage.getItem('guestMode');
         const guestData = localStorage.getItem('guestData');
-        
-        console.log('🔍 AuthUtils: Guest mode:', guestMode);
-        console.log('🔍 AuthUtils: Guest data exists:', !!guestData);
         
         if (guestMode === 'true' && guestData) {
             try {
@@ -711,11 +801,18 @@ window.AuthUtils = {
                 displayName: displayName,
                 isGuest: false
             };
-            console.log('🔍 AuthUtils: Firebase user found, returning:', result);
+            
+            // Update cache
+            this._userCache = result;
+            this._lastCheck = now;
+            
             return result;
         }
         
-        console.log('🔍 AuthUtils: No user found, returning null');
+        // Update cache with null
+        this._userCache = null;
+        this._lastCheck = now;
+        
         return null;
     },
     
@@ -810,12 +907,16 @@ window.AuthUtils = {
             // Clear remember me
             localStorage.removeItem('rememberUser');
             
-            // Redirect to login
-            window.location.href = 'login.html';
+            // Redirect to login with small delay to ensure cleanup
+            setTimeout(() => {
+                window.location.href = 'index.html';
+            }, 100);
         } catch (error) {
             console.error('Logout error:', error);
             // Force redirect even on error
-            window.location.href = 'login.html';
+            setTimeout(() => {
+                window.location.href = 'index.html';
+            }, 100);
         }
     },
     

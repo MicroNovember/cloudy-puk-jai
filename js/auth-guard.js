@@ -12,7 +12,7 @@
     
     // Public pages that don't require authentication
     const PUBLIC_PAGES = [
-        'login.html',
+        'index.html',
         'register.html', 
         'forgot-password.html',
         'reset-password.html',
@@ -21,7 +21,7 @@
     
     // Get current page
     const currentPath = window.location.pathname;
-    const currentPage = currentPath.split('/').pop() || 'index.html';
+    const currentPage = currentPath.split('/').pop() || 'main-menu.html';
     
     // Skip auth check for public pages
     if (PUBLIC_PAGES.includes(currentPage)) {
@@ -56,7 +56,7 @@
             }
             
             console.log('🛡️ Auth Guard: No authentication found, redirecting to login');
-            window.location.href = 'login.html';
+            window.location.href = 'index.html';
             return false;
             
         } catch (error) {
@@ -89,7 +89,7 @@
             }
 
             console.log('🛡️ Auth Guard: Redirecting to login');
-            window.location.href = 'login.html';
+            window.location.href = 'index.html';
         };
 
         const hasGuestSession = () => {

@@ -1,6 +1,35 @@
 <!DOCTYPE html>
 <html lang="th" x-data="mindbloomApp()" x-init="init()" :class="{ 'dark': darkMode }">
-<head>
+  <head>
+    <!-- Immediate Dark Mode Script -->
+    <script>
+        // Set dark mode immediately to prevent flash
+        (function() {
+            // Wait for DOM to be ready
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', function() {
+                    const savedDarkMode = localStorage.getItem('darkMode');
+                    // Default to dark mode if no preference saved
+                    if (savedDarkMode === null) {
+                        localStorage.setItem('darkMode', 'true');
+                        document.documentElement.classList.add('dark');
+                    } else if (savedDarkMode === 'true') {
+                        document.documentElement.classList.add('dark');
+                    }
+                });
+            } else {
+                // DOM already loaded, run immediately
+                const savedDarkMode = localStorage.getItem('darkMode');
+                // Default to dark mode if no preference saved
+                if (savedDarkMode === null) {
+                        localStorage.setItem('darkMode', 'true');
+                        document.documentElement.classList.add('dark');
+                    } else if (savedDarkMode === 'true') {
+                        document.documentElement.classList.add('dark');
+                    }
+            }
+        })();
+    </script>
     <link rel="icon" type="image/png" href="image/favicon.png">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -131,22 +160,22 @@
                 </div>
                 
                 <div class="space-y-2">
-                    <a href="index.html" @click="mobileMenuOpen = false" class="flex items-center px-3 py-3 rounded-2xl font-medium text-gray-600 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                    <a href="main-menu.html" @click="mobileMenuOpen = false" class="flex items-center px-3 py-3 rounded-2xl font-medium text-gray-600 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
                         <i class="fas fa-home-alt mr-3 w-4"></i>หน้าหลัก
                     </a>
-                    <a href="index.html#journal" @click="mobileMenuOpen = false" class="flex items-center px-3 py-3 rounded-2xl font-medium text-gray-600 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                    <a href="main-menu.html#journal" @click="mobileMenuOpen = false" class="flex items-center px-3 py-3 rounded-2xl font-medium text-gray-600 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
                         <i class="fas fa-journal-whills mr-3 w-4"></i>บันทึกความรู้สึก
                     </a>
-                    <a href="index.html#articles" @click="mobileMenuOpen = false" class="flex items-center px-3 py-3 rounded-2xl font-medium text-gray-600 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                    <a href="main-menu.html#articles" @click="mobileMenuOpen = false" class="flex items-center px-3 py-3 rounded-2xl font-medium text-gray-600 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
                         <i class="fas fa-book-open mr-3 w-4"></i>ความรู้เพื่อสุขภาพจิต
                     </a>
-                    <a href="index.html#music" @click="mobileMenuOpen = false" class="flex items-center px-3 py-3 rounded-2xl font-medium text-gray-600 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                    <a href="main-menu.html#music" @click="mobileMenuOpen = false" class="flex items-center px-3 py-3 rounded-2xl font-medium text-gray-600 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
                         <i class="fas fa-music mr-3 w-4"></i>ผ่อนคลายด้วยเพลง
                     </a>
                     <a href="tools.html" @click="mobileMenuOpen = false" class="flex items-center px-3 py-3 rounded-2xl font-medium text-gray-600 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
                         <i class="fas fa-lungs mr-3 w-4"></i>Breathing Buddy
                     </a>
-                    <a href="index.html#assessments" @click="mobileMenuOpen = false" class="flex items-center px-3 py-3 rounded-2xl font-medium text-gray-600 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                    <a href="main-menu.html#assessments" @click="mobileMenuOpen = false" class="flex items-center px-3 py-3 rounded-2xl font-medium text-gray-600 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
                         <i class="fas fa-clipboard-list mr-3 w-4"></i>แบบทดสอบ
                     </a>
                     <a href="#" @click="mobileMenuOpen = false" class="flex items-center px-3 py-3 rounded-2xl font-medium bg-primary-light text-white transition-colors">
@@ -200,22 +229,22 @@
             </div>
             
             <div class="space-y-2">
-              <a href="index.html" class="flex items-center px-3 py-2 rounded-2xl font-medium text-gray-600 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+              <a href="main-menu.html" class="flex items-center px-3 py-2 rounded-2xl font-medium text-gray-600 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
                 <i class="fas fa-home-alt mr-3 w-4"></i>หน้าหลัก
               </a>
-              <a href="index.html#journal" class="flex items-center px-3 py-2 rounded-2xl font-medium text-gray-600 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+              <a href="main-menu.html#journal" class="flex items-center px-3 py-2 rounded-2xl font-medium text-gray-600 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
                 <i class="fas fa-journal-whills mr-3 w-4"></i>บันทึกความรู้สึก
               </a>
-              <a href="index.html#articles" class="flex items-center px-3 py-2 rounded-2xl font-medium text-gray-600 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+              <a href="main-menu.html#articles" class="flex items-center px-3 py-2 rounded-2xl font-medium text-gray-600 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
                 <i class="fas fa-book-open mr-3 w-4"></i>ความรู้เพื่อสุขภาพจิต
               </a>
-              <a href="index.html#music" class="flex items-center px-3 py-2 rounded-2xl font-medium text-gray-600 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+              <a href="main-menu.html#music" class="flex items-center px-3 py-2 rounded-2xl font-medium text-gray-600 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
                 <i class="fas fa-headphones mr-3 w-4"></i>ผ่อนคลายด้วยเพลง
               </a>
               <a href="tools.html" class="flex items-center px-3 py-2 rounded-2xl font-medium text-gray-600 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
                 <i class="fas fa-lungs mr-3 w-4"></i>Breathing Buddy
               </a>
-              <a href="index.html#assessments" class="flex items-center px-3 py-2 rounded-2xl font-medium text-gray-600 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+              <a href="main-menu.html#assessments" class="flex items-center px-3 py-2 rounded-2xl font-medium text-gray-600 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
                 <i class="fas fa-clipboard-list mr-3 w-4"></i>แบบทดสอบ
               </a>
               <a href="#" class="flex items-center px-3 py-2 rounded-2xl font-medium bg-primary-light text-white transition-colors">
@@ -448,7 +477,7 @@
                     <i class="fas fa-clipboard-list text-5xl sm:text-6xl text-gray-300 dark:text-gray-600 mb-4"></i>
                     <h4 class="text-lg sm:text-xl font-bold text-gray-700 dark:text-gray-300 mb-2">ยังไม่มีประวัติการทดสอบ</h4>
                     <p class="text-gray-500 dark:text-gray-400 mb-6 text-sm sm:text-base">เริ่มทำแบบทดสอบเพื่อเก็บประวัติของคุณ</p>
-                    <a href="index.html" class="inline-block bg-primary hover:bg-primary-dark text-white px-6 py-3 rounded-2xl text-sm sm:text-base transition-colors">
+                    <a href="main-menu.html" class="inline-block bg-primary hover:bg-primary-dark text-white px-6 py-3 rounded-2xl text-sm sm:text-base transition-colors">
                         <i class="fas fa-clipboard-check mr-2"></i>ไปยังแบบทดสอบ
                     </a>
                 </div>
@@ -684,14 +713,49 @@
                     localStorage.setItem('darkMode', isDark);
                 });
                 
-                // Load saved preference
+                // Load saved preference - default to dark mode, but respect HTML class
                 const savedDarkMode = localStorage.getItem('darkMode');
-                if (savedDarkMode === 'true') {
+                const hasHtmlClass = document.documentElement.classList.contains('dark');
+                
+                if (hasHtmlClass) {
+                    // HTML already has dark class, ensure localStorage is set
                     document.documentElement.classList.add('dark');
                     darkModeIcon.className = 'fas fa-sun text-lg';
+                    if (savedDarkMode === null) {
+                        localStorage.setItem('darkMode', 'true');
+                    }
+                } else {
+                    // No HTML class, check localStorage
+                    if (savedDarkMode === 'true' || savedDarkMode === null) {
+                        document.documentElement.classList.add('dark');
+                        darkModeIcon.className = 'fas fa-sun text-lg';
+                        // Save default preference
+                        if (savedDarkMode === null) {
+                            localStorage.setItem('darkMode', 'true');
+                        }
+                    }
                 }
             }
         });
     </script>
+
+    <!-- Help Modal - หน่วยงานช่วยเหลือ -->
+    <div x-show="modalOpen === 'help'" x-transition class="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center p-4 z-50">
+      <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+        <div class="p-6">
+          <div class="text-center mb-6">
+            <div class="text-4xl mb-4">🆘</div>
+            <h3 class="text-2xl font-bold text-primary">หน่วยงานช่วยเหลือ</h3>
+            <p class="text-sm text-gray-600 dark:text-gray-500 mt-2">ไม่ว่าคุณจะเผชิญปัญหาอะไร มีคนพร้อมรับฟังเสมอ</p>
+          </div>
+
+          <div class="flex gap-3">
+            <button @click="closeModal()" class="flex-1 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-500 font-medium py-3 px-4 rounded-2xl transition-colors">
+              ปิด
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
 </body>
 </html>
