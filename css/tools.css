@@ -6,6 +6,10 @@
 .breathing-circle {
     width: 16.5rem;
     height: 16.5rem;
+    min-width: 16.5rem;
+    min-height: 16.5rem;
+    max-width: 16.5rem;
+    max-height: 16.5rem;
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -15,6 +19,8 @@
     transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
     box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
     aspect-ratio: 1/1; /* บังคับให้เป็นวงกลมสมบูรณ์ */
+    flex-shrink: 0; /* ป้องกันการบีบอัด */
+    will-change: transform; /* ปรับ performance */
 }
 
 .breathing-circle::before {
@@ -53,6 +59,7 @@
     flex-direction: column;
     align-items: center;
     gap: 2rem;
+    justify-content: center;
 }
 
 /* MOBILE ADJUSTMENTS */
@@ -65,7 +72,12 @@
     .breathing-circle {
         width: 18rem;
         height: 18rem;
+        min-width: 18rem;
+        min-height: 18rem;
+        max-width: 18rem;
+        max-height: 18rem;
         aspect-ratio: 1/1; /* บังคับวงกลมในมือถือ */
+        flex-shrink: 0;
     }
     
     .breathing-circle .text-7xl {
@@ -85,7 +97,12 @@
     .breathing-circle {
         width: 16rem;
         height: 16rem;
+        min-width: 16rem;
+        min-height: 16rem;
+        max-width: 16rem;
+        max-height: 16rem;
         aspect-ratio: 1/1; /* บังคับวงกลมในมือถือเล็ก */
+        flex-shrink: 0;
     }
     
     .breathing-circle .text-7xl {
@@ -553,11 +570,14 @@
 /* PROGRESS RING */
 .progress-ring {
     position: absolute;
-    inset: 8px;
+    inset: 6px;
     border-radius: 50%;
     background: transparent;
     transition: background 0.3s ease;
     z-index: -1;
+    aspect-ratio: 1/1; /* บังคับให้เป็นวงกลมสมบูรณ์ */
+    width: auto;
+    height: auto;
 }
 
 /* ENHANCED BREATHING CIRCLE */

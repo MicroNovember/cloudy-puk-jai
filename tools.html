@@ -1,6 +1,35 @@
 <!DOCTYPE html>
 <html lang="th" x-data="mindbloomApp()" x-init="init()" :class="{ 'dark': darkMode }">
   <head>
+    <!-- Immediate Dark Mode Script -->
+    <script>
+        // Set dark mode immediately to prevent flash
+        (function() {
+            // Wait for DOM to be ready
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', function() {
+                    const savedDarkMode = localStorage.getItem('darkMode');
+                    // Default to dark mode if no preference saved
+                    if (savedDarkMode === null) {
+                        localStorage.setItem('darkMode', 'true');
+                        document.documentElement.classList.add('dark');
+                    } else if (savedDarkMode === 'true') {
+                        document.documentElement.classList.add('dark');
+                    }
+                });
+            } else {
+                // DOM already loaded, run immediately
+                const savedDarkMode = localStorage.getItem('darkMode');
+                // Default to dark mode if no preference saved
+                if (savedDarkMode === null) {
+                    localStorage.setItem('darkMode', 'true');
+                    document.documentElement.classList.add('dark');
+                } else if (savedDarkMode === 'true') {
+                        document.documentElement.classList.add('dark');
+                }
+            }
+        })();
+    </script>
     <link rel="icon" type="image/png" href="image/favicon.png">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -761,6 +790,24 @@
         </div>
       </div>
     </div>
+    <!-- Help Modal - หน่วยงานช่วยเหลือ -->
+    <div x-show="modalOpen === 'help'" x-transition class="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center p-4 z-50">
+      <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+        <div class="p-6">
+          <div class="text-center mb-6">
+            <div class="text-4xl mb-4">🆘</div>
+            <h3 class="text-2xl font-bold text-primary">หน่วยงานช่วยเหลือ</h3>
+            <p class="text-sm text-gray-600 dark:text-gray-500 mt-2">ไม่ว่าคุณจะเผชิญปัญหาอะไร มีคนพร้อมรับฟังเสมอ</p>
+          </div>
+
+          <div class="flex gap-3">
+            <button @click="closeModal()" class="flex-1 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-500 font-medium py-3 px-4 rounded-2xl transition-colors">
+              ปิด
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
     <!-- Firebase -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
@@ -773,5 +820,29 @@
     <script src="js/app.js"></script>
     <!-- Tools Script -->
     <script src="js/tools.js"></script>
+    
+    <!-- Ensure Dark Mode Default -->
+    <script>
+        // Ensure dark mode starts as default for tools page
+        document.addEventListener('alpine:init', () => {
+            // Check if dark mode is already set in HTML
+            const hasHtmlClass = document.documentElement.classList.contains('dark');
+            
+            if (hasHtmlClass) {
+                // HTML already has dark class, ensure localStorage is set
+                if (localStorage.getItem('darkMode') === null) {
+                    localStorage.setItem('darkMode', 'true');
+                }
+            } else {
+                // No HTML class, check localStorage
+                if (localStorage.getItem('darkMode') === null) {
+                    localStorage.setItem('darkMode', 'true');
+                    document.documentElement.classList.add('dark');
+                } else if (localStorage.getItem('darkMode') === 'true') {
+                    document.documentElement.classList.add('dark');
+                }
+            }
+        });
+    </script>
   </body>
 </html>
