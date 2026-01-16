@@ -877,11 +877,51 @@ button:active {
   box-shadow: var(--shadow-md);
 }
 
-.btn-secondary {
-  background-color: var(--color-secondary-200);
-  color: var(--color-text-primary);
-  border-color: var(--color-secondary-200);
+/* Focus Ring Styles */
+.focus\:ring-primary:focus {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 3px rgba(109, 159, 113, 0.1);
 }
+
+.focus\:ring-2:focus {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+.focus\:border-transparent:focus {
+  border-color: transparent;
+}
+
+/* Dark Mode Utilities */
+.dark\:bg-gray-800 { background-color: #1f2937; }
+.dark\:bg-gray-700 { background-color: #374151; }
+.dark\:bg-gray-900 { background-color: #111827; }
+.dark\:border-gray-600 { border-color: #4b5563; }
+.dark\:border-gray-800 { border-color: #1f2937; }
+.dark\:text-gray-200 { color: #e5e7eb; }
+.dark\:text-gray-300 { color: #d1d5db; }
+.dark\:text-gray-400 { color: #9ca3af; }
+.dark\:text-blue-200 { color: #bfdbfe; }
+.dark\:text-blue-300 { color: #93c5fd; }
+.dark\:text-blue-400 { color: #60a5fa; }
+.dark\:text-green-300 { color: #86efac; }
+.dark\:text-red-300 { color: #fca5a5; }
+
+/* Blue colors for dark mode */
+.dark\:bg-blue-900 { background-color: #1e3a8a; }
+.dark\:bg-blue-900\/20 { background-color: rgba(30, 58, 138, 0.2); }
+.dark\:border-blue-800 { border-color: #1e40af; }
+
+/* Red colors for dark mode */
+.dark\:bg-red-900 { background-color: #7f1d1d; }
+.dark\:bg-red-900\/20 { background-color: rgba(127, 29, 29, 0.2); }
+.dark\:border-red-800 { border-color: #991b1b; }
+
+/* Green colors for dark mode */
+.dark\:bg-green-900 { background-color: #14532d; }
+.dark\:bg-green-900\/20 { background-color: rgba(20, 83, 45, 0.2); }
+.dark\:border-green-800 { border-color: #166534; }
 
 .btn-secondary:hover:not(:disabled) {
   background-color: var(--color-secondary-300);

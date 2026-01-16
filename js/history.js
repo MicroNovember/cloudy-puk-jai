@@ -3,7 +3,6 @@ console.log('history.js กำลังโหลด...');
 
 // ตัวแปร global
 let historyData = [];
-let darkMode = false;
 let isExportingPDF = false;
 
 // ==================== PAGE INITIALIZATION ====================
@@ -111,10 +110,7 @@ function initializePage() {
     console.log('Initializing history page...');
     
     try {
-        // 1. ตั้งค่า Dark Mode
-        initDarkMode();
-        
-        // 2. โหลดข้อมูลประวัติ
+        // 1. โหลดข้อมูลประวัติ
         loadHistoryData();
         
         // 3. ตั้งค่า Event Listeners
@@ -139,82 +135,6 @@ function initializePage() {
     } catch (error) {
         console.error('initializePage error:', error);
         showNotification('เกิดข้อผิดพลาดในการเริ่มต้นหน้า: ' + error.message, 'error');
-    }
-}
-
-// ==================== DARK MODE ====================
-
-// ตั้งค่า Dark Mode
-function initDarkMode() {
-    console.log('initDarkMode: กำลังตั้งค่า Dark Mode...');
-    
-    try {
-        const savedDarkMode = localStorage.getItem('darkMode');
-        darkMode = savedDarkMode === 'true';
-        
-        if (darkMode) {
-            document.documentElement.classList.add('dark');
-        }
-        
-        // ตรวจสอบว่ามี icon element ก่อนใช้งาน
-        const darkModeIcon = document.getElementById('darkModeIcon');
-        if (darkModeIcon) {
-            darkModeIcon.className = darkMode ? 'fas fa-sun text-lg' : 'fas fa-moon text-lg';
-        }
-        
-        const darkModeToggle = document.getElementById('darkModeToggle');
-        if (darkModeToggle) {
-            darkModeToggle.addEventListener('click', function() {
-                darkMode = !darkMode;
-                document.documentElement.classList.toggle('dark');
-                
-                const icon = document.getElementById('darkModeIcon');
-                if (icon) {
-                    icon.className = darkMode ? 'fas fa-sun text-lg' : 'fas fa-moon text-lg';
-                }
-                
-                localStorage.setItem('darkMode', darkMode);
-            });
-        }
-        
-        // ฟังการเปลี่ยนแปลง darkMode จากหน้าอื่น (เฉพาะเมื่อมีการเปลี่ยนแปลงจริง)
-        window.addEventListener('storage', (e) => {
-            if (e.key === 'darkMode' && e.oldValue !== e.newValue) {
-                darkMode = e.newValue === 'true';
-                if (darkMode) {
-                    document.documentElement.classList.add('dark');
-                } else {
-                    document.documentElement.classList.remove('dark');
-                }
-                
-                const icon = document.getElementById('darkModeIcon');
-                if (icon) {
-                    icon.className = darkMode ? 'fas fa-sun text-lg' : 'fas fa-moon text-lg';
-                }
-            }
-        });
-        
-        // ตรวจสอบการเปลี่ยนแปลง darkMode ทุกๆ 500ms (fallback สำหรับข้ามแท็บ)
-        setInterval(() => {
-            const currentDarkMode = localStorage.getItem('darkMode') === 'true';
-            if (currentDarkMode !== darkMode) {
-                darkMode = currentDarkMode;
-                if (darkMode) {
-                    document.documentElement.classList.add('dark');
-                } else {
-                    document.documentElement.classList.remove('dark');
-                }
-                
-                const icon = document.getElementById('darkModeIcon');
-                if (icon) {
-                    icon.className = darkMode ? 'fas fa-sun text-lg' : 'fas fa-moon text-lg';
-                }
-            }
-        }, 500);
-        
-        console.log('initDarkMode: สำเร็จ');
-    } catch (error) {
-        console.error('initDarkMode error:', error);
     }
 }
 

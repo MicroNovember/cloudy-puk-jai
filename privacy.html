@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="th" x-data="privacyApp()" x-init="init()" :class="{ 'dark': darkMode }">
+<head>
+    <script>
+        window.location.replace('login.html?legal=privacy');
+    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="description" content="นโยบายความเป็นส่วนตัว Cloudy・Puk・Jai - การปกป้องข้อมูลผู้ใช้">
+    <meta name="keywords" content="นโยบายความเป็นส่วนตัว, ความเป็นส่วนตัว, ข้อมูลส่วนตัว, สุขภาพจิต">
+    
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" content="นโยบายความเป็นส่วนตัว - Cloudy・Puk・Jai">
+    <meta property="og:description" content="อ่านนโยบายความเป็นส่วนตัวของแอปพลิเคชันดูแลสุขภาพจิต Cloudy・Puk・Jai">
+    <meta property="og:type" content="website">
+    
+    <!-- Theme Color -->
+    <meta name="theme-color" content="#6D9F71">
+    
+    <title>นโยบายความเป็นส่วนตัว - Cloudy・Puk・Jai</title>
+    
+    <!-- Tailwind CSS -->
+    <link rel="stylesheet" href="css/tailwind.css">
+    <!-- Alpine.js -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Anuphan:wght@300;400;500;600;700&family=Noto+Sans+Thai:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Logo CSS -->
+    <link rel="stylesheet" href="assets/css/logo.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body class="bg-gray-50 dark:bg-gray-900 min-h-screen">
+    <!-- Header -->
+    <header class="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700">
+        <div class="max-w-4xl mx-auto px-4 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-3">
+                    <div class="logo logo-cloudy-puk-jai-medium"></div>
+                    <h1 class="text-xl font-bold text-primary">Cloudy・Puk・Jai</h1>
+                </div>
+                <button 
+                    @click="toggleDarkMode()"
+                    class="p-3 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-all duration-300 shadow-md hover:shadow-lg">
+                    <i :class="darkMode ? 'fas fa-sun text-yellow-500' : 'fas fa-moon text-gray-600'"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-4xl mx-auto px-4 py-8">
+        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8">
+            <!-- Page Title -->
+            <div class="text-center mb-8">
+                <div class="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-shield-alt text-2xl text-primary"></i>
+                </div>
+                <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+                    นโยบายความเป็นส่วนตัว
+                </h1>
+                <p class="text-gray-600 dark:text-gray-400">
+                    ปรับปรุงล่าสุด: 1 มกราคม 2026
+                </p>
+            </div>
+
+            <!-- Introduction -->
+            <section class="mb-8">
+                <div class="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-2xl p-6">
+                    <h2 class="text-xl font-semibold text-green-800 dark:text-green-200 mb-3 flex items-center">
+                        <i class="fas fa-shield-alt mr-2"></i>
+                        คำมั่นของเรา
+                    </h2>
+                    <p class="text-green-700 dark:text-green-300 leading-relaxed">
+                        ที่ Cloudy・Puk・Jai เราให้ความสำคัญกับความเป็นส่วนตัวของคุณเป็นอันดับแรก 
+                        นโยบายฉบับนี้อธิบายว่าเราเก็บ ใช้ และปกป้องข้อมูลของคุณอย่างไร
+                    </p>
+                </div>
+            </section>
+
+            <!-- Privacy Content -->
+            <div class="space-y-8">
+                <!-- 1. ข้อมูลที่เราเก็บ -->
+                <section>
+                    <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
+                        <span class="w-8 h-8 bg-primary text-white rounded-full flex items-center justify-center text-sm mr-3">1</span>
+                        ข้อมูลที่เราเก็บ
+                    </h3>
+                    <div class="pl-11 space-y-4">
+                        <div class="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-2xl p-4">
+                            <h4 class="font-semibold text-blue-800 dark:text-blue-200 mb-3">
+                                <i class="fas fa-database mr-2"></i>ข้อมูลที่จำเป็นต้องเก็บ
+                            </h4>
+                            <div class="space-y-3">
+                                <div class="flex items-start">
+                                    <i class="fas fa-envelope text-blue-500 mr-3 mt-1"></i>
+                                    <div>
+                                        <p class="font-medium text-gray-900 dark:text-white">อีเมล</p>
+                                        <p class="text-sm text-gray-600 dark:text-gray-400">สำหรับการลงทะเบียนและเข้าสู่ระบบ</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-start">
+                                    <i class="fas fa-heart text-red-500 mr-3 mt-1"></i>
+                                    <div>
+                                        <p class="font-medium text-gray-900 dark:text-white">ข้อมูลบันทึกความรู้สึก</p>
+                                        <p class="text-sm text-gray-600 dark:text-gray-400">อารมณ์ ความรู้สึก กิจกรรม และบันทึกประจำวัน</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-start">
+                                    <i class="fas fa-clipboard-check text-green-500 mr-3 mt-1"></i>
+                                    <div>
+                                        <p class="font-medium text-gray-900 dark:text-white">ผลแบบประเมิน</p>
+                                        <p class="text-sm text-gray-600 dark:text-gray-400">ผลลัพธ์จากแบบทดสอบสุขภาพจิต</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-gray-50 dark:bg-gray-700 rounded-2xl p-4">
+                            <h4 class="font-semibold text-gray-800 dark:text-gray-200 mb-3">
+                                <i class="fas fa-cogs mr-2"></i>ข้อมูลที่เก็บโดยอัตโนมัติ
+                            </h4>
+                            <div class="space-y-2 text-sm text-gray-600 dark:text-gray-400">
+                                <p>• ข้อมูลการใช้งาน (วันที่ เวลา ความถี่)</p>
+                                <p>• ข้อมูลอุปกรณ์ (ประเภท เวอร์ชัน ระบบปฏิบัติการ)</p>
+                                <p>• ข้อมูลทางเทคนิค (IP Address ประเภท Browser)</p>
+                                <p>• ข้อมูลการตั้งค่าและการปรับแต่งแอป</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 2. ข้อมูลที่เราไม่เก็บ -->
+                <section>
+                    <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
+                        <span class="w-8 h-8 bg-primary text-white rounded-full flex items-center justify-center text-sm mr-3">2</span>
+                        ข้อมูลที่เราไม่เก็บ
+                    </h3>
+                    <div class="pl-11">
+                        <div class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-2xl p-4">
+                            <h4 class="font-semibold text-red-800 dark:text-red-200 mb-3">
+                                <i class="fas fa-ban mr-2"></i>ข้อมูลที่เราไม่รวบรวม
+                            </h4>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                <div class="flex items-center space-x-2">
+                                    <i class="fas fa-user text-red-500"></i>
+                                    <span class="text-sm">ชื่อ-นามสกุล</span>
+                                </div>
+                                <div class="flex items-center space-x-2">
+                                    <i class="fas fa-phone text-red-500"></i>
+                                    <span class="text-sm">เบอร์โทรศัพท์</span>
+                                </div>
+                                <div class="flex items-center space-x-2">
+                                    <i class="fas fa-home text-red-500"></i>
+                                    <span class="text-sm">ที่อยู่</span>
+                                </div>
+                                <div class="flex items-center space-x-2">
+                                    <i class="fas fa-credit-card text-red-500"></i>
+                                    <span class="text-sm">ข้อมูลบัตรเครดิต</span>
+                                </div>
+                                <div class="flex items-center space-x-2">
+                                    <i class="fas fa-id-card text-red-500"></i>
+                                    <span class="text-sm">เลขบัตรประชาชน</span>
+                                </div>
+                                <div class="flex items-center space-x-2">
+                                    <i class="fas fa-map-marker-alt text-red-500"></i>
+                                    <span class="text-sm">ตำแหน่ง GPS</span>
+                                </div>
+                                <div class="flex items-center space-x-2">
+                                    <i class="fas fa-address-book text-red-500"></i>
+                                    <span class="text-sm">รายชื่อผู้ติดต่อ</span>
+                                </div>
+                                <div class="flex items-center space-x-2">
+                                    <i class="fas fa-image text-red-500"></i>
+                                    <span class="text-sm">รูปภาพส่วนตัว</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 3. วิธีการเก็บข้อมูล -->
+                <section>
+                    <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
+                        <span class="w-8 h-8 bg-primary text-white rounded-full flex items-center justify-center text-sm mr-3">3</span>
+                        วิธีการเก็บข้อมูล
+                    </h3>
+                    <div class="pl-11 space-y-3 text-gray-700 dark:text-gray-300">
+                        <p>เราเก็บข้อมูลผ่านช่องทางต่อไปนี้:</p>
+                        <ul class="list-disc list-inside space-y-2 ml-4">
+                            <li><strong>การลงทะเบียน:</strong> เมื่อคุณสร้างบัญชีผู้ใช้</li>
+                            <li><strong>การใช้งานแอป:</strong> เมื่อคุณบันทึกข้อมูลหรือใช้ฟีเจอร์ต่างๆ</li>
+                            <li><strong>การทำแบบประเมิน:</strong> เมื่อคุณทำแบบทดสอบสุขภาพจิต</li>
+                            <li><strong>ข้อมูลอุปกรณ์:</strong> ผ่านการตรวจสอบอัตโนมัติ</li>
+                            <li><strong>Cookies และ Local Storage:</strong> สำหรับจัดเก็บการตั้งค่า</li>
+                        </ul>
+                    </div>
+                </section>
+
+                <!-- 4. การใช้ข้อมูล -->
+                <section>
+                    <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
+                        <span class="w-8 h-8 bg-primary text-white rounded-full flex items-center justify-center text-sm mr-3">4</span>
+                        การใช้ข้อมูล
+                    </h3>
+                    <div class="pl-11 space-y-3 text-gray-700 dark:text-gray-300">
+                        <p>เราใช้ข้อมูลของคุณเพื่อ:</p>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-2xl p-3">
+                                <div class="flex items-center space-x-2 mb-2">
+                                    <i class="fas fa-check-circle text-green-500"></i>
+                                    <span class="font-medium">การบริการ</span>
+                                </div>
+                                <ul class="text-sm space-y-1">
+                                    <li>• ให้บริการตามที่คุณขอ</li>
+                                    <li>• ปรับปรุงประสบการณ์ผู้ใช้</li>
+                                    <li>• จัดการบัญชีผู้ใช้</li>
+                                </ul>
+                            </div>
+                            <div class="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-2xl p-3">
+                                <div class="flex items-center space-x-2 mb-2">
+                                    <i class="fas fa-chart-line text-blue-500"></i>
+                                    <span class="font-medium">การวิเคราะห์</span>
+                                </div>
+                                <ul class="text-sm space-y-1">
+                                    <li>• วิเคราะห์พฤติกรรมการใช้งาน</li>
+                                    <li>• ปรับปรุงฟีเจอร์แอปพลิเคชัน</li>
+                                    <li>• พัฒนาบริการใหม่ๆ</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 5. การปกป้องข้อมูล -->
+                <section>
+                    <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
+                        <span class="w-8 h-8 bg-primary text-white rounded-full flex items-center justify-center text-sm mr-3">5</span>
+                        การปกป้องข้อมูล
+                    </h3>
+                    <div class="pl-11 space-y-4">
+                        <div class="bg-purple-50 dark:bg-purple-900/20 border border-purple-200 dark:border-purple-800 rounded-2xl p-4">
+                            <h4 class="font-semibold text-purple-800 dark:text-purple-200 mb-3">
+                                <i class="fas fa-lock mr-2"></i>มาตรการรักษาความปลอดภัย
+                            </h4>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                <div class="flex items-center space-x-2">
+                                    <i class="fas fa-shield-alt text-purple-500"></i>
+                                    <span class="text-sm">การเข้ารหัส SSL/TLS</span>
+                                </div>
+                                <div class="flex items-center space-x-2">
+                                    <i class="fas fa-server text-purple-500"></i>
+                                    <span class="text-sm">เซิร์ฟเวอร์ปลอดภัย</span>
+                                </div>
+                                <div class="flex items-center space-x-2">
+                                    <i class="fas fa-user-shield text-purple-500"></i>
+                                    <span class="text-sm">การจำกัดการเข้าถึง</span>
+                                </div>
+                                <div class="flex items-center space-x-2">
+                                    <i class="fas fa-database text-purple-500"></i>
+                                    <span class="text-sm">การสำรองข้อมูล</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-2xl p-4">
+                            <h4 class="font-semibold text-yellow-800 dark:text-yellow-200 mb-2">
+                                <i class="fas fa-exclamation-triangle mr-2"></i>ข้อควรทราบสำหรับ Guest Mode
+                            </h4>
+                            <p class="text-sm text-yellow-700 dark:text-yellow-300">
+                                ข้อมูลใน Guest Mode จะถูกเก็บไว้ในอุปกรณ์ของคุณเท่านั้น (localStorage) 
+                                ซึ่งมีความเสี่ยงที่สูงกว่าในการสูญหายข้อมูล
+                            </p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 6. การแชร์ข้อมูล -->
+                <section>
+                    <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
+                        <span class="w-8 h-8 bg-primary text-white rounded-full flex items-center justify-center text-sm mr-3">6</span>
+                        การแชร์ข้อมูล
+                    </h3>
+                    <div class="pl-11 space-y-3 text-gray-700 dark:text-gray-300">
+                        <div class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-2xl p-4">
+                            <h4 class="font-semibold text-red-800 dark:text-red-200 mb-2">
+                                <i class="fas fa-times-circle mr-2"></i>เราไม่แชร์ข้อมูลกับบุคคลภายนอก
+                            </h4>
+                            <p class="text-sm text-red-700 dark:text-red-300">
+                                เราไม่ขาย ให้เช่า หรือแชร์ข้อมูลส่วนตัวของคุณกับบริษัทอื่นๆ 
+                                ไม่ว่าจะด้วยเหตุผลใดก็ตาม
+                            </p>
+                        </div>
+                        
+                        <p>ข้อมูลของคุณจะถูกแชร์เฉพาะในกรณีต่อไปนี้:</p>
+                        <ul class="list-disc list-inside space-y-2 ml-4">
+                            <li><strong>การได้รับความยินยอม:</strong> เมื่อคุณอนุญาตอย่างชัดแจ้ง</li>
+                            <li><strong>ตามกฎหมาย:</strong> เมื่อจำเป็นตามกฎหมายหรือคำสั่งศาล</li>
+                            <li><strong>การปกป้องสิทธิ:</strong> เพื่อปกป้องสิทธิ ทรัพย์สิน หรือความปลอดภัย</li>
+                        </ul>
+                    </div>
+                </section>
+
+                <!-- 7. สิทธิของผู้ใช้ -->
+                <section>
+                    <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
+                        <span class="w-8 h-8 bg-primary text-white rounded-full flex items-center justify-center text-sm mr-3">7</span>
+                        สิทธิของผู้ใช้
+                    </h3>
+                    <div class="pl-11 space-y-3 text-gray-700 dark:text-gray-300">
+                        <p>คุณมีสิทธิต่อไปนี้เกี่ยวกับข้อมูลของคุณ:</p>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-2xl p-3">
+                                <div class="flex items-center space-x-2 mb-2">
+                                    <i class="fas fa-eye text-blue-500"></i>
+                                    <span class="font-medium">สิทธิในการเข้าถึง</span>
+                                </div>
+                                <p class="text-sm">ขอดูข้อมูลส่วนตัวที่เราเก็บเกี่ยวกับคุณ</p>
+                            </div>
+                            <div class="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-2xl p-3">
+                                <div class="flex items-center space-x-2 mb-2">
+                                    <i class="fas fa-edit text-green-500"></i>
+                                    <span class="font-medium">สิทธิในการแก้ไข</span>
+                                </div>
+                                <p class="text-sm">ขอแก้ไขข้อมูลส่วนตัวที่ไม่ถูกต้อง</p>
+                            </div>
+                            <div class="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-2xl p-3">
+                                <div class="flex items-center space-x-2 mb-2">
+                                    <i class="fas fa-trash text-yellow-500"></i>
+                                    <span class="font-medium">สิทธิในการลบ</span>
+                                </div>
+                                <p class="text-sm">ขอลบข้อมูลส่วนตัวของคุณ</p>
+                            </div>
+                            <div class="bg-purple-50 dark:bg-purple-900/20 border border-purple-200 dark:border-purple-800 rounded-2xl p-3">
+                                <div class="flex items-center space-x-2 mb-2">
+                                    <i class="fas fa-download text-purple-500"></i>
+                                    <span class="font-medium">สิทธิในการส่งออก</span>
+                                </div>
+                                <p class="text-sm">ขอรับข้อมูลส่วนตัวในรูปแบบที่อ่านได้</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 8. การเก็บข้อมูลของเด็ก -->
+                <section>
+                    <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
+                        <span class="w-8 h-8 bg-primary text-white rounded-full flex items-center justify-center text-sm mr-3">8</span>
+                        การเก็บข้อมูลของเด็ก
+                    </h3>
+                    <div class="pl-11 space-y-3 text-gray-700 dark:text-gray-300">
+                        <div class="bg-orange-50 dark:bg-orange-900/20 border border-orange-200 dark:border-orange-800 rounded-2xl p-4">
+                            <h4 class="font-semibold text-orange-800 dark:text-orange-200 mb-2">
+                                <i class="fas fa-child mr-2"></i>นโยบายเกี่ยวกับเด็ก
+                            </h4>
+                            <p class="text-sm text-orange-700 dark:text-orange-300">
+                                Cloudy・Puk・Jai ไม่มุ่เป้าหมายเก็บข้อมูลจากเด็กอายุต่ำกว่า 13 ปี 
+                                และจะไม่เก็บข้อมูลจากเด็กโดยเจตนา
+                            </p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 9. การเปลี่ยนแปลงนโยบาย -->
+                <section>
+                    <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
+                        <span class="w-8 h-8 bg-primary text-white rounded-full flex items-center justify-center text-sm mr-3">9</span>
+                        การเปลี่ยนแปลงนโยบาย
+                    </h3>
+                    <div class="pl-11 space-y-3 text-gray-700 dark:text-gray-300">
+                        <p>เราอาจปรับปรุงนโยบายความเป็นส่วนตัวเป็นครั้งคราว เพื่อให้สอดคล้องกับ:</p>
+                        <ul class="list-disc list-inside space-y-2 ml-4">
+                            <li>การเปลี่ยนแปลงกฎหมาย</li>
+                            <li>การพัฒนาบริการของเรา</li>
+                            <li>การปรับปรุงประสบการณ์ผู้ใช้</li>
+                            <li>ความคิดเห็นจากผู้ใช้</li>
+                        </ul>
+                        <p>การเปลี่ยนแปลงจะมีผลบังเมื่อมีการประกาศบนแอปพลิเคชันหรือเว็บไซต์</p>
+                    </div>
+                </section>
+
+                <!-- 10. การติดต่อ -->
+                <section>
+                    <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
+                        <span class="w-8 h-8 bg-primary text-white rounded-full flex items-center justify-center text-sm mr-3">10</span>
+                        การติดต่อเรา
+                    </h3>
+                    <div class="pl-11 space-y-3 text-gray-700 dark:text-gray-300">
+                        <p>หากมีคำถามเกี่ยวกับนโยบายความเป็นส่วนตัว สามารถติดต่อเราได้ที่:</p>
+                        <div class="bg-gray-50 dark:bg-gray-700 rounded-2xl p-4">
+                            <div class="space-y-2">
+                                <p><i class="fas fa-envelope mr-2 text-primary"></i>อีเมล: privacy@cloudypukjai.com</p>
+                                <p><i class="fas fa-globe mr-2 text-primary"></i>เว็บไซต์: www.cloudypukjai.com</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <!-- Agreement Section -->
+            <section class="mt-12 pt-8 border-t border-gray-200 dark:border-gray-700">
+                <div class="bg-gradient-to-r from-green/10 to-blue/10 rounded-xl p-6 text-center">
+                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-3">
+                        การยอมรับนโยบายความเป็นส่วนตัว
+                    </h3>
+                    <p class="text-gray-600 dark:text-gray-400 mb-4">
+                        การใช้งาน Cloudy・Puk・Jai ถือว่าคุณได้อ่านและยอมรับนโยบายความเป็นส่วนตัวนี้
+                    </p>
+                    <div class="flex justify-center space-x-4">
+                        <button 
+                            @click="goBack()"
+                            class="btn-outline px-6 py-2">
+                            <i class="fas fa-arrow-left mr-2"></i>
+                            กลับ
+                        </button>
+                        <button 
+                            @click="printPrivacy()"
+                            class="btn-primary px-6 py-2">
+                            <i class="fas fa-print mr-2"></i>
+                            พิมพ์
+                        </button>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 mt-12">
+        <div class="max-w-4xl mx-auto px-4 py-6">
+            <div class="text-center text-sm text-gray-600 dark:text-gray-400">
+                <p>&copy; 2026 Cloudy・Puk・Jai. สงวนลิขสิทธิ์</p>
+                <div class="mt-2 space-x-4">
+                    <a href="terms.html" class="text-primary hover:text-primary-dark">เงื่อนไขการใช้งาน</a>
+                    <span>•</span>
+                    <a href="privacy.html" class="text-primary hover:text-primary-dark">นโยบายความเป็นส่วนตัว</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        function privacyApp() {
+            return {
+                darkMode: false,
+                
+                init() {
+                    // Load dark mode preference
+                    this.darkMode = localStorage.getItem('darkMode') === 'true';
+                },
+                
+                toggleDarkMode() {
+                    this.darkMode = !this.darkMode;
+                    localStorage.setItem('darkMode', this.darkMode);
+                },
+                
+                goBack() {
+                    if (window.history.length > 1) {
+                        window.history.back();
+                    } else {
+                        window.location.href = 'login.html';
+                    }
+                },
+                
+                printPrivacy() {
+                    window.print();
+                },
+                
+                // Time-based greeting system
+                getTimeBasedGreeting() {
+                    const hour = new Date().getHours();
+                    let timeGreeting = '';
+                    
+                    if (hour >= 5 && hour < 12) {
+                        timeGreeting = 'สวัสดีตอนเช้า';
+                    } else if (hour >= 12 && hour < 17) {
+                        timeGreeting = 'สวัสดีตอนบ่าย';
+                    } else if (hour >= 17 && hour < 21) {
+                        timeGreeting = 'สวัสดีตอนเย็น';
+                    } else {
+                        timeGreeting = 'สวัสดีตอนดึก';
+                    }
+                    
+                    return timeGreeting + ' ';
+                }
+            }
+        }
+        
+        document.addEventListener('alpine:init', () => {
+            Alpine.data('privacyApp', privacyApp);
+        });
+    </script>
+</body>
+</html>

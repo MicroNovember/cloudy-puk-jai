@@ -17,9 +17,19 @@ try {
 
 const auth = firebase.auth();
 
+// Guest/Trial data retention (days)
+const GUEST_SESSION_DAYS = 7;
+
 // Test Firebase functionality
 auth.onAuthStateChanged((user) => {
     // Auth state change detected
+    console.log('🔥 Firebase Auth State Changed:', user ? 'User logged in' : 'User logged out');
+    console.log('🔥 Firebase User:', user ? {
+        uid: user.uid,
+        email: user.email,
+        displayName: user.displayName
+    } : null);
+    
     if (user) {
         // ทำให้ผู้ใช้พร้อมใช้งานทั่วโลก
         window.currentUser = user;
@@ -27,10 +37,12 @@ auth.onAuthStateChanged((user) => {
         // อัปเดต AuthUtils
         if (window.AuthUtils) {
             // Updating AuthUtils with new user
+            console.log('🔥 Updating AuthUtils with Firebase user');
         }
     } else {
         // No user in auth state change
         window.currentUser = null;
+        console.log('🔥 Firebase: No user, window.currentUser set to null');
     }
 });
 
@@ -77,33 +89,103 @@ document.addEventListener('alpine:init', () => {
         error: '',
         success: '',
         showPassword: false,
+        showRegisterPassword: false,
         showConfirmPassword: false,
         showEmailForm: false,
         showGuestModal: false,
+        showLegalModal: false,
+        legalTab: 'terms',
         guestAgreed: false,
         darkMode: false,
         
+                
+        // Tab State
+        activeTab: 'login',
+        
+        // Greeting message based on time of day
+        getGreetingMessage() {
+            const hour = new Date().getHours();
+            let greeting = '';
+            
+            if (hour >= 5 && hour < 12) {
+                greeting = 'สวัสดีตอนเช้า';
+            } else if (hour >= 12 && hour < 17) {
+                greeting = 'สวัสดีตอนบ่าย';
+            } else if (hour >= 17 && hour < 20) {
+                greeting = 'สวัสดีตอนเย็น';
+            } else {
+                greeting = 'สวัสดีตอนดึก';
+            }
+            
+            return greeting + '💖';
+        },
+        
+        // Time-based greeting system (same as app.js)
+        getTimeBasedGreeting() {
+            const hour = new Date().getHours();
+            let timeGreeting = '';
+            
+            if (hour >= 5 && hour < 12) {
+                timeGreeting = 'สวัสดีตอนเช้า';
+            } else if (hour >= 12 && hour < 17) {
+                timeGreeting = 'สวัสดีตอนบ่าย';
+            } else if (hour >= 17 && hour < 21) {
+                timeGreeting = 'สวัสดีตอนเย็น';
+            } else {
+                timeGreeting = 'สวัสดีตอนดึก';
+            }
+            
+            return timeGreeting + ' 💖 ';
+        },
+
+        openLegal(tab) {
+            this.legalTab = tab || 'terms';
+            this.showLegalModal = true;
+        },
+
+        closeLegal() {
+            this.showLegalModal = false;
+        },
+        
         // Initialize Firebase and check auth state
         init() {
-            
-            // Check for existing session
-            auth.onAuthStateChanged((user) => {
-                
-                if (user) {
-                    // User is signed in, redirect to main app
-                    // Only redirect if not already on login page
-                    if (!window.location.pathname.includes('login.html')) {
-                        this.redirectToApp();
-                    }
-                } else {
-                    // User is signed out
+            console.log('🔧 Initializing auth app...');
+
+            try {
+                const last = sessionStorage.getItem('authGuard:lastRedirect');
+                if (last) {
+                    console.warn('🛡️ Auth Guard: last redirect info:', JSON.parse(last));
+                    sessionStorage.removeItem('authGuard:lastRedirect');
                 }
-            });
+            } catch (e) {
+                // ignore
+            }
+
+            // If auth-guard just redirected us from a protected page, suppress auto-redirect back to index
+            let suppressUntil = 0;
+            try {
+                const raw = sessionStorage.getItem('authGuard:suppressLoginRedirectUntil');
+                suppressUntil = raw ? Number(raw) : 0;
+            } catch (e) {
+                suppressUntil = 0;
+            }
             
-            // Check for guest session
-            const guestMode = localStorage.getItem('guestMode') === 'true';
-            if (guestMode) {
-                // Guest mode detected
+            // Redirect if already authenticated (use onAuthStateChanged, auth.currentUser may be null initially)
+            if (!window.__authLoginRedirectListenerAttached) {
+                window.__authLoginRedirectListenerAttached = true;
+                auth.onAuthStateChanged((user) => {
+                    try {
+                        const currentPage = (window.location.pathname.split('/').pop() || '').toLowerCase();
+                        const isLoginPage = currentPage === 'login.html' || currentPage === '';
+                        const isSuppressed = suppressUntil && Date.now() < suppressUntil;
+                        if (isLoginPage && user && !isSuppressed) {
+                            console.log('🔥 User already logged in, redirecting...');
+                            window.location.href = 'index.html';
+                        }
+                    } catch (e) {
+                        // ignore
+                    }
+                });
             }
             
             // Load dark mode preference
@@ -117,6 +199,17 @@ document.addEventListener('alpine:init', () => {
                 this.form.email = rememberedEmail;
                 this.form.remember = true;
             }
+
+            // Support deep-link to legal modal (stop using terms/privacy pages)
+            try {
+                const params = new URLSearchParams(window.location.search || '');
+                const legal = (params.get('legal') || '').toLowerCase();
+                if (legal === 'terms' || legal === 'privacy') {
+                    this.openLegal(legal);
+                }
+            } catch (e) {
+                // ignore
+            }
         },
         
         // Check if guest is logged in
@@ -128,13 +221,13 @@ document.addEventListener('alpine:init', () => {
                 return false;
             }
             
-            // Check if guest session is still valid (30 days)
+            // Check if guest session is still valid
             const data = JSON.parse(guestData);
             const loginTime = new Date(data.loginTime);
             const now = new Date();
             const daysDiff = (now - loginTime) / (1000 * 60 * 60 * 24);
             
-            if (daysDiff > 30) {
+            if (daysDiff > GUEST_SESSION_DAYS) {
                 // Guest session expired
                 this.clearGuestData();
                 return false;
@@ -143,178 +236,70 @@ document.addEventListener('alpine:init', () => {
             return true;
         },
         
-        // Show Guest Agreement Modal
-        showGuestAgreement() {
-            this.showGuestModal = true;
-        },
-        
-        // Login as Guest
-        loginAsGuest() {
+        // Login as Guest (Streamlined)
+        async loginAsGuest() {
             this.loading = true;
             this.error = '';
             
-            // สร้าง popup แจ้งเตือนสำหรับการเข้าใช้งานแบบ Guest
-            this.showGuestWarningDialog();
+            try {
+                // Clear any existing auth data
+                this.clearAllAuthData();
+                
+                // Set guest mode in localStorage
+                localStorage.setItem('guestMode', 'true');
+                localStorage.setItem('userType', 'guest');
+                localStorage.setItem('guestLoginTime', new Date().toISOString());
+                
+                // Create guest user data
+                const guestData = {
+                    uid: 'guest_' + Date.now(),
+                    email: 'guest@cloudypukjai.local',
+                    displayName: 'Guest User',
+                    photoURL: null,
+                    agreedAt: new Date().toISOString(),
+                    agreedToTerms: true, // Explicit agreement flag
+                    deviceInfo: navigator.userAgent,
+                    loginWarning: true,
+                    loginTime: new Date().toISOString() // Add loginTime for compatibility
+                };
+                
+                localStorage.setItem('guestData', JSON.stringify(guestData));
+                
+                // Close modal and show success message
+                this.showGuestModal = false;
+                this.success = '✅ เข้าสู่ระบบแบบ Guest สำเร็จแล้ว';
+                setTimeout(() => {
+                    this.success = '';
+                }, 3000);
+                
+                this.loading = false;
+                
+                // Redirect to main app
+                this.redirectToApp();
+                
+            } catch (error) {
+                this.error = 'เกิดข้อผิดพลาดในการเข้าใช้งานแบบ Guest: ' + error.message;
+                this.loading = false;
+            }
         },
         
-        // แสดง popup แจ้งเตือนการเข้าใช้งานแบบ Guest
-        showGuestWarningDialog() {
-            // สร้าง overlay
-            const overlay = document.createElement('div');
-            overlay.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4';
-            overlay.style.backdropFilter = 'blur(4px)';
+        // Proceed with Guest Login (from modal)
+        proceedGuestLogin() {
+            if (!this.guestAgreed) {
+                this.error = 'กรุณายอมรับเงื่อนไขการใช้งานแบบ Guest';
+                return;
+            }
             
-            // สร้าง popup container
-            const popup = document.createElement('div');
-            popup.className = 'bg-white dark:bg-gray-800 rounded-2xl shadow-2xl max-w-md w-full p-6 transform transition-all duration-300 scale-95';
-            
-            popup.innerHTML = `
-                <div class="text-center">
-                    <!-- Icon -->
-                    <div class="mx-auto w-16 h-16 bg-blue-100 dark:bg-blue-900/30 rounded-full flex items-center justify-center mb-4">
-                        <i class="fas fa-user-astronaut text-2xl text-blue-600 dark:text-blue-400"></i>
-                    </div>
-                    
-                    <!-- Title -->
-                    <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-3">🚀 เข้าใช้งานแบบ Guest</h3>
-                    
-                    <!-- Message -->
-                    <div class="text-gray-600 dark:text-gray-300 mb-6 text-sm leading-relaxed">
-                        <p class="mb-3">⚠️ <strong>คำเตือนเกี่ยวกับการใช้งานแบบ Guest:</strong></p>
-                        <div class="text-left space-y-2">
-                            <div class="flex items-start">
-                                <i class="fas fa-mobile-alt text-blue-500 mt-1 mr-2"></i>
-                                <span>📱 ข้อมูลของคุณจะถูกเก็บไว้เฉพาะในอุปกรณ์นี้เท่านั้น</span>
-                            </div>
-                            <div class="flex items-start">
-                                <i class="fas fa-sync-alt text-blue-500 mt-1 mr-2"></i>
-                                <span>🔒 ไม่สามารถซิงค์ข้อมูลข้ามอุปกรณ์ได้</span>
-                            </div>
-                            <div class="flex items-start">
-                                <i class="fas fa-trash-alt text-blue-500 mt-1 mr-2"></i>
-                                <span>🗑️ การลบแคช/คุกกี้/ใช้เบราว์เซอร์อื่นจะทำให้ข้อมูลหายไป</span>
-                            </div>
-                            <div class="flex items-start">
-                                <i class="fas fa-exchange-alt text-blue-500 mt-1 mr-2"></i>
-                                <span>📱 การเปลี่ยนอุปกรณ์จะทำให้ข้อมูลสูญหายไป</span>
-                            </div>
-                            <div class="flex items-start">
-                                <i class="fas fa-shield-alt text-blue-500 mt-1 mr-2"></i>
-                                <span>🔐 แนะนำให้สมัครสมาชิกเพื่อความปลอดภัยข้อมูล</span>
-                            </div>
-                        </div>
-                        <p class="mt-3 font-semibold">คุณยอมรับเงื่อนไขและเข้าใจใจข้อความเสี่ยงเหล่านี้หรือไม่?</p>
-                    </div>
-                    
-                    <!-- Buttons -->
-                    <div class="flex gap-3 justify-center">
-                        <button id="cancelBtn" class="px-6 py-2.5 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200 rounded-lg font-medium transition-all duration-200 flex items-center">
-                            <i class="fas fa-times mr-2"></i>
-                            ยกเลิก
-                        </button>
-                        <button id="confirmBtn" class="px-6 py-2.5 bg-blue-500 hover:bg-blue-600 text-white rounded-lg font-medium transition-all duration-200 flex items-center">
-                            <i class="fas fa-user-astronaut mr-2"></i>
-                            ยอมรับและเข้าใช้งาน
-                        </button>
-                    </div>
-                </div>
-            `;
-            
-            // เพิ่ม popup ไปยัง overlay
-            overlay.appendChild(popup);
-            document.body.appendChild(overlay);
-            
-            // แสดง popup ด้วย animation
-            setTimeout(() => {
-                popup.classList.remove('scale-95');
-                popup.classList.add('scale-100');
-            }, 10);
-            
-            // Event listeners
-            const cancelBtn = document.getElementById('cancelBtn');
-            const confirmBtn = document.getElementById('confirmBtn');
-            
-            cancelBtn.addEventListener('click', () => {
-                this.closeGuestWarningDialog(overlay, () => {
-                    this.loading = false;
-                    this.error = 'คุณต้องยอมรับเงื่อนไขเพื่อเข้าใช้งานแบบ Guest';
-                });
-            });
-            
-            confirmBtn.addEventListener('click', () => {
-                this.closeGuestWarningDialog(overlay, () => {
-                    this.proceedWithGuestLogin();
-                });
-            });
-            
-            // ปิด popup เมื่อคลิก overlay
-            overlay.addEventListener('click', (e) => {
-                if (e.target === overlay) {
-                    this.closeGuestWarningDialog(overlay, () => {
-                        this.loading = false;
-                        this.error = 'คุณต้องยอมรับเงื่อนไขเพื่อเข้าใช้งานแบบ Guest';
-                    });
-                }
-            });
-            
-            // ปิด popup เมื่อกด Escape
-            const handleEscape = (e) => {
-                if (e.key === 'Escape') {
-                    this.closeGuestWarningDialog(overlay, () => {
-                        this.loading = false;
-                        this.error = 'คุณต้องยอมรับเงื่อนไขเพื่อเข้าใช้งานแบบ Guest';
-                    });
-                    document.removeEventListener('keydown', handleEscape);
-                }
-            };
-            document.addEventListener('keydown', handleEscape);
+            // Close modal and proceed with login
+            this.showGuestModal = false;
+            this.loginAsGuest();
         },
         
-        // ปิด popup แจ้งเตือน Guest
-        closeGuestWarningDialog(overlay, callback) {
-            const popup = overlay.querySelector('div');
-            popup.classList.remove('scale-100');
-            popup.classList.add('scale-95');
-            
-            setTimeout(() => {
-                document.body.removeChild(overlay);
-                if (callback) callback();
-            }, 300);
-        },
-        
-        // ดำเนินการ login แบบ Guest
-        proceedWithGuestLogin() {
-            // Clear any existing auth data
-            this.clearAllAuthData();
-            
-            // Set guest mode in localStorage
-            localStorage.setItem('guestMode', 'true');
-            localStorage.setItem('userType', 'guest');
-            localStorage.setItem('guestLoginTime', new Date().toISOString());
-            
-            // Create guest user data
-            const guestData = {
-                uid: 'guest_' + Date.now(),
-                email: 'guest@cloudypukjai.local',
-                displayName: 'Guest User',
-                photoURL: null,
-                agreedAt: new Date().toISOString(),
-                deviceInfo: navigator.userAgent,
-                loginWarning: true
-            };
-            
-            localStorage.setItem('guestData', JSON.stringify(guestData));
-            
-            // Show success message briefly
-            this.success = '✅ เข้าสู่ระบบแบบ Guest สำเร็จแล้ว';
-            setTimeout(() => {
-                this.success = '';
-            }, 3000);
-            
-            this.loading = false;
-            
-            // Redirect to main app
-            this.redirectToApp();
+        // Show Guest Modal (reset agreement state)
+        showGuestModalFunc() {
+            this.guestAgreed = false; // Reset agreement
+            this.error = ''; // Clear any previous errors
+            this.showGuestModal = true;
         },
         
         // Debug Register Function
@@ -428,33 +413,66 @@ document.addEventListener('alpine:init', () => {
         
         // Login with Email/Password
         async login() {
+            console.log('🔐 Starting email login process...');
+            console.log('🔐 Email:', this.form.email);
+            
             if (!this.form.email || !this.form.password) {
+                console.log('🔐 Form data during validation:');
+                console.log('  - this.form.email:', this.form.email);
+                console.log('  - this.form.password:', this.form.password);
+                console.log('🔐 Validation failed: missing email or password');
                 this.error = 'กรุณากรอกอีเมลและรหัสผ่าน';
                 return;
             }
             
             this.loading = true;
             this.error = '';
+            console.log('🔐 Loading state set to true');
             
             try {
+                // Set Firebase persistence (remember me)
+                try {
+                    const persistence = this.form.remember
+                        ? firebase.auth.Auth.Persistence.LOCAL
+                        : firebase.auth.Auth.Persistence.SESSION;
+                    await auth.setPersistence(persistence);
+                } catch (e) {
+                    console.warn('🔐 Failed to set auth persistence:', e);
+                }
+
                 // Clear any existing guest data
+                console.log('🔐 Clearing existing guest data...');
                 this.clearGuestData();
                 
+                console.log('🔐 Attempting Firebase sign in...');
                 // Sign in with Firebase
-                await auth.signInWithEmailAndPassword(this.form.email, this.form.password);
+                const userCredential = await auth.signInWithEmailAndPassword(this.form.email, this.form.password);
+                console.log('🔐 Firebase sign in successful:', userCredential.user.email);
+
+                // Ensure session is established before navigation
+                try {
+                    await userCredential.user.getIdToken();
+                } catch (e) {
+                    console.warn('🔐 Failed to get ID token before redirect:', e);
+                }
                 
                 // Remember me functionality
                 if (this.form.remember) {
+                    console.log('🔐 Remember me enabled, saving email...');
                     localStorage.setItem('rememberUser', this.form.email);
                 } else {
+                    console.log('🔐 Remember me disabled, removing saved email...');
                     localStorage.removeItem('rememberUser');
                 }
                 
+                console.log('🔐 Redirecting to app...');
                 this.redirectToApp();
                 
             } catch (error) {
+                console.error('🔐 Login error:', error);
                 this.handleAuthError(error);
             } finally {
+                console.log('🔐 Loading state set to false');
                 this.loading = false;
             }
         },
@@ -484,28 +502,14 @@ document.addEventListener('alpine:init', () => {
         
         // Redirect to App
         redirectToApp() {
-            // รอให้ auth state อัปเดตก่อน redirect
+            console.log('🚀 Redirecting to app...');
+            console.log('🚀 Current user:', auth.currentUser ? auth.currentUser.email : 'null');
+            
+            // Add a small delay to ensure Firebase state is ready
             setTimeout(() => {
-                if (auth.currentUser || window.currentUser) {
-                    // Only redirect if not already on index page
-                    if (!window.location.pathname.includes('index.html')) {
-                        window.location.href = 'index.html';
-                    }
-                } else {
-                    // รออีกครั้ง
-                    setTimeout(() => {
-                        if (auth.currentUser || window.currentUser) {
-                            if (!window.location.pathname.includes('index.html')) {
-                                window.location.href = 'index.html';
-                            }
-                        } else {
-                            if (!window.location.pathname.includes('index.html')) {
-                                window.location.href = 'index.html';
-                            }
-                        }
-                    }, 1000);
-                }
-            }, 1000);
+                console.log('🚀 Actually redirecting now...');
+                window.location.href = 'index.html';
+            }, 100);
         },
         
         // Validate Journal Entry
@@ -653,21 +657,27 @@ document.addEventListener('alpine:init', () => {
 window.AuthUtils = {
     // Get current user info
     getCurrentUser() {
+        console.log('🔍 AuthUtils: Getting current user...');
+        
         // ตรวจสอบ Guest Mode ก่อน
         const guestMode = localStorage.getItem('guestMode');
         const guestData = localStorage.getItem('guestData');
+        
+        console.log('🔍 AuthUtils: Guest mode:', guestMode);
+        console.log('🔍 AuthUtils: Guest data exists:', !!guestData);
         
         if (guestMode === 'true' && guestData) {
             try {
                 const guestUser = JSON.parse(guestData);
                 
-                // ตรวจสอบว่า guest ยังไม่หมดอายุ (30 วัน)
-                const loginTime = new Date(guestUser.loginTime);
+                // ตรวจสอบว่า guest ยังไม่หมดอายุ
+                // Check for agreedAt or loginTime in guest data
+                const loginTime = new Date(guestUser.agreedAt || guestUser.loginTime || localStorage.getItem('guestLoginTime'));
                 const now = new Date();
                 const daysDiff = (now - loginTime) / (1000 * 60 * 60 * 24);
                 
-                if (daysDiff < 30) {
-                    return {
+                if (daysDiff < GUEST_SESSION_DAYS) {
+                    const result = {
                         uid: guestUser.uid,
                         email: guestUser.email,
                         displayName: guestUser.displayName,
@@ -675,13 +685,16 @@ window.AuthUtils = {
                         loginTime: guestUser.loginTime,
                         sessionId: guestUser.sessionId
                     };
+                    console.log('🔍 AuthUtils: Guest user is valid, returning:', result);
+                    return result;
                 } else {
+                    console.log('🔍 AuthUtils: Guest session expired, cleaning up...');
                     localStorage.removeItem('guestMode');
                     localStorage.removeItem('guestData');
                     localStorage.removeItem('guestLoginTime');
                 }
             } catch (error) {
-                console.error('Error parsing guest data:', error);
+                console.error('🔍 AuthUtils: Error parsing guest data:', error);
             }
         }
         
@@ -692,14 +705,17 @@ window.AuthUtils = {
             // สำหรับผู้ใช้ Firebase ให้ใช้ email เป็น displayName เสมอ
             const displayName = firebaseUser.email || 'User';
             
-            return {
+            const result = {
                 uid: firebaseUser.uid,
                 email: firebaseUser.email,
                 displayName: displayName,
                 isGuest: false
             };
+            console.log('🔍 AuthUtils: Firebase user found, returning:', result);
+            return result;
         }
         
+        console.log('🔍 AuthUtils: No user found, returning null');
         return null;
     },
     
@@ -812,7 +828,7 @@ window.AuthUtils = {
             user,
             isGuest: user.isGuest,
             loginTime: user.isGuest ? user.loginTime : new Date().toISOString(),
-            sessionDuration: user.isGuest ? '30 days' : 'Until logout'
+            sessionDuration: user.isGuest ? `${GUEST_SESSION_DAYS} days` : 'Until logout'
         };
     }
 };

@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="th" x-data="termsApp()" x-init="init()" :class="{ 'dark': darkMode }">
+<head>
+    <script>
+        window.location.replace('login.html?legal=terms');
+    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="description" content="เงื่อนไขการใช้งาน Cloudy・Puk・Jai - แอปพลิเคชันดูแลสุขภาพจิต">
+    <meta name="keywords" content="เงื่อนไขการใช้งาน, ข้อตกลง, สุขภาพจิต, ดูแลใจ">
+    
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" content="เงื่อนไขการใช้งาน - Cloudy・Puk・Jai">
+    <meta property="og:description" content="อ่านเงื่อนไขการใช้งานแอปพลิเคชันดูแลสุขภาพจิต Cloudy・Puk・Jai">
+    <meta property="og:type" content="website">
+    
+    <!-- Theme Color -->
+    <meta name="theme-color" content="#6D9F71">
+    
+    <title>เงื่อนไขการใช้งาน - Cloudy・Puk・Jai</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Alpine.js -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Anuphan:wght@300;400;500;600;700&family=Noto+Sans+Thai:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Logo CSS -->
+    <link rel="stylesheet" href="assets/css/logo.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/styles.css">
+    <script>
+      // กำหนดค่า Tailwind
+      tailwind.config = {
+        darkMode: 'class',
+        theme: {
+          extend: {
+            colors: {
+              primary: '#6D9F71',
+              'primary-light': '#8FBC8F',
+              'primary-dark': '#4A7C59',
+              secondary: '#FFB6C1',
+              accent: '#FFD166',
+              happy: '#FFEAA7',
+              calm: '#A7E6FF',
+              sad: '#D8C3FF',
+              anxious: '#FFB8B8',
+              energetic: '#C5FFB8',
+              neutral: '#F0F0F0',
+            },
+            fontFamily: {
+              'sans': ['Anuphan', 'Noto Sans Thai', 'sans-serif'],
+            },
+            animation: {
+              'pulse-slow': 'pulse 3s ease-in-out infinite',
+              'bounce-slow': 'bounce 2s infinite',
+            }
+          }
+        }
+      }
+    </script>
+</head>
+<body class="min-h-screen bg-gradient-to-br from-gray-50 via-gray-100 to-gray-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
+    <!-- Header -->
+    <header class="bg-white/95 dark:bg-gray-800/95 backdrop-blur-lg shadow-lg border-b border-gray-200/50 dark:border-gray-700/50 sticky top-0 z-50">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-4">
+                    <div class="logo logo-cloudy-puk-jai-medium animate-pulse-slow"></div>
+                    <h1 class="text-2xl font-bold bg-gradient-to-r from-primary to-primary-dark bg-clip-text text-transparent">Cloudy・Puk・Jai</h1>
+                </div>
+                <button 
+                    @click="toggleDarkMode()"
+                    class="p-3 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-all duration-300 shadow-md hover:shadow-lg">
+                    <i :class="darkMode ? 'fas fa-sun text-yellow-500 text-lg' : 'fas fa-moon text-gray-600 text-lg'"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-6xl mx-auto px-4 sm:px-6 py-8">
+        <div class="bg-white/95 dark:bg-gray-800/95 backdrop-blur-lg rounded-2xl shadow-2xl p-8 sm:p-12">
+            <!-- Page Title -->
+            <div class="text-center mb-12">
+                <div class="w-20 h-20 bg-gradient-to-br from-primary/20 to-primary/10 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg">
+                    <i class="fas fa-file-contract text-3xl text-primary"></i>
+                </div>
+                <h1 class="text-4xl sm:text-5xl font-bold bg-gradient-to-r from-primary to-primary-dark bg-clip-text text-transparent mb-4">
+                    เงื่อนไขการใช้งาน
+                </h1>
+                <p class="text-lg text-gray-600 dark:text-gray-400">
+                    ปรับปรุงล่าสุด: 1 มกราคม 2026
+                </p>
+            </div>
+
+            <!-- Introduction -->
+            <section class="mb-12">
+                <div class="bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 dark:from-blue-900/30 dark:via-indigo-900/30 dark:to-purple-900/30 border border-blue-200/50 dark:border-blue-700/50 rounded-2xl p-8 shadow-lg backdrop-blur-sm">
+                    <h2 class="text-2xl font-bold text-blue-900 dark:text-blue-100 mb-4 flex items-center">
+                        <div class="w-8 h-8 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-full flex items-center justify-center mr-3">
+                            <i class="fas fa-info-circle text-white text-sm"></i>
+                        </div>
+                        ข้อความแนะนำ
+                    </h2>
+                    <p class="text-blue-700 dark:text-blue-300 leading-relaxed text-lg">
+                        ยินดีต้อนรับสู่ Cloudy・Puk・Jai แอปพลิเคชันดูแลสุขภาพจิตของคุณ 
+                        การใช้งานแอปพลิเคชันของเราถือว่าคุณได้อ่าน ทำความเข้าใจ และยอมรับเงื่อนไขการใช้งานเหล่านี้
+                    </p>
+                </div>
+            </section>
+
+            <!-- Terms Content -->
+            <div class="space-y-8">
+                <!-- 1. การยอมรับเงื่อนไข -->
+                <section>
+                    <h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-6 flex items-center">
+                        <div class="w-12 h-12 bg-gradient-to-br from-primary to-primary-dark text-white rounded-full flex items-center justify-center text-lg mr-4 shadow-lg">
+                            1
+                        </div>
+                        การยอมรับเงื่อนไข
+                    </h3>
+                    <div class="pl-16 space-y-4 text-gray-700 dark:text-gray-300 text-lg leading-relaxed">
+                        <p>การเข้าถึงและใช้งาน Cloudy・Puk・Jai ถือว่าคุณยอมรับเงื่อนไขเหล่านี้ หากคุณไม่ยอมรับ กรุณางดใช้งานแอปพลิเคชัน</p>
+                        <p>เราอาจแก้ไขเงื่อนไขเหล่านี้เป็นครั้งคราว การใช้งานต่อเนื่องถือว่าคุณยอมรับการเปลี่ยนแปลง</p>
+                    </div>
+                </section>
+
+                <!-- 2. ลักษณะของบริการ -->
+                <section>
+                    <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
+                        <span class="w-8 h-8 bg-primary text-white rounded-full flex items-center justify-center text-sm mr-3">2</span>
+                        ลักษณะของบริการ
+                    </h3>
+                    <div class="pl-11 space-y-3 text-gray-700 dark:text-gray-300">
+                        <p>Cloudy・Puk・Jai เป็นแอปพลิเคชันดูแลสุขภาพจิตที่ให้บริการ:</p>
+                        <ul class="list-disc list-inside space-y-2 ml-4">
+                            <li>บันทึกและติดตามความรู้สึกประจำวัน</li>
+                            <li>ทำแบบประเมินสุขภาพจิต</li>
+                            <li>เข้าถึงเพลงผ่อนคลายและเสียงช่วยนอนหลับ</li>
+                            <li>อ่านบทความเกี่ยวกับการดูแลสุขภาพจิต</li>
+                            <li>ใช้เครื่องมือช่วยผ่อนคลาย (Breathing Buddy)</li>
+                            <li>ติดตามและวิเคราะห์พฤติกรรมสุขภาพจิต</li>
+                        </ul>
+                    </div>
+                </section>
+
+                <!-- 3. การลงทะเบียนและบัญชีผู้ใช้ -->
+                <section>
+                    <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
+                        <span class="w-8 h-8 bg-primary text-white rounded-full flex items-center justify-center text-sm mr-3">3</span>
+                        การลงทะเบียนและบัญชีผู้ใช้
+                    </h3>
+                    <div class="pl-11 space-y-3 text-gray-700 dark:text-gray-300">
+                        <div class="bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-900/20 dark:to-orange-900/20 border border-amber-200/50 dark:border-amber-700/50 rounded-2xl p-6 shadow-lg backdrop-blur-sm">
+                            <h4 class="font-bold text-amber-900 dark:text-amber-100 mb-4 flex items-center text-lg">
+                                <div class="w-8 h-8 bg-gradient-to-br from-amber-500 to-orange-600 rounded-full flex items-center justify-center mr-3">
+                                    <i class="fas fa-user-astronaut text-white text-sm"></i>
+                                </div>
+                                Guest Mode
+                            </h4>
+                            <ul class="text-amber-700 dark:text-amber-300 space-y-3 text-base">
+                                <li class="flex items-start">
+                                    <i class="fas fa-check-circle mt-1 mr-3 text-amber-500 flex-shrink-0"></i>
+                                    <span>สามารถใช้งานได้ทันทีโดยไม่ต้องลงทะเบียน</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fas fa-check-circle mt-1 mr-3 text-amber-500 flex-shrink-0"></i>
+                                    <span>ข้อมูลจะถูกเก็บไว้ในอุปกรณ์ของคุณเท่านั้น (localStorage)</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fas fa-check-circle mt-1 mr-3 text-amber-500 flex-shrink-0"></i>
+                                    <span>การลบแคช คุกกี้ หรือเปลี่ยนเบราว์เซอร์จะทำให้ข้อมูลหายไป</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fas fa-check-circle mt-1 mr-3 text-amber-500 flex-shrink-0"></i>
+                                    <span>ไม่สามารถซิงค์ข้อมูลข้ามอุปกรณ์ได้</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fas fa-check-circle mt-1 mr-3 text-amber-500 flex-shrink-0"></i>
+                                    <span>ข้อมูลจะถูกลบอัตโนมัติหากไม่มีการใช้งาน 30 วัน</span>
+                                </li>
+                            </ul>
+                        </div>
+                        
+                        <div class="bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 border border-green-200/50 dark:border-green-700/50 rounded-2xl p-6 shadow-lg backdrop-blur-sm">
+                            <h4 class="font-bold text-green-900 dark:text-green-100 mb-4 flex items-center text-lg">
+                                <div class="w-8 h-8 bg-gradient-to-br from-green-500 to-emerald-600 rounded-full flex items-center justify-center mr-3">
+                                    <i class="fas fa-user-check text-white text-sm"></i>
+                                </div>
+                                Registered Account
+                            </h4>
+                            <ul class="text-green-700 dark:text-green-300 space-y-3 text-base">
+                                <li class="flex items-start">
+                                    <i class="fas fa-check-circle mt-1 mr-3 text-green-500 flex-shrink-0"></i>
+                                    <span>ต้องใช้อีเมลในการลงทะเบียน (อาจใช้อีเมลจริงหรือไม่จริงก็ได้)</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fas fa-check-circle mt-1 mr-3 text-green-500 flex-shrink-0"></i>
+                                    <span>ข้อมูลจะถูกเก็บไว้บนคลาวด์และสามารถซิงค์ข้ามอุปกรณ์ได้</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fas fa-check-circle mt-1 mr-3 text-green-500 flex-shrink-0"></i>
+                                    <span>มีความปลอดภัยสูงกว่าและไม่สูญหายข้อมูล</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fas fa-check-circle mt-1 mr-3 text-green-500 flex-shrink-0"></i>
+                                    <span>สามารถกู้คืนข้อมูลได้หากเปลี่ยนอุปกรณ์</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 4. ความเป็นส่วนตัวและข้อมูลผู้ใช้ -->
+                <section>
+                    <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
+                        <span class="w-8 h-8 bg-primary text-white rounded-full flex items-center justify-center text-sm mr-3">4</span>
+                        ความเป็นส่วนตัวและข้อมูลผู้ใช้
+                    </h3>
+                    <div class="pl-11 space-y-3 text-gray-700 dark:text-gray-300">
+                        <div class="bg-purple-50 dark:bg-purple-900/20 border border-purple-200 dark:border-purple-800 rounded-2xl p-4">
+                            <h4 class="font-semibold text-purple-800 dark:text-purple-200 mb-2">
+                                <i class="fas fa-shield-alt mr-2"></i>ข้อมูลที่เราเก็บ
+                            </h4>
+                            <ul class="text-sm text-purple-700 dark:text-purple-300 space-y-1">
+                                <li>• <strong>อีเมล:</strong> ใช้สำหรับการลงทะเบียนและเข้าสู่ระบบเท่านั้น</li>
+                                <li>• <strong>ข้อมูลบันทึกความรู้สึก:</strong> บันทึกความรู้สึก อารมณ์ และกิจกรรมประจำวัน</li>
+                                <li>• <strong>ผลแบบประเมิน:</strong> ผลลัพธ์จากแบบทดสอบสุขภาพจิต</li>
+                                <li>• <strong>ข้อมูลการใช้งาน:</strong> วันที่ เวลา และความถี่ในการใช้งาน</li>
+                                <li>• <strong>การตั้งค่า:</strong> การตั้งค่าแอปพลิเคชันและการปรับแต่ง</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-2xl p-4">
+                            <h4 class="font-semibold text-red-800 dark:text-red-200 mb-2">
+                                <i class="fas fa-times-circle mr-2"></i>ข้อมูลที่เราไม่เก็บ
+                            </h4>
+                            <ul class="text-sm text-red-700 dark:text-red-300 space-y-1">
+                                <li>• ข้อมูลส่วนตัวอื่นๆ เช่น ชื่อ-นามสกุล ที่อยู่ เบอร์โทรศัพท์</li>
+                                <li>• ข้อมูลบัตรเครดิตหรือข้อมูลการชำระเงิน</li>
+                                <li>• ข้อมูลตำแหน่ง GPS (เว้นแต่คุณอนุญาต)</li>
+                                <li>• ข้อมูลรายชื่อผู้ติดต่อในโทรศัพท์</li>
+                                <li>• ข้อมูลไฟล์หรือรูปภาพส่วนตัว</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 5. ความปลอดภัยของข้อมูล -->
+                <section>
+                    <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
+                        <span class="w-8 h-8 bg-primary text-white rounded-full flex items-center justify-center text-sm mr-3">5</span>
+                        ความปลอดภัยของข้อมูล
+                    </h3>
+                    <div class="pl-11 space-y-3 text-gray-700 dark:text-gray-300">
+                        <p>เราใช้มาตรฐานความปลอดภัยต่อไปนี้เพื่อปกป้องข้อมูลของคุณ:</p>
+                        <ul class="list-disc list-inside space-y-2 ml-4">
+                            <li>การเข้ารหัสข้อมูลด้วย SSL/TLS</li>
+                            <li>การจัดเก็บข้อมูลบนเซิร์ฟเวอร์ที่ปลอดภัยของ Firebase</li>
+                            <li>การจำกัดการเข้าถึงข้อมูลสำหรับบุคคลที่ได้รับอนุญาต</li>
+                            <li>การสำรองข้อมูลอัตโนมัติ</li>
+                            <li>การอัปเดตระบบความปลอดภัยอย่างสม่ำเสมอ</li>
+                        </ul>
+                    </div>
+                </section>
+
+                <!-- 6. การใช้งานที่อนุญาต -->
+                <section>
+                    <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
+                        <span class="w-8 h-8 bg-primary text-white rounded-full flex items-center justify-center text-sm mr-3">6</span>
+                        การใช้งานที่อนุญาต
+                    </h3>
+                    <div class="pl-11 space-y-3 text-gray-700 dark:text-gray-300">
+                        <p>คุณสามารถใช้งาน Cloudy・Puk・Jai เพื่อ:</p>
+                        <ul class="list-disc list-inside space-y-2 ml-4">
+                            <li>การดูแลสุขภาพจิตส่วนตัว</li>
+                            <li>การบันทึกและติดตามความรู้สึก</li>
+                            <li>การเข้าถึงเนื้อหาและเครื่องมือที่ให้บริการ</li>
+                            <li>การใช้งานเพื่อการศึกษาและวิจัยส่วนตัว</li>
+                        </ul>
+                    </div>
+                </section>
+
+                <!-- 7. การใช้งานที่ไม่อนุญาต -->
+                <section>
+                    <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
+                        <span class="w-8 h-8 bg-primary text-white rounded-full flex items-center justify-center text-sm mr-3">7</span>
+                        การใช้งานที่ไม่อนุญาต
+                    </h3>
+                    <div class="pl-11 space-y-3 text-gray-700 dark:text-gray-300">
+                        <p>คุณไม่สามารถ:</p>
+                        <ul class="list-disc list-inside space-y-2 ml-4">
+                            <li>ทำซ้ำ ทำสำเนา หรือจัดจำหน่ายแอปพลิเคชัน</li>
+                            <li>ใช้งานเพื่อวัตถุประสงค์ที่ผิดกฎหมาย</li>
+                            <li>ละเมิดสิทธิ์ในทรัพย์สินทางปัญญา</li>
+                            <li>พยายามเจาะระบบหรือทำลายความปลอดภัย</li>
+                            <li>ส่งสแปมหรือเนื้อหาที่เป็นอันตราย</li>
+                            <li>ใช้งานในลักษณะที่เป็นอันตรายต่อผู้อื่น</li>
+                        </ul>
+                    </div>
+                </section>
+
+                <!-- 8. ข้อจำกัดความรับผิดชอบ -->
+                <section>
+                    <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
+                        <span class="w-8 h-8 bg-primary text-white rounded-full flex items-center justify-center text-sm mr-3">8</span>
+                        ข้อจำกัดความรับผิดชอบ
+                    </h3>
+                    <div class="pl-11 space-y-3 text-gray-700 dark:text-gray-300">
+                        <div class="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-2xl p-4">
+                            <h4 class="font-semibold text-yellow-800 dark:text-yellow-200 mb-2">
+                                <i class="fas fa-exclamation-triangle mr-2"></i>ข้อควรทราบ重要性
+                            </h4>
+                            <ul class="text-sm text-yellow-700 dark:text-yellow-300 space-y-1">
+                                <li>• Cloudy・Puk・Jai <strong>ไม่ใช่</strong> เครื่องมือทางการแพทย์</li>
+                                <li>• <strong>ไม่สามารถ</strong> ใช้แทนการวินิจฉัยหรือการรักษาจากแพทย์ผู้เชี่ยวชาญ</li>
+                                <li>• <strong>ไม่สามารถ</strong> ใช้ในกรณีฉุกเฉินที่เป็นอันตรายถึงชีวิต</li>
+                                <li>• หากมีอาการรุนแรง กรุณาติดต่อแพทย์หรือสถานพยาบาลทันที</li>
+                            </ul>
+                        </div>
+                        
+                        <p>เราไม่รับประกันความถูกต้อง ความสมบูรณ์ หรือความเหมาะสมของข้อมูลและเนื้อหาในแอปพลิเคชัน</p>
+                        <p>การใช้งานแอปพลิเคชันเป็นความเสี่ยงของผู้ใช้งานเอง</p>
+                    </div>
+                </section>
+
+                <!-- 9. ทรัพย์สินทางปัญญา -->
+                <section>
+                    <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
+                        <span class="w-8 h-8 bg-primary text-white rounded-full flex items-center justify-center text-sm mr-3">9</span>
+                        ทรัพย์สินทางปัญญา
+                    </h3>
+                    <div class="pl-11 space-y-3 text-gray-700 dark:text-gray-300">
+                        <p>แอปพลิเคชันและเนื้อหาทั้งหมดเป็นทรัพย์สินทางปัญญาของ Cloudy・Puk・Jai และ/หรือ ผู้ให้ใช้สิทธิ์</p>
+                        <p>คุณไม่สามารถใช้ ทำซ้ำ หรือจัดจำหน่ายโดยไม่ได้รับอนุญาต</p>
+                    </div>
+                </section>
+
+                <!-- 10. การยกเลิกและสิ้นสุดสัญญา -->
+                <section>
+                    <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
+                        <span class="w-8 h-8 bg-primary text-white rounded-full flex items-center justify-center text-sm mr-3">10</span>
+                        การยกเลิกและสิ้นสุดสัญญา
+                    </h3>
+                    <div class="pl-11 space-y-3 text-gray-700 dark:text-gray-300">
+                        <p>คุณสามารถยกเลิกการใช้งานได้ทุกเมื่อโดย:</p>
+                        <ul class="list-disc list-inside space-y-2 ml-4">
+                            <li>ลบแอปพลิเคชันจากอุปกรณ์</li>
+                            <li>ลบบัญชีผู้ใช้ (สำหรับบัญชีที่ลงทะเบียน)</li>
+                            <li>หยุดใช้งานบริการ</li>
+                        </ul>
+                        <p>เราอาจยกเลิกหรือระงับบัญชีของคุณหากพบว่ามีการละเมิดเงื่อนไข</p>
+                    </div>
+                </section>
+
+                <!-- 11. การติดต่อ -->
+                <section>
+                    <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
+                        <span class="w-8 h-8 bg-primary text-white rounded-full flex items-center justify-center text-sm mr-3">11</span>
+                        การติดต่อ
+                    </h3>
+                    <div class="pl-11 space-y-3 text-gray-700 dark:text-gray-300">
+                        <p>หากมีข้อสงสัยเกี่ยวกับเงื่อนไขการใช้งาน สามารถติดต่อเราได้ที่:</p>
+                        <div class="bg-gray-50 dark:bg-gray-700 rounded-2xl p-4">
+                            <div class="space-y-2">
+                                <p><i class="fas fa-envelope mr-2 text-primary"></i>อีเมล: support@cloudypukjai.com</p>
+                                <p><i class="fas fa-globe mr-2 text-primary"></i>เว็บไซต์: www.cloudypukjai.com</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <!-- Agreement Section -->
+            <section class="mt-16 pt-12 border-t border-gray-200 dark:border-gray-700">
+                <div class="bg-gradient-to-r from-primary/10 via-primary/5 to-secondary/10 rounded-2xl p-8 text-center shadow-lg backdrop-blur-sm">
+                    <h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-4">
+                        การยอมรับเงื่อนไข
+                    </h3>
+                    <p class="text-lg text-gray-600 dark:text-gray-400 mb-6 leading-relaxed">
+                        การใช้งาน Cloudy・Puk・Jai ต่อเนื่องถือว่าคุณได้อ่าน ทำความเข้าใจ และยอมรับเงื่อนไขการใช้งานทั้งหมด
+                    </p>
+                    <div class="flex justify-center space-x-6">
+                        <button 
+                            @click="goBack()"
+                            class="btn-outline px-8 py-3 rounded-full text-lg font-semibold shadow-md hover:shadow-lg transition-all duration-300">
+                            <i class="fas fa-arrow-left mr-2"></i>
+                            กลับ
+                        </button>
+                        <button 
+                            @click="printTerms()"
+                            class="btn-primary px-8 py-3 rounded-full text-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-300">
+                            <i class="fas fa-print mr-2"></i>
+                            พิมพ์
+                        </button>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white/95 dark:bg-gray-800/95 backdrop-blur-lg border-t border-gray-200/50 dark:border-gray-700/50 mt-16">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 py-8">
+            <div class="text-center">
+                <p class="text-gray-600 dark:text-gray-400 mb-4">&copy; 2026 Cloudy・Puk・Jai. สงวนลิขสิทธิ์</p>
+                <div class="flex justify-center space-x-8">
+                    <a href="terms.html" class="text-primary hover:text-primary-dark font-medium transition-colors">เงื่อนไขการใช้งาน</a>
+                    <span class="text-gray-400">•</span>
+                    <a href="privacy.html" class="text-primary hover:text-primary-dark font-medium transition-colors">นโยบายความเป็นส่วนตัว</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        function termsApp() {
+            return {
+                darkMode: false,
+                
+                init() {
+                    // Load dark mode preference
+                    this.darkMode = localStorage.getItem('darkMode') === 'true';
+                },
+                
+                toggleDarkMode() {
+                    this.darkMode = !this.darkMode;
+                    localStorage.setItem('darkMode', this.darkMode);
+                },
+                
+                goBack() {
+                    if (window.history.length > 1) {
+                        window.history.back();
+                    } else {
+                        window.location.href = 'login.html';
+                    }
+                },
+                
+                printTerms() {
+                    window.print();
+                }
+            }
+        }
+    </script>
+</body>
+</html>

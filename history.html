@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="th" x-data="mindbloomApp()">
+<html lang="th" x-data="mindbloomApp()" x-init="init()" :class="{ 'dark': darkMode }">
 <head>
     <link rel="icon" type="image/png" href="image/favicon.png">
     <meta charset="UTF-8">
@@ -93,19 +93,19 @@
                         <button @click="userMenuOpen = !userMenuOpen" class="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700">
                             <i class="fas fa-user-circle text-lg text-primary"></i>
                         </button>
-                        <div x-show="userMenuOpen" @click.away="userMenuOpen = false" x-transition="" class="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 z-50" style="display: none;">
+                        <div x-show="userMenuOpen" @click.away="userMenuOpen = false" x-transition="" class="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700 z-50" style="display: none;">
                             <div class="p-3 border-b border-gray-200 dark:border-gray-700">
                                 <p class="text-sm font-medium text-gray-900 dark:text-gray-100" x-text="userDisplayName"></p>
-                                <p class="text-xs text-gray-500 dark:text-gray-400" x-text="userDisplayName"></p>
+                                <p class="text-xs text-gray-500 dark:text-gray-400" x-text="getUserAuthInfo()"></p>
                             </div>
-                            <button @click="logout()" class="w-full text-left px-3 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-b-lg">
+                            <button @click="logout()" class="w-full text-left px-3 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-b-2xl">
                                 <i class="fas fa-sign-out-alt mr-2"></i>ออกจากระบบ
                             </button>
                         </div>
                     </div>
 
                      
-                    <button @click="mobileMenuOpen = !mobileMenuOpen" class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700">
+                    <button @click="mobileMenuOpen = !mobileMenuOpen" class="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700">
                         <i class="fas fa-bars text-lg"></i>
                     </button>
                 </div>
@@ -125,37 +125,37 @@
                             <h3 class="text-xl font-bold text-primary">Cloudy・Puk・Jai</h3>
                         </div>
                     </div>
-                    <button @click="mobileMenuOpen = false" class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700">
+                    <button @click="mobileMenuOpen = false" class="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700">
                         <i class="fas fa-times text-lg"></i>
                     </button>
                 </div>
                 
                 <div class="space-y-2">
-                    <a href="index.html" @click="mobileMenuOpen = false" class="flex items-center px-3 py-3 rounded-lg font-medium text-gray-600 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                    <a href="index.html" @click="mobileMenuOpen = false" class="flex items-center px-3 py-3 rounded-2xl font-medium text-gray-600 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
                         <i class="fas fa-home-alt mr-3 w-4"></i>หน้าหลัก
                     </a>
-                    <a href="index.html#journal" @click="mobileMenuOpen = false" class="flex items-center px-3 py-3 rounded-lg font-medium text-gray-600 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                    <a href="index.html#journal" @click="mobileMenuOpen = false" class="flex items-center px-3 py-3 rounded-2xl font-medium text-gray-600 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
                         <i class="fas fa-journal-whills mr-3 w-4"></i>บันทึกความรู้สึก
                     </a>
-                    <a href="index.html#articles" @click="mobileMenuOpen = false" class="flex items-center px-3 py-3 rounded-lg font-medium text-gray-600 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                    <a href="index.html#articles" @click="mobileMenuOpen = false" class="flex items-center px-3 py-3 rounded-2xl font-medium text-gray-600 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
                         <i class="fas fa-book-open mr-3 w-4"></i>ความรู้เพื่อสุขภาพจิต
                     </a>
-                    <a href="index.html#music" @click="mobileMenuOpen = false" class="flex items-center px-3 py-3 rounded-lg font-medium text-gray-600 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                    <a href="index.html#music" @click="mobileMenuOpen = false" class="flex items-center px-3 py-3 rounded-2xl font-medium text-gray-600 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
                         <i class="fas fa-music mr-3 w-4"></i>ผ่อนคลายด้วยเพลง
                     </a>
-                    <a href="tools.html" @click="mobileMenuOpen = false" class="flex items-center px-3 py-3 rounded-lg font-medium text-gray-600 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                    <a href="tools.html" @click="mobileMenuOpen = false" class="flex items-center px-3 py-3 rounded-2xl font-medium text-gray-600 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
                         <i class="fas fa-lungs mr-3 w-4"></i>Breathing Buddy
                     </a>
-                    <a href="index.html#assessments" @click="mobileMenuOpen = false" class="flex items-center px-3 py-3 rounded-lg font-medium text-gray-600 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                    <a href="index.html#assessments" @click="mobileMenuOpen = false" class="flex items-center px-3 py-3 rounded-2xl font-medium text-gray-600 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
                         <i class="fas fa-clipboard-list mr-3 w-4"></i>แบบทดสอบ
                     </a>
-                    <a href="#" @click="mobileMenuOpen = false" class="flex items-center px-3 py-3 rounded-lg font-medium bg-primary-light text-white transition-colors">
+                    <a href="#" @click="mobileMenuOpen = false" class="flex items-center px-3 py-3 rounded-2xl font-medium bg-primary-light text-white transition-colors">
                         <i class="fas fa-chart-line mr-3 w-4"></i>ประวัติผลการทดสอบ
                     </a>
                     
                     <!-- Help Section -->
                     <div class="pt-4 border-t border-gray-200 dark:border-gray-700">
-                        <button @click="openModal('help'); mobileMenuOpen = false" class="w-full flex items-center px-3 py-3 rounded-lg font-medium text-gray-600 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                        <button @click="openModal('help'); mobileMenuOpen = false" class="w-full flex items-center px-3 py-3 rounded-2xl font-medium text-gray-600 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
                             <i class="fas fa-hands-helping mr-3 w-4 text-primary"></i>
                             <span>หน่วยงานช่วยเหลือ</span>
                         </button>
@@ -164,16 +164,17 @@
                     <!-- User Section -->
                     <div class="pt-4 border-t border-gray-200 dark:border-gray-700">
                         <div class="relative" x-data="{ userMenuOpen: false }">
-                            <button @click="userMenuOpen = !userMenuOpen" class="w-full flex items-center px-3 py-3 rounded-lg font-medium text-gray-600 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                            <button @click="userMenuOpen = !userMenuOpen" class="w-full flex items-center px-3 py-3 rounded-2xl font-medium text-gray-600 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
                                 <i class="fas fa-user-circle mr-3 w-4 text-primary"></i>
                                 <span class="flex-1 text-left" x-text="userDisplayName"></span>
                                 <i class="fas fa-chevron-down text-xs"></i>
                             </button>
-                            <div x-show="userMenuOpen" @click.away="userMenuOpen = false" x-transition class="absolute left-0 right-0 mt-1 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 z-50">
+                            <div x-show="userMenuOpen" @click.away="userMenuOpen = false" x-transition class="absolute left-0 right-0 mt-1 bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700 z-50">
                                 <div class="p-3 border-b border-gray-200 dark:border-gray-700">
                                     <p class="text-sm font-medium text-gray-900 dark:text-gray-100" x-text="userDisplayName"></p>
+                                    <p class="text-xs text-gray-500 dark:text-gray-400" x-text="getUserAuthInfo()"></p>
                                 </div>
-                                <button @click="logout(); mobileMenuOpen = false" class="w-full text-left px-3 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-b-lg">
+                                <button @click="logout(); mobileMenuOpen = false" class="w-full text-left px-3 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-b-2xl">
                                     <i class="fas fa-sign-out-alt mr-2"></i>ออกจากระบบ
                                 </button>
                             </div>
@@ -199,31 +200,31 @@
             </div>
             
             <div class="space-y-2">
-              <a href="index.html" class="flex items-center px-3 py-2 rounded-lg font-medium text-gray-600 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+              <a href="index.html" class="flex items-center px-3 py-2 rounded-2xl font-medium text-gray-600 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
                 <i class="fas fa-home-alt mr-3 w-4"></i>หน้าหลัก
               </a>
-              <a href="index.html#journal" class="flex items-center px-3 py-2 rounded-lg font-medium text-gray-600 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+              <a href="index.html#journal" class="flex items-center px-3 py-2 rounded-2xl font-medium text-gray-600 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
                 <i class="fas fa-journal-whills mr-3 w-4"></i>บันทึกความรู้สึก
               </a>
-              <a href="index.html#articles" class="flex items-center px-3 py-2 rounded-lg font-medium text-gray-600 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+              <a href="index.html#articles" class="flex items-center px-3 py-2 rounded-2xl font-medium text-gray-600 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
                 <i class="fas fa-book-open mr-3 w-4"></i>ความรู้เพื่อสุขภาพจิต
               </a>
-              <a href="index.html#music" class="flex items-center px-3 py-2 rounded-lg font-medium text-gray-600 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+              <a href="index.html#music" class="flex items-center px-3 py-2 rounded-2xl font-medium text-gray-600 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
                 <i class="fas fa-headphones mr-3 w-4"></i>ผ่อนคลายด้วยเพลง
               </a>
-              <a href="tools.html" class="flex items-center px-3 py-2 rounded-lg font-medium text-gray-600 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+              <a href="tools.html" class="flex items-center px-3 py-2 rounded-2xl font-medium text-gray-600 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
                 <i class="fas fa-lungs mr-3 w-4"></i>Breathing Buddy
               </a>
-              <a href="index.html#assessments" class="flex items-center px-3 py-2 rounded-lg font-medium text-gray-600 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+              <a href="index.html#assessments" class="flex items-center px-3 py-2 rounded-2xl font-medium text-gray-600 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
                 <i class="fas fa-clipboard-list mr-3 w-4"></i>แบบทดสอบ
               </a>
-              <a href="#" class="flex items-center px-3 py-2 rounded-lg font-medium bg-primary-light text-white transition-colors">
+              <a href="#" class="flex items-center px-3 py-2 rounded-2xl font-medium bg-primary-light text-white transition-colors">
                 <i class="fas fa-chart-line mr-3 w-4"></i>ประวัติผลการทดสอบ
               </a>
               
               <!-- Help Section -->
               <div class="pt-4 border-t border-gray-200 dark:border-gray-700">
-                <button @click="openModal('help')" class="w-full flex items-center px-3 py-2 rounded-lg font-medium text-gray-600 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                <button @click="openModal('help')" class="w-full flex items-center px-3 py-2 rounded-2xl font-medium text-gray-600 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
                   <i class="fas fa-hands-helping mr-3 w-4 text-primary"></i>
                   <span>หน่วยงานช่วยเหลือ</span>
                 </button>
@@ -232,15 +233,15 @@
               <!-- User Section -->
               <div class="pt-4 border-t border-gray-200 dark:border-gray-700">
                 <div class="relative" x-data="{ userMenuOpen: false }">
-                    <button @click="userMenuOpen = !userMenuOpen" class="w-full flex items-center px-3 py-2 rounded-lg font-medium text-gray-600 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                    <button @click="userMenuOpen = !userMenuOpen" class="w-full flex items-center px-3 py-2 rounded-2xl font-medium text-gray-600 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
                         <i class="fas fa-user-circle mr-3 w-4 text-primary"></i>
                         <span class="flex-1 text-left" x-text="userDisplayName"></span>
                         <i class="fas fa-chevron-down text-xs"></i>
                     </button>
-                    <div x-show="userMenuOpen" @click.away="userMenuOpen = false" x-transition class="absolute left-0 right-0 mt-1 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 z-50">
+                    <div x-show="userMenuOpen" @click.away="userMenuOpen = false" x-transition class="absolute left-0 right-0 mt-1 bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700 z-50">
                         <div class="p-3 border-b border-gray-200 dark:border-gray-700">
                             <p class="text-sm font-medium text-gray-900 dark:text-gray-100" x-text="userDisplayName"></p>
-                            <p class="text-xs text-gray-500 dark:text-gray-400" x-text="userDisplayName"></p>
+                            <p class="text-xs text-gray-500 dark:text-gray-400" x-text="getUserAuthInfo()"></p>
                         </div>
                         <button @click="logout()" class="w-full text-left px-3 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-b-lg">
                             <i class="fas fa-sign-out-alt mr-2"></i>ออกจากระบบ
@@ -251,7 +252,7 @@
               
               <!-- Theme Toggle -->
               <div class="pt-4 border-t border-gray-200 dark:border-gray-700">
-                <button @click="toggleDarkMode()" class="w-full flex items-center px-3 py-2 rounded-lg font-medium text-gray-600 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                <button @click="toggleDarkMode()" class="w-full flex items-center px-3 py-2 rounded-2xl font-medium text-gray-600 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
                   <i :class="darkMode ? 'fas fa-sun' : 'fas fa-moon'" class="mr-3 w-4"></i>
                   <span x-text="darkMode ? 'โหมดสว่าง' : 'โหมดมืด'"></span>
                 </button>
@@ -323,7 +324,7 @@
                         <div class="relative">
                             <div class="absolute inset-0 bg-white/20 rounded-full blur group-hover:blur-md 
                                         transition-all duration-300"></div>
-                            <div class="relative p-2 sm:p-3 bg-white/20 rounded-lg sm:rounded-xl group-hover:scale-110 transition-transform duration-300">
+                            <div class="relative p-2 sm:p-3 bg-white/20 rounded-2xl sm:rounded-xl group-hover:scale-110 transition-transform duration-300">
                                 <i class="fas fa-graduation-cap text-white text-lg sm:text-xl"></i>
                             </div>
                         </div>
@@ -347,7 +348,7 @@
                         <button id="exportPdfBtn"
                                 class="flex-1 text-xs sm:text-sm bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 
                                        text-gray-700 dark:text-gray-300 
-                                       px-3 py-2 sm:px-4 sm:py-2.5 rounded-lg sm:rounded-xl transition-all duration-200 
+                                       px-3 py-2 sm:px-4 sm:py-2.5 rounded-2xl sm:rounded-xl transition-all duration-200 
                                        flex items-center justify-center gap-1.5 sm:gap-2 border border-gray-200 dark:border-gray-600 
                                        hover:border-primary hover:shadow-md group">
                             <i class="fas fa-file-pdf text-red-500 text-sm sm:text-base group-hover:scale-110 transition-transform"></i>
@@ -356,7 +357,7 @@
                         <button id="printBtn"
                                 class="flex-1 text-xs sm:text-sm bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 
                                        text-gray-700 dark:text-gray-300 
-                                       px-3 py-2 sm:px-4 sm:py-2.5 rounded-lg sm:rounded-xl transition-all duration-200 
+                                       px-3 py-2 sm:px-4 sm:py-2.5 rounded-2xl sm:rounded-xl transition-all duration-200 
                                        flex items-center justify-center gap-1.5 sm:gap-2 border border-gray-200 dark:border-gray-600 
                                        hover:border-primary hover:shadow-md group">
                             <i class="fas fa-print text-blue-500 text-sm sm:text-base group-hover:scale-110 transition-transform"></i>
@@ -374,7 +375,7 @@
                         การอัปเดตล่าสุด: <span id="lastUpdateTime" class="font-medium text-primary">กำลังโหลด...</span>
                     </span>
                     <button class="text-primary hover:text-primary-dark text-xs sm:text-sm font-medium 
-                                   flex items-center gap-1.5 sm:gap-2 transition-colors hover:bg-primary/10 px-2 py-1 sm:px-3 sm:py-1 rounded-lg"
+                                   flex items-center gap-1.5 sm:gap-2 transition-colors hover:bg-primary/10 px-2 py-1 sm:px-3 sm:py-1 rounded-2xl"
                             onclick="refreshHealthOverview()">
                         <i class="fas fa-redo text-xs sm:text-base animate-spin-slow"></i>
                         <span class="hidden sm:inline">รีเฟรชข้อมูล</span>
@@ -447,7 +448,7 @@
                     <i class="fas fa-clipboard-list text-5xl sm:text-6xl text-gray-300 dark:text-gray-600 mb-4"></i>
                     <h4 class="text-lg sm:text-xl font-bold text-gray-700 dark:text-gray-300 mb-2">ยังไม่มีประวัติการทดสอบ</h4>
                     <p class="text-gray-500 dark:text-gray-400 mb-6 text-sm sm:text-base">เริ่มทำแบบทดสอบเพื่อเก็บประวัติของคุณ</p>
-                    <a href="index.html" class="inline-block bg-primary hover:bg-primary-dark text-white px-6 py-3 rounded-lg text-sm sm:text-base transition-colors">
+                    <a href="index.html" class="inline-block bg-primary hover:bg-primary-dark text-white px-6 py-3 rounded-2xl text-sm sm:text-base transition-colors">
                         <i class="fas fa-clipboard-check mr-2"></i>ไปยังแบบทดสอบ
                     </a>
                 </div>
@@ -539,7 +540,7 @@
             
             <div class="space-y-6">
                 <!-- วัตถุประสงค์ -->
-                <div class="bg-blue-50 dark:bg-blue-900/30 rounded-lg p-4">
+                <div class="bg-blue-50 dark:bg-blue-900/30 rounded-2xl p-4">
                     <h4 class="font-bold text-blue-700 dark:text-blue-300 mb-2">
                         <i class="fas fa-bullseye mr-2"></i>📊 เข้าใจภาพรวมของหัวใจผ่าน Dashboard
                     </h4>
@@ -551,7 +552,7 @@
                 </div>
                 
                 <!-- วิธีการตีความ -->
-                <div class="bg-green-50 dark:bg-green-900/30 rounded-lg p-4">
+                <div class="bg-green-50 dark:bg-green-900/30 rounded-2xl p-4">
                     <h4 class="font-bold text-green-700 dark:text-green-300 mb-2">
                         <i class="fas fa-chart-line mr-2"></i>💡 วิธีการอ่านค่าแนวโน้มอารมณ์
                     </h4>
@@ -563,7 +564,7 @@
                 </div>
                 
                 <!-- ข้อจำกัดสำคัญ -->
-                <div class="bg-yellow-50 dark:bg-yellow-900/30 rounded-lg p-4">
+                <div class="bg-yellow-50 dark:bg-yellow-900/30 rounded-2xl p-4">
                     <h4 class="font-bold text-yellow-700 dark:text-yellow-300 mb-2">
                         <i class="fas fa-exclamation-triangle mr-2"></i>🛡️ ขอบเขตการดูแลของ Cloudy・Puk・Jai
                     </h4>
@@ -591,7 +592,7 @@
                 </div>
                 
                 <!-- คำแนะนำการใช้งาน -->
-                <div class="bg-purple-50 dark:bg-purple-900/30 rounded-lg p-4">
+                <div class="bg-purple-50 dark:bg-purple-900/30 rounded-2xl p-4">
                     <h4 class="font-bold text-purple-700 dark:text-purple-300 mb-2">
                         <i class="fas fa-lightbulb mr-2"></i>คำแนะนำการใช้งาน
                     </h4>
@@ -612,7 +613,7 @@
                 </div>
                 
                 <!-- แหล่งช่วยเหลือ -->
-                <div class="bg-red-50 dark:bg-red-500/30 rounded-lg p-4">
+                <div class="bg-red-50 dark:bg-red-500/30 rounded-2xl p-4">
                     <h4 class="font-bold text-red-700 dark:text-red-300 mb-2">
                         <i class="fas fa-hands-helping mr-2"></i>🆘 แหล่งช่วยเหลือเมื่อต้องการคนรับฟัง
                     </h4>
@@ -628,7 +629,7 @@
                 </div>
                 
                 <!-- การจัดการข้อมูล -->
-                <div class="bg-gray-100 dark:bg-gray-800 rounded-lg p-4">
+                <div class="bg-gray-100 dark:bg-gray-800 rounded-2xl p-4">
                 <h4 class="font-bold text-gray-700 dark:text-gray-500 mb-2">🔒 ความเป็นส่วนตัวของคุณคือหัวใจสำคัญ:</h4>
                 <div class="text-sm text-gray-600 dark:text-gray-400 space-y-2">
                   <div class="flex items-center">
@@ -657,7 +658,7 @@
             
             <button 
                 id="closeHealthTipsBtn" 
-                class="w-full mt-6 bg-primary hover:bg-primary-dark text-white font-medium py-3 px-6 rounded-lg transition-colors"
+                class="w-full mt-6 bg-primary hover:bg-primary-dark text-white font-medium py-3 px-6 rounded-2xl transition-colors"
             >
                 <i class="fas fa-check mr-2"></i>เข้าใจแล้ว
             </button>
