@@ -937,3 +937,4 @@ window.AuthUtils = {
 // Export for global access
 window.auth = auth;
 window.firebase = firebase;
+
