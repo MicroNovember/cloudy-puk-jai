@@ -80,6 +80,7 @@ document.addEventListener('alpine:init', () => {
         
         // Journal Data
         journalEntries: [],
+        currentJournalEntry: null,
         journalForm: {
             date: new Date().toISOString().split('T')[0],
             mood: 'neutral',
@@ -272,7 +273,7 @@ document.addEventListener('alpine:init', () => {
         
         // Journal Entry Management
         toggleEntryMenu(entryId) {
-            // this.activeEntryMenu = this.activeEntryMenu === entryId ? null : entryId;
+            this.activeEntryMenu = this.activeEntryMenu === entryId ? null : entryId;
         },
 
         getMoodLabel(moodId) {
@@ -311,8 +312,6 @@ document.addEventListener('alpine:init', () => {
             this.currentJournalEntry = entry;
             this.modalOpen = 'journalDetail';
         },
-
-        currentJournalEntry: null,
         
         // ============================================
         // FEATURE CONFIGURATION
@@ -794,7 +793,33 @@ const greetings = {
                     this.isGuest = true;
                     this.isAuthenticated = true;
                     
-                    // ไม่ต้องโหลดข้อมูลจาก localStorage สำหรับ guest
+                    // โหลดข้อมูลจาก localStorage สำหรับ guest
+                    const guestStorageKey = this.getUserStorageKey();
+                    const encryptedData = localStorage.getItem(guestStorageKey);
+                    
+                    if (encryptedData) {
+                        try {
+                            const decryptedData = this.decryptData(encryptedData);
+                            const savedData = JSON.parse(decryptedData);
+                            this.journalEntries = savedData.journalEntries || [];
+                            this.assessmentHistory = savedData.assessmentHistory || [];
+                            this.tree = savedData.tree || this.tree;
+                            console.log('✅ Loaded guest data:', {
+                                journalEntries: this.journalEntries.length,
+                                assessmentHistory: this.assessmentHistory.length
+                            });
+                        } catch (error) {
+                            console.error('Failed to decrypt guest data:', error);
+                            this.journalEntries = [];
+                            this.assessmentHistory = [];
+                            this.tree = this.tree;
+                        }
+                    } else {
+                        this.journalEntries = [];
+                        this.assessmentHistory = [];
+                        this.tree = this.tree;
+                        console.log('No guest data found in localStorage');
+                    }
                 } else {
                     // No valid user found
                     this.user = null;
@@ -981,9 +1006,52 @@ const greetings = {
         
         // Get user storage key
         getUserStorageKey() {
-            if (!this.user) return 'mindbloomData';
-            const userId = this.user.isGuest ? this.user.sessionId : this.user.uid;
-            return `mindbloomData_${userId}`;
+            if (!this.user) return 'mindbloomData_guest';
+            if (this.user.isGuest) {
+                // สำหรับ guest ใช้ key ที่มี sessionId หรือ timestamp ปัจจุบัน
+                const guestId = this.user.sessionId || this.user.uid || 'guest_default';
+                return `mindbloomData_guest_${guestId}`;
+            } else {
+                // สำหรับ logged-in user ใช้ uid จาก Firebase
+                return `mindbloomData_user_${this.user.uid}`;
+            }
+        },
+
+        // Load guest data from localStorage
+        loadGuestData() {
+            try {
+                const guestStorageKey = this.getUserStorageKey();
+                const encryptedData = localStorage.getItem(guestStorageKey);
+                
+                if (encryptedData) {
+                    try {
+                        const decryptedData = this.decryptData(encryptedData);
+                        const savedData = JSON.parse(decryptedData);
+                        this.journalEntries = savedData.journalEntries || [];
+                        this.assessmentHistory = savedData.assessmentHistory || [];
+                        this.tree = savedData.tree || this.tree;
+                        console.log('✅ Loaded guest data in loadGuestData():', {
+                            journalEntries: this.journalEntries.length,
+                            assessmentHistory: this.assessmentHistory.length
+                        });
+                    } catch (error) {
+                        console.error('Failed to decrypt guest data in loadGuestData():', error);
+                        this.journalEntries = [];
+                        this.assessmentHistory = [];
+                        this.tree = this.tree;
+                    }
+                } else {
+                    this.journalEntries = [];
+                    this.assessmentHistory = [];
+                    this.tree = this.tree;
+                    console.log('No guest data found in localStorage in loadGuestData()');
+                }
+            } catch (error) {
+                console.error('Error in loadGuestData():', error);
+                this.journalEntries = [];
+                this.assessmentHistory = [];
+                this.tree = this.tree;
+            }
         },
         
         // สร้าง secret key สำหรับการเข้ารหัส
@@ -1168,6 +1236,13 @@ const greetings = {
                         this.user = user;
                         this.isAuthenticated = true;
                         this.isGuest = user.isGuest || false;
+                        
+                        // โหลดข้อมูลตามประเภทผู้ใช้
+                        if (user.isGuest) {
+                            this.loadGuestData();
+                        } else {
+                            this.refreshUserData();
+                        }
                     }
                 };
                 
@@ -1206,18 +1281,29 @@ const greetings = {
                 if (user.isGuest) {
                     this.isGuest = true;
                     this.isAuthenticated = true;
+                    
+                    // โหลดข้อมูลสำหรับ guest
+                    this.loadGuestData();
                 } else {
                     this.isGuest = false;
                     this.isAuthenticated = true;
+                    
+                    // รีเฟรชชข้อมูลผู้ใช้จาก Firebase เพื่อให้แน่ใจว่ามีการเปลี่ยนแปลง
+                    this.refreshUserData();
                 }
-                
-                // รีเฟรชชข้อมูลผู้ใช้จาก Firebase เพื่อให้แน่ใจว่ามีการเปลี่ยนแปลง
-                this.refreshUserData();
                 
                 // โหลดข้อมูล (music, articles, assessments)
                 this.loadData();
                 
-                this.initRouter();
+                // โหลดข้อมูลแบบทดสอบจาก Firebase
+                this.loadAssessmentHistoryFromFirebase();
+                
+                // Set global decrypt function for history.js
+        if (typeof window.setDecryptFunction === 'function') {
+            window.setDecryptFunction(this.decryptData.bind(this));
+        }
+        
+        this.initRouter();
                 this.showRandomQuote();
                 
                 // Dark mode setup and listeners...
@@ -1388,7 +1474,10 @@ const greetings = {
                 this.tree.progress += 1;
                 this.updateTreeAnimation();
 
-                // บันทึกข้อมูล
+                // บันทึกข้อมูลไป Firebase Firestore
+                this.saveAssessmentToFirebase(assessmentEntry);
+
+                // บันทึกข้อมูลแบบเดิม (fallback)
                 this.saveData();
 
                 // แสดง notification
@@ -1423,6 +1512,97 @@ const greetings = {
         saveAssessmentResult() {
             // ผลลัพธ์ถูกบันทึกไว้แล้วใน calculateQuizResult()
             this.showNotification('บันทึกผลลัพธ์แล้ว', 'success');
+        },
+
+        // บันทึกผลการทดสอบลง Firebase Firestore
+        async saveAssessmentToFirebase(assessment) {
+            if (!window.db) {
+                console.warn('Firebase Firestore not available, using localStorage only');
+                return;
+            }
+
+            try {
+                const user = window.AuthUtils ? window.AuthUtils.getCurrentUser() : null;
+                if (!user) {
+                    console.warn('User not authenticated, skipping Firebase sync');
+                    return;
+                }
+                
+                // Skip Firebase save for guest users
+                if (user.isGuest) {
+                    console.log('Guest user detected, skipping Firebase save');
+                    return;
+                }
+
+                const assessmentRef = window.db
+                    .collection('users')
+                    .doc(user.uid)
+                    .collection('assessments')
+                    .doc(assessment.id);
+
+                await assessmentRef.set({
+                    ...assessment,
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                    completedAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+
+                console.log('✅ Assessment saved to Firebase:', assessment.title);
+                this.showNotification('บันทึกข้อมูลลงฐานข้อมูลสำเร็จ', 'success');
+
+            } catch (error) {
+                console.error('❌ Error saving assessment to Firebase:', error);
+                this.showNotification('เกิดข้อผิดพลาดในการบันทึกข้อมูล: ' + error.message, 'error');
+            }
+        },
+
+        // โหลดประวัติแบบทดสอบจาก Firebase
+        async loadAssessmentHistoryFromFirebase() {
+            if (!window.db) {
+                console.warn('Firebase Firestore not available, using localStorage only');
+                return;
+            }
+
+            try {
+                const user = window.AuthUtils ? window.AuthUtils.getCurrentUser() : null;
+                if (!user) {
+                    console.warn('User not authenticated, skipping Firebase load');
+                    return;
+                }
+                
+                // Skip Firebase load for guest users
+                if (user.isGuest) {
+                    console.log('Guest user detected, skipping Firebase load');
+                    return;
+                }
+
+                const assessmentSnapshot = await window.db
+                    .collection('users')
+                    .doc(user.uid)
+                    .collection('assessments')
+                    .orderBy('completedAt', 'desc')
+                    .limit(50)
+                    .get();
+
+                const assessments = assessmentSnapshot.docs
+                    .map(doc => ({ id: doc.id, ...doc.data() }))
+                    .filter(assessment => assessment.id !== 'init');
+
+                this.assessmentHistory = assessments;
+                console.log('✅ Loaded assessment history from Firebase:', assessments.length, 'items');
+                
+                // Trigger history.js to reload and display the data
+                if (typeof loadHistoryData === 'function') {
+                    setTimeout(() => {
+                        loadHistoryData();
+                        if (typeof updateUI === 'function') {
+                            updateUI();
+                        }
+                    }, 100);
+                }
+
+            } catch (error) {
+                console.error('❌ Error loading assessment history from Firebase:', error);
+            }
         },
 
         // Utility functions
@@ -1844,3 +2024,7 @@ const greetings = {
         }
     }))
 });
+
+
+
+

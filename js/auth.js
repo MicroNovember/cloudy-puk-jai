@@ -11,6 +11,9 @@ const firebaseConfig = {
 // Initialize Firebase
 try {
     firebase.initializeApp(firebaseConfig);
+    // Initialize Firestore
+    window.db = firebase.firestore();
+    console.log('✅ Firebase and Firestore initialized successfully');
 } catch (error) {
     console.error('Firebase initialization error:', error);
 }
@@ -884,7 +887,30 @@ window.AuthUtils = {
     
     // Check if user is authenticated
     isAuthenticated() {
+        // Clean up expired guest data first
+        this.cleanupExpiredGuestData();
         return auth.currentUser !== null || localStorage.getItem('guestMode') === 'true';
+    },
+    
+    // Clean up expired guest data (7 days)
+    cleanupExpiredGuestData() {
+        const guestLoginTime = localStorage.getItem('guestLoginTime');
+        if (guestLoginTime) {
+            const loginDate = new Date(guestLoginTime);
+            const now = new Date();
+            const daysDiff = (now - loginDate) / (1000 * 60 * 60 * 24);
+            
+            if (daysDiff >= GUEST_SESSION_DAYS) {
+                console.log('Guest session expired, cleaning up data...');
+                localStorage.removeItem('mindbloomData_guest');
+                localStorage.removeItem('guestMode');
+                localStorage.removeItem('guestData');
+                localStorage.removeItem('userType');
+                localStorage.removeItem('guestLoginTime');
+                return true;
+            }
+        }
+        return false;
     },
     
     // Logout
@@ -900,6 +926,8 @@ window.AuthUtils = {
                 localStorage.removeItem('userType');
                 localStorage.removeItem('guestLoginTime');
             } else {
+                // Clear logged-in user data
+                localStorage.removeItem('mindbloomData_user');
                 // Logout from Firebase
                 await auth.signOut();
             }
@@ -937,3 +965,4 @@ window.AuthUtils = {
 // Export for global access
 window.auth = auth;
 window.firebase = firebase;
+

@@ -23,6 +23,7 @@ document.addEventListener('DOMContentLoaded', function() {
     window.exportPDF = exportPDF;
     window.printReport = printReport;
     window.clearAllHistory = clearAllHistory;
+    window.clearCorruptedData = clearCorruptedData;
     
     console.log('History page fully loaded');
 });
@@ -31,7 +32,6 @@ document.addEventListener('DOMContentLoaded', function() {
 function viewDetails(index) {
     console.log('viewDetails called with index:', index);
     
-    const historyData = getHistoryData();
     const item = historyData[index];
     
     if (!item) {
@@ -106,31 +106,41 @@ function viewDetails(index) {
 }
 
 // ฟังก์ชันเริ่มต้นหน้าเว็บ
-function initializePage() {
+async function initializePage() {
     console.log('Initializing history page...');
     
     try {
-        // 1. โหลดข้อมูลประวัติ
-        loadHistoryData();
-        
-        // 3. ตั้งค่า Event Listeners
+        // 1. Set up event listeners first
+        console.log('1. Setting up event listeners...');
         setupEventListeners();
         
-        // 4. ตั้งค่า Health Overview Tips Modal
+        // 2. Initialize health overview tips
+        console.log('2. Initializing health overview tips...');
         initHealthOverviewTips();
         
-        // 5. โหลดวันที่ทดสอบล่าสุด
-        loadLastTestDate();
-        
-        // 6. ตั้งค่าเวลาอัปเดตเริ่มต้น
+        // 3. Update last update time
+        console.log('3. Updating last update time...');
         updateLastUpdateTime();
         
-        // 7. แสดงสถานะพร้อมใช้งาน
-        setTimeout(() => {
-            showNotification('ระบบประวัติการทดสอบพร้อมใช้งาน', 'info', 2000);
-        }, 500);
+        // 4. Wait for app.js to be ready and load history data
+        console.log('4. Waiting for app.js to be ready...');
         
-        console.log('Page initialization complete');
+        // Wait a bit for app.js to initialize
+        setTimeout(async () => {
+            console.log('5. Loading history data from app.js...');
+            await loadHistoryData();
+            console.log('6. History data loaded, data length:', historyData.length);
+            
+            // 7. Update UI with loaded data
+            console.log('7. Updating UI with history data...');
+            updateUI();
+            
+            // 8. Load last test date
+            console.log('8. Loading last test date...');
+            loadLastTestDate();
+            
+            console.log('Page initialization complete');
+        }, 1000); // Wait 1 second for app.js to initialize
         
     } catch (error) {
         console.error('initializePage error:', error);
@@ -140,74 +150,337 @@ function initializePage() {
 
 // ==================== DATA MANAGEMENT ====================
 
-// โหลดข้อมูลประวัติ
-function loadHistoryData() {
-    console.log('loadHistoryData: กำลังโหลดข้อมูล...');
-    
+// ตัวแปรสำหรับแยกข้อมูล guest และ user
+let guestHistoryData = [];
+let userHistoryData = [];
+
+// ฟังก์ชันสำหรับบันทึกข้อมูลลง localStorage
+function saveHistoryData() {
     try {
-        // ดึงข้อมูลจาก Alpine.js
-        const app = Alpine.store('mindbloomApp') || Alpine.$data(document.querySelector('[x-data*="mindbloomApp"]'));
+        const user = window.AuthUtils ? window.AuthUtils.getCurrentUser() : null;
         
-        if (app && app.assessmentHistory) {
-            historyData = app.assessmentHistory;
-            console.log('โหลดข้อมูลจาก Alpine.js:', historyData.length, 'รายการ');
-            
-            // เรียงจากใหม่ไปเก่า
-            historyData.sort((a, b) => {
-                const dateA = new Date(a.date || a.timestamp || 0);
-                const dateB = new Date(b.date || b.timestamp || 0);
-                return dateB - dateA;
-            });
-            
-            console.log('โหลดข้อมูลสำเร็จ:', historyData.length, 'รายการ');
-            updateUI();
-            
+        if (user && user.isGuest) {
+            // Guest user - บันทึกลง localStorage สำหรับ guest
+            const storageKey = 'mindbloomData_guest';
+            const data = {
+                assessmentHistory: guestHistoryData,
+                lastUpdated: new Date().toISOString()
+            };
+            localStorage.setItem(storageKey, JSON.stringify(data));
+            console.log('บันทึกข้อมูล guest ลง localStorage เรียบร้อย');
         } else {
-            console.log('ไม่พบข้อมูลจาก Alpine.js, ลองโหลดจาก localStorage');
-            // Fallback: โหลดจาก localStorage
-            const savedData = localStorage.getItem('mindbloomData');
-            if (savedData) {
-                const data = JSON.parse(savedData);
-                historyData = data.assessmentHistory || [];
-                console.log('โหลดจาก localStorage fallback:', historyData.length, 'รายการ');
-                updateUI();
-            } else {
-                console.log('ไม่พบข้อมูลประวัติใน localStorage');
-                showEmptyState();
-            }
+            // Logged in user - บันทึกลง localStorage สำหรับ user (backup)
+            const storageKey = 'mindbloomData_user';
+            const data = {
+                assessmentHistory: userHistoryData,
+                lastUpdated: new Date().toISOString()
+            };
+            localStorage.setItem(storageKey, JSON.stringify(data));
+            console.log('บันทึกข้อมูล user ลง localStorage เรียบร้อย');
         }
+        
+        return true;
     } catch (error) {
-        console.error('Error loading history data:', error);
-        console.error('Error details:', error.message, error.stack);
-        showNotification('เกิดข้อผิดพลาดในการโหลดข้อมูล: ' + error.message, 'error');
-        showEmptyState();
+        console.error('ไม่สามารถบันทึกข้อมูลลง localStorage:', error);
+        return false;
     }
 }
 
-// บันทึกข้อมูลประวัติ
-function saveHistoryData() {
+// Global decryption function reference
+let decryptFunction = null;
+
+// Set decryption function when app.js is ready
+function setDecryptFunction(fn) {
+    decryptFunction = fn;
+}
+
+// โหลดข้อมูลประวัติ
+async function loadHistoryData() {
+    console.log('loadHistoryData: กำลังโหลดข้อมูล...');
+    
     try {
-        // อัปเดตข้อมูลใน Alpine.js
-        const app = Alpine.store('mindbloomApp') || Alpine.$data(document.querySelector('[x-data*="mindbloomApp"]'));
-        if (app) {
-            app.assessmentHistory = historyData;
-            app.saveData(); // เรียกใช้ฟังก์ชัน saveData ของ Alpine.js
+        const user = window.AuthUtils ? window.AuthUtils.getCurrentUser() : null;
+        
+        if (user && user.isGuest) {
+            console.log('Guest user detected, loading from localStorage...');
+            loadHistoryFromLocalStorage();
+            // ใช้ข้อมูล guest สำหรับ historyData
+            console.log('guestHistoryData after loading:', guestHistoryData.length, 'items');
+            historyData = guestHistoryData;
+            console.log('historyData assigned from guestHistoryData:', historyData.length, 'items');
+            return historyData;
         }
         
-        // Fallback: บันทึกใน localStorage สำหรับความเข้ากัน
-        let data = {};
-        const savedData = localStorage.getItem('mindbloomData');
+        // Try to load directly from Firebase first for logged-in users
+        if (window.db && window.AuthUtils && window.AuthUtils.getCurrentUser() && !window.AuthUtils.getCurrentUser().isGuest) {
+            console.log('Loading directly from Firebase...');
+            return await loadHistoryFromFirebase();
+        }
+        
+        // Fallback: Get data from app.js Alpine store
+        let app = Alpine.store('mindbloomApp');
+        let retries = 0;
+        const maxRetries = 10;
+        
+        // Wait for Alpine store to be available
+        while (!app && retries < maxRetries) {
+            console.log(`Waiting for Alpine store... attempt ${retries + 1}/${maxRetries}`);
+            await new Promise(resolve => setTimeout(resolve, 100));
+            app = Alpine.store('mindbloomApp');
+            retries++;
+        }
+        
+        console.log('Alpine store found:', !!app);
+        console.log('app.assessmentHistory:', app ? app.assessmentHistory : 'undefined');
+        console.log('app.assessmentHistory length:', app && app.assessmentHistory ? app.assessmentHistory.length : 'N/A');
+        
+        if (app && app.assessmentHistory && app.assessmentHistory.length > 0) {
+            console.log('โหลดข้อมูลจาก app.js:', app.assessmentHistory.length, 'รายการ');
+            
+            // Update the userHistoryData array with data from app.js
+            userHistoryData = app.assessmentHistory.map(assessment => ({
+                title: assessment.title || 'ไม่ระบุชื่อแบบทดสอบ',
+                score: assessment.score || 0,
+                result: assessment.result || 'ไม่มีผลลัพธ์',
+                date: assessment.completedAt ? 
+                    (typeof assessment.completedAt.toDate === 'function' ? 
+                        assessment.completedAt.toDate().toISOString() : 
+                        assessment.completedAt) : 
+                    new Date().toISOString(),
+                quizId: assessment.quizId || 'unknown',
+                answers: Array.isArray(assessment.answers) ? assessment.answers : [],
+                id: assessment.id || Date.now().toString()
+            }));
+            
+            // ใช้ข้อมูล user สำหรับ historyData
+            historyData = userHistoryData;
+            console.log('อัปเดต historyData จาก app.js:', historyData.length, 'รายการ');
+        } else {
+            console.warn('ไม่พบข้อมูลจาก app.js');
+        }
+        
+    } catch (error) {
+        console.error('เกิดข้อผิดพลาดในการโหลดข้อมูล:', error);
+        historyData = [];
+    }
+    
+    return historyData;
+}
+
+// โหลดข้อมูลจาก localStorage (สำหรับ guest)
+function loadHistoryFromLocalStorage() {
+    try {
+        const user = window.AuthUtils ? window.AuthUtils.getCurrentUser() : null;
+        const storageKey = 'mindbloomData_guest'; // ใช้เฉพาะ key สำหรับ guest
+        
+        console.log('กำลังโหลดข้อมูล guest จาก localStorage...', 'storageKey:', storageKey);
+        const savedData = localStorage.getItem(storageKey);
         
         if (savedData) {
-            data = JSON.parse(savedData);
+            console.log('🔍 Raw savedData:', savedData.substring(0, 200) + '...');
+            console.log('🔍 savedData startsWith Q:', savedData.startsWith('Q'));
+            console.log('🔍 savedData matches base64 pattern:', savedData.match(/^[A-Za-z0-9+/=]+$/));
+            
+            try {
+                // Try to decrypt data first (from app.js encryption)
+                let data;
+                try {
+                    // Check if data is encrypted (starts with specific pattern)
+                    if (savedData.startsWith('Q') || savedData.match(/^[A-Za-z0-9+/=]+$/)) {
+                        console.log('🔐 Attempting to decrypt data...');
+                        // Try to decrypt using global decrypt function
+                        if (decryptFunction && typeof decryptFunction === 'function') {
+                            data = decryptFunction(savedData);
+                            console.log('✅ Decryption successful, data type:', typeof data);
+                            // After decryption, data might still be a string, so parse it
+                            if (typeof data === 'string') {
+                                console.log('🔄 Parsing decrypted string to object...');
+                                data = JSON.parse(data);
+                                console.log('✅ Parsed decrypted data, type:', typeof data);
+                            }
+                        } else {
+                            console.log('⚠️ No decrypt function available, trying direct parse');
+                            // Fallback: try direct parse
+                            data = JSON.parse(savedData);
+                        }
+                    } else {
+                        console.log('📄 Data appears to be plain JSON, parsing directly...');
+                        data = JSON.parse(savedData);
+                    }
+                } catch (decryptError) {
+                    console.warn('❌ Decryption failed, trying direct parse:', decryptError);
+                    data = JSON.parse(savedData);
+                }
+                
+                console.log('ข้อมูล guest ที่โหลดได้จาก localStorage:', data);
+                
+                // ตรวจสอบและแปลงข้อมูลให้ถูกต้อง
+                console.log('🔍 Data structure analysis:');
+                console.log('- data.assessmentHistory exists:', !!data.assessmentHistory);
+                console.log('- data.assessmentHistory type:', typeof data.assessmentHistory);
+                console.log('- Is Array?', Array.isArray(data.assessmentHistory));
+                console.log('- data.assessmentHistory length:', data.assessmentHistory ? data.assessmentHistory.length : 'N/A');
+                
+                if (data.assessmentHistory) {
+                    // ถ้าเป็น array อยู่แล้ว
+                    if (Array.isArray(data.assessmentHistory)) {
+                        guestHistoryData = data.assessmentHistory;
+                        console.log('✅ guestHistoryData assigned from assessmentHistory:', guestHistoryData.length, 'items');
+                    } 
+                    // ถ้าเป็น object เดี่ยว ให้แปลงเป็น array
+                    else if (typeof data.assessmentHistory === 'object' && data.assessmentHistory !== null) {
+                        guestHistoryData = [data.assessmentHistory];
+                    }
+                } 
+                // ถ้าไม่มี assessmentHistory แต่มีข้อมูลโดยตรงใน data (guest data structure)
+                else if (Array.isArray(data)) {
+                    // กรองเอาเฉพาะ assessment จาก array แต่ตรวจสอบว่าเป็น array ของ assessments หรือ object ที่มี assessmentHistory
+                    if (data.length > 0 && typeof data[0] === 'object' && (data[0].quizId || data[0].assessmentId || data[0].id)) {
+                        // กรณีอีน data เป็น array ของ assessments
+                        guestHistoryData = data;
+                    } else {
+                        // กรณีอีน data เป็น object ที่มี assessmentHistory
+                        const assessments = data.filter(item => 
+                            item && (item.quizId || item.assessmentId || item.id)
+                        );
+                        guestHistoryData = assessments;
+                    }
+                    
+                    console.log('Filtered guest assessments count:', guestHistoryData.length);
+                } else {
+                    // ถ้าเป็น object เดี่ยวที่ไม่มี assessmentHistory
+                    if (typeof data === 'object' && data !== null) {
+                        // ตรวจสอบว่าเป็น assessment หรือไม่
+                        if (data.quizId || data.assessmentId || data.id) {
+                            guestHistoryData = [data];
+                        }
+                    }
+                }
+            } catch (jsonError) {
+                console.error('เกิดข้อผิดพลาดในการแปลงข้อมูล JSON จาก localStorage:', jsonError);
+                console.log('กำลังล้างข้อมูลที่อาจเสียหาย...');
+                // ล้างข้อมูลที่เสียหาย
+                localStorage.removeItem(storageKey);
+                guestHistoryData = [];
+            }
+        } else {
+            console.log('ไม่พบข้อมูล guest ใน localStorage');
+            guestHistoryData = [];
+        }
+        console.log('🏁 Final guestHistoryData length:', guestHistoryData.length);
+    } catch (error) {
+        console.error('เกิดข้อผิดพลาดในการโหลดจาก localStorage:', error);
+        guestHistoryData = [];
+    }
+}
+async function loadHistoryFromFirebase() {
+    if (!window.db) {
+        console.warn('Firebase Firestore not available');
+        throw new Error('Firebase not available');
+    }
+
+    try {
+        const user = window.AuthUtils ? window.AuthUtils.getCurrentUser() : null;
+        if (!user || user.isGuest) {
+            console.warn('User not authenticated or is guest, using localStorage');
+            throw new Error('User not authenticated');
+        }
+
+        console.log('🔄 กำลังโหลดข้อมูลจาก Firebase...');
+        const assessmentSnapshot = await window.db
+            .collection('users')
+            .doc(user.uid)
+            .collection('assessments')
+            .orderBy('completedAt', 'desc')
+            .limit(50)
+            .get();
+
+        if (assessmentSnapshot.empty) {
+            console.log('⚠️ ไม่พบข้อมูลใน Firebase');
+            historyData = [];
+            return [];
+        }
+
+        const assessments = assessmentSnapshot.docs
+            .map(doc => ({
+                id: doc.id,
+                ...doc.data(),
+                // เก็บ reference ไปยัง document
+                _ref: doc.ref
+            }))
+            .filter(assessment => assessment.id !== 'init');
+
+        console.log('📥 ได้รับข้อมูลจาก Firebase:', assessments.length, 'รายการ');
+        
+        // แปลงข้อมูลให้ตรงกับรูปแบบที่ต้องการ
+        const formattedData = assessments.map(assessment => {
+            // ตรวจสอบและแปลงวันที่ให้ถูกต้อง
+            let dateValue = assessment.completedAt || assessment.date || assessment.timestamp;
+            if (dateValue && typeof dateValue.toDate === 'function') {
+                dateValue = dateValue.toDate().toISOString();
+            } else if (!dateValue) {
+                dateValue = new Date().toISOString();
+            }
+
+            return {
+                title: assessment.title || assessment.quizTitle || 'ไม่ระบุชื่อแบบทดสอบ',
+                score: assessment.score || 0,
+                result: assessment.result || assessment.interpretation || 'ไม่มีผลลัพธ์',
+                date: dateValue,
+                quizId: assessment.quizId || assessment.assessmentId || 'unknown',
+                answers: Array.isArray(assessment.answers) ? assessment.answers : [],
+                id: assessment.id,
+                // เก็บข้อมูลต้นฉบับเพื่อใช้ในภายหลัง
+                _raw: assessment
+            };
+        });
+        
+        // อัปเดตข้อมูลใน historyData
+        historyData = formattedData;
+        
+        // อัปเดต userHistoryData ด้วย
+        userHistoryData = formattedData;
+        
+        // บันทึกลง localStorage เป็นข้อมูลสำรอง
+        saveHistoryData();
+        
+        console.log('✅ โหลดข้อมูลจาก Firebase สำเร็จ:', historyData.length, 'รายการ');
+        console.log('ตัวอย่างข้อมูล:', JSON.stringify(historyData[0], null, 2));
+        
+        // อัปเดต UI
+        updateUI();
+        
+        return historyData;
+
+    } catch (error) {
+        console.error('❌ ไม่สามารถโหลดข้อมูลจาก Firebase:', error);
+        throw error; // Let caller handle fallback
+    }
+}
+
+// ฟังก์ชันสำหรับล้างข้อมูลที่เสียหาย
+function clearCorruptedData() {
+    try {
+        const user = window.AuthUtils ? window.AuthUtils.getCurrentUser() : null;
+        const storageKey = user && user.isGuest ? 'mindbloomData_guest' : 'mindbloomData_user';
+        
+        localStorage.removeItem(storageKey);
+        
+        // ล้างตัวแปรที่เกี่ยวข้องด้วย
+        if (user && user.isGuest) {
+            guestHistoryData = [];
+        } else {
+            userHistoryData = [];
         }
         
-        data.assessmentHistory = historyData;
-        localStorage.setItem('mindbloomData', JSON.stringify(data));
-        console.log('saveHistoryData: บันทึกข้อมูลสำเร็จ');
+        console.log('Cleared corrupted data from localStorage');
+        showNotification('ล้างข้อมูลที่เสียหายเรียบร้อยแล้ว', 'success');
+        
+        // โหลดข้อมูลใหม่
+        loadHistoryData();
     } catch (error) {
-        console.error('Error saving history data:', error);
-        showNotification('เกิดข้อผิดพลาดในการบันทึกข้อมูล', 'error');
+        console.error('Error clearing corrupted data:', error);
+        showNotification('ไม่สามารถล้างข้อมูลที่เสียหาย', 'error');
     }
 }
 
@@ -216,12 +489,20 @@ function saveHistoryData() {
 // อัปเดต UI
 function updateUI() {
     console.log('updateUI: กำลังอัปเดต UI...');
-    console.log('จำนวนข้อมูล:', historyData.length);
+    console.log('จำนวนข้อมูลใน historyData:', historyData.length);
+    console.log('ตัวอย่างข้อมูลรายการแรก:', historyData.length > 0 ? JSON.stringify(historyData[0], null, 2) : 'ไม่มีข้อมูล');
     
     try {
+        console.log('Updating test type summary...');
         updateTestTypeSummary();
+        
+        console.log('Updating mental health overview...');
         updateMentalHealthOverview();
+        
+        console.log('Updating history table...');
         updateHistoryTable();
+        
+        console.log('Updating last test date...');
         updateLastTestDate();
         
         // ซ่อน/แสดงปุ่มล้างประวัติ
@@ -243,8 +524,15 @@ function updateLastTestDate() {
     try {
         const lastTestDateElement = document.getElementById('lastTestDate');
         if (lastTestDateElement && historyData.length > 0) {
-            const lastTest = historyData[0];
-            const date = new Date(lastTest.date || lastTest.timestamp);
+            // เรียงข้อมูลตามวันที่ล่าสุด
+            const sortedData = [...historyData].sort((a, b) => {
+                const dateA = new Date(a.date || a.timestamp || 0);
+                const dateB = new Date(b.date || b.timestamp || 0);
+                return dateB - dateA;
+            });
+            
+            const lastTest = sortedData[0];
+            const date = new Date(lastTest.date || lastTest.timestamp || lastTest.completedAt);
             if (!isNaN(date.getTime())) {
                 const formattedDate = date.toLocaleDateString('th-TH', {
                     day: 'numeric',
@@ -356,8 +644,7 @@ function updateMentalHealthOverview() {
                             <div class="text-sm font-medium">${aspect.name}</div>
                             <div class="flex items-center text-xs text-gray-500">
                                 <div class="w-24 h-1 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden mr-2">
-                                    <div class="h-full bg-gradient-to-r ${aspect.colorFrom} ${aspect.colorTo}" 
-                                         style="width: ${aspect.score}%"></div>
+                                    <div class="h-full bg-gradient-to-r ${aspect.colorFrom} ${aspect.colorTo}" style="width: ${aspect.score}%"></div>
                                 </div>
                                 ${Math.round(aspect.score)}%
                             </div>
@@ -527,11 +814,16 @@ function analyzeMentalHealth() {
 
 function updateTestTypeSummary() {
     const container = document.getElementById('testTypeSummary');
-    if (!container) return;
+    if (!container) {
+        console.error('❌ ไม่พบ element #testTypeSummary ในหน้าเว็บ');
+        return;
+    }
     
-    console.log('updateTestTypeSummary: กำลังอัปเดต...');
+    console.log('🔍 updateTestTypeSummary: กำลังอัปเดต...');
+    console.log('📊 จำนวนข้อมูลใน historyData:', historyData.length);
     
     if (historyData.length === 0) {
+        console.log('ℹ️ ไม่พบข้อมูลใน historyData แสดงสถานะว่างเปล่า');
         container.innerHTML = `
             <div class="text-center py-8">
                 <i class="fas fa-chart-pie text-3xl text-gray-300 mb-2"></i>
@@ -543,36 +835,54 @@ function updateTestTypeSummary() {
     }
     
     try {
+        console.log('📋 ตัวอย่างข้อมูลใน historyData[0]:', JSON.stringify(historyData[0], null, 2));
+        
         const testGroups = {};
         
-        historyData.forEach(item => {
-            const title = item.title || 'ไม่มีชื่อ';
-            if (!testGroups[title]) {
-                testGroups[title] = {
-                    title: title,
-                    count: 0,
-                    scores: [],
-                    latestResult: '',
-                    latestDate: '',
-                    latestScore: 0
-                };
-            }
-            
-            testGroups[title].count++;
-            testGroups[title].scores.push(Number(item.score) || 0);
-            
-            const itemDate = new Date(item.date || 0);
-            const currentDate = new Date(testGroups[title].latestDate || 0);
-            
-            if (!testGroups[title].latestDate || itemDate > currentDate) {
-                testGroups[title].latestResult = item.result || 'ไม่มีข้อมูล';
-                testGroups[title].latestDate = item.date || '';
-                testGroups[title].latestScore = Number(item.score) || 0;
+        historyData.forEach((item, index) => {
+            try {
+                const title = item.title || 'ไม่มีชื่อ';
+                console.log(`📌 รายการที่ ${index + 1}: ${title} (คะแนน: ${item.score || 'ไม่มี'}, วันที่: ${item.date || 'ไม่มี'})`);
+                
+                if (!testGroups[title]) {
+                    testGroups[title] = {
+                        title: title,
+                        count: 0,
+                        scores: [],
+                        latestResult: '',
+                        latestDate: '',
+                        latestScore: 0
+                    };
+                    console.log(`➕ สร้างกลุ่มใหม่สำหรับ: ${title}`);
+                }
+                
+                testGroups[title].count++;
+                const score = Number(item.score) || 0;
+                testGroups[title].scores.push(score);
+                
+                const itemDate = item.date ? new Date(item.date) : new Date(0);
+                const currentDate = testGroups[title].latestDate ? new Date(testGroups[title].latestDate) : new Date(0);
+                
+                if (!testGroups[title].latestDate || itemDate > currentDate) {
+                    testGroups[title].latestResult = item.result?.title || item.result || 'ไม่มีข้อมูล';
+                    testGroups[title].latestDate = item.date || '';
+                    testGroups[title].latestScore = score;
+                    console.log(`🔄 อัปเดตรายการล่าสุดสำหรับ ${title}: ${score} คะแนน`);
+                }
+            } catch (error) {
+                console.error(`❌ เกิดข้อผิดพลาดในการประมวลผลรายการที่ ${index + 1}:`, error);
+                console.error('รายละเอียดรายการ:', JSON.stringify(item, null, 2));
             }
         });
         
+        console.log(`📊 จำนวนกลุ่มแบบทดสอบที่พบ: ${Object.keys(testGroups).length} กลุ่ม`);
+        
         let html = '';
-        Object.values(testGroups).forEach(test => {
+        const testGroupsArray = Object.values(testGroups);
+        console.log(`🔄 กำลังสร้าง HTML สำหรับ ${testGroupsArray.length} กลุ่มแบบทดสอบ...`);
+        
+        testGroupsArray.forEach((test, index) => {
+            console.log(`📝 กำลังประมวลผลกลุ่มที่ ${index + 1}: ${test.title} (${test.count} ครั้ง)`);
             const avgScore = test.scores.length > 0 
                 ? Math.round(test.scores.reduce((a, b) => a + b, 0) / test.scores.length)
                 : 0;
@@ -610,8 +920,19 @@ function updateTestTypeSummary() {
             `;
         });
         
-        container.innerHTML = html;
-        console.log('updateTestTypeSummary: สำเร็จ');
+        if (html.trim() === '') {
+            console.warn('⚠️ ไม่มี HTML ที่ถูกสร้างขึ้นสำหรับแสดงผล');
+            container.innerHTML = `
+                <div class="text-center py-8 text-yellow-600">
+                    <i class="fas fa-exclamation-triangle text-2xl mb-2"></i>
+                    <p class="text-sm">ไม่พบข้อมูลที่สามารถแสดงได้</p>
+                    <p class="text-xs mt-1">กรุณาตรวจสอบคอนโซลสำหรับรายละเอียดเพิ่มเติม</p>
+                </div>
+            `;
+        } else {
+            container.innerHTML = html;
+            console.log('✅ updateTestTypeSummary: สร้าง HTML สำเร็จ');
+        }
     } catch (error) {
         console.error('updateTestTypeSummary error:', error);
         container.innerHTML = `<p class="text-red-500 text-sm">เกิดข้อผิดพลาดในการแสดงข้อมูล</p>`;
@@ -629,6 +950,7 @@ function updateHistoryTable() {
     
     console.log('updateHistoryTable: กำลังอัปเดต...');
     console.log('จำนวนข้อมูลสำหรับตาราง:', historyData.length);
+    console.log('โครงสร้างข้อมูล:', historyData); // Debug: show full data structure
     
     if (historyData.length === 0) {
         tableContainer.classList.add('hidden');
@@ -658,7 +980,7 @@ function updateHistoryTable() {
                     <td class="py-2 px-3">
                         <div class="font-bold text-sm" style="color: ${color}">${item.score}${maxScore ? '/' + maxScore : ''}</div>
                     </td>
-                    <td class="py-2 px-3 text-sm">${item.result || 'ไม่มีข้อมูล'}</td>
+                    <td class="py-2 px-3 text-sm">${item.result?.title || item.result || 'ไม่มีข้อมูล'}</td>
                     <td class="py-2 px-3">
                         <button onclick="viewDetails(${index})" class="text-primary hover:text-primary-dark mr-2 text-sm">
                             <i class="fas fa-eye mr-1"></i>ดู
@@ -821,6 +1143,8 @@ function showEmptyState() {
         }
     } catch (error) {
         console.error('showEmptyState error:', error);
+    }
+}
 
 function showItemDetails(index) {
     try {
@@ -886,40 +1210,15 @@ function deleteItem(index) {
         
         const historyItem = historyData[index];
         
-        // อ่านข้อมูลประวัติจาก localStorage
-        const savedData = localStorage.getItem('mindbloomData');
-        if (!savedData) {
-            console.error('No data found in localStorage');
-            showNotification('ไม่พบข้อมูลที่จะลบ', 'error');
-            return;
-        }
-        
-        const data = JSON.parse(savedData);
-        const history = data.assessmentHistory || [];
-        
-        // ตรวจสอบ index
-        if (index < 0 || index >= history.length) {
-            console.error('Invalid index:', index, 'History length:', history.length);
-            showNotification('ข้อมูลไม่ถูกต้อง', 'error');
-            return;
-        }
-        
-        const item = history[index];
-        if (!item) {
-            console.log('Item not found at index:', index);
-            showNotification('ไม่พบข้อมูลรายการที่เลือก', 'error');
-            return;
-        }
-        
         // แสดง SweetAlert2 ยืนยันการลบ
         Swal.fire({
             title: 'ยืนยันการลบ?',
             html: `
                 <p class="text-gray-600 mb-3">คุณต้องการลบรายการนี้หรือไม่?</p>
                 <div class="bg-gray-50 p-3 rounded-lg text-left">
-                    <p class="font-semibold">${getShortTitle(item.title)}</p>
-                    <p class="text-sm text-gray-500">${formatDate(item.date)}</p>
-                    <p class="text-sm">คะแนน: ${item.score}</p>
+                    <p class="font-semibold">${getShortTitle(historyItem.title)}</p>
+                    <p class="text-sm text-gray-500">${formatDate(historyItem.date)}</p>
+                    <p class="text-sm">คะแนน: ${historyItem.score}</p>
                 </div>
             `,
             icon: 'warning',
@@ -929,14 +1228,54 @@ function deleteItem(index) {
             confirmButtonText: 'ลบรายการ',
             cancelButtonText: 'ยกเลิก',
             reverseButtons: true
-        }).then((result) => {
+        }).then(async (result) => {
             if (result.isConfirmed) {
-                // ลบรายการจาก array
-                history.splice(index, 1);
+                const user = window.AuthUtils ? window.AuthUtils.getCurrentUser() : null;
                 
-                // บันทึกข้อมูลใหม่
-                data.assessmentHistory = history;
-                localStorage.setItem('mindbloomData', JSON.stringify(data));
+                if (user && !user.isGuest && window.db && historyItem.id) {
+                    // ผู้ใช้ Firebase - ลบจาก Firebase
+                    try {
+                        await window.db
+                            .collection('users')
+                            .doc(user.uid)
+                            .collection('assessments')
+                            .doc(historyItem.id)
+                            .delete();
+                        console.log('✅ ลบข้อมูลจาก Firebase สำเร็จ');
+                    } catch (error) {
+                        console.error('❌ ลบจาก Firebase ไม่สำเร็จ:', error);
+                        showNotification('ลบข้อมูลไม่สำเร็จ: ' + error.message, 'error');
+                        return;
+                    }
+                } else {
+                    // Guest user - ลบจาก localStorage
+                    try {
+                        const savedData = localStorage.getItem('mindbloomData_guest');
+                        if (savedData) {
+                            const data = JSON.parse(savedData);
+                            const history = data.assessmentHistory || [];
+                            
+                            // หา index ที่ตรงกันใน localStorage
+                            const localIndex = history.findIndex(item => 
+                                item.date === historyItem.date && 
+                                item.title === historyItem.title
+                            );
+                            
+                            if (localIndex !== -1) {
+                                history.splice(localIndex, 1);
+                                data.assessmentHistory = history;
+                                localStorage.setItem('mindbloomData_guest', JSON.stringify(data));
+                                // อัปเดต guestHistoryData ด้วย
+                                guestHistoryData = history;
+                                console.log('✅ ลบข้อมูล guest จาก localStorage สำเร็จ');
+                            }
+                        }
+                    } catch (error) {
+                        console.error('❌ ลบจาก localStorage ไม่สำเร็จ:', error);
+                        showNotification('ลบข้อมูลไม่สำเร็จ: ' + error.message, 'error');
+                        return;
+                    }
+                }
                 
                 // โหลดข้อมูลใหม่
                 loadHistoryData();
@@ -982,13 +1321,55 @@ function clearAllHistory() {
             confirmButtonText: 'ลบทั้งหมด',
             cancelButtonText: 'ยกเลิก',
             reverseButtons: true
-        }).then((result) => {
+        }).then(async (result) => {
             if (result.isConfirmed) {
-                // ลบข้อมูลทั้งหมด
-                historyData = [];
+                const user = window.AuthUtils ? window.AuthUtils.getCurrentUser() : null;
                 
-                // บันทึกข้อมูลใหม่
-                localStorage.setItem('mindbloomData', JSON.stringify({ assessmentHistory: [] }));
+                if (user && !user.isGuest && window.db) {
+                    // ผู้ใช้ Firebase - ลบทั้งหมดจาก Firebase
+                    try {
+                        const assessmentsSnapshot = await window.db
+                            .collection('users')
+                            .doc(user.uid)
+                            .collection('assessments')
+                            .get();
+                        
+                        const batch = window.db.batch();
+                        assessmentsSnapshot.docs.forEach(doc => {
+                            if (doc.id !== 'init') {
+                                batch.delete(doc.ref);
+                            }
+                        });
+                        
+                        await batch.commit();
+                        console.log('✅ ลบข้อมูลทั้งหมดจาก Firebase สำเร็จ');
+                    } catch (error) {
+                        console.error('❌ ลบจาก Firebase ไม่สำเร็จ:', error);
+                        showNotification('ลบข้อมูลไม่สำเร็จ: ' + error.message, 'error');
+                        return;
+                    }
+                } else {
+                    // Guest user - ลบทั้งหมดจาก localStorage
+                    try {
+                        const storageKey = 'mindbloomData_guest';
+                        localStorage.setItem(storageKey, JSON.stringify({ assessmentHistory: [] }));
+                        // ล้าง guestHistoryData ด้วย
+                        guestHistoryData = [];
+                        console.log('✅ ลบข้อมูล guest ทั้งหมดจาก localStorage สำเร็จ');
+                    } catch (error) {
+                        console.error('❌ ลบจาก localStorage ไม่สำเร็จ:', error);
+                        showNotification('ลบข้อมูลไม่สำเร็จ: ' + error.message, 'error');
+                        return;
+                    }
+                }
+                
+                // ล้างข้อมูลใน memory
+                if (user && user.isGuest) {
+                    guestHistoryData = [];
+                } else {
+                    userHistoryData = [];
+                }
+                historyData = [];
                 
                 // โหลดข้อมูลใหม่
                 loadHistoryData();
@@ -1377,7 +1758,7 @@ function createSimplePDFContent() {
                     <td style="padding: 6px; border: 1px solid #ddd;">${formatDate(item.date)}</td>
                     <td style="padding: 6px; border: 1px solid #ddd;">${getShortTitle(item.title)}</td>
                     <td style="padding: 6px; border: 1px solid #ddd; font-weight: bold;">${item.score}${maxScore ? '/' + maxScore : ''}</td>
-                    <td style="padding: 6px; border: 1px solid #ddd;">${item.result || ''}</td>
+                    <td style="padding: 6px; border: 1px solid #ddd;">${item.result?.title || item.result || ''}</td>
                 </tr>
             `;
         });
@@ -1645,33 +2026,26 @@ function refreshHealthOverview() {
 
 function loadLastTestDate() {
     try {
-        // อ่านข้อมูลจาก localStorage (ใช้ key เดียวกับระบบหลัก)
-        const savedData = localStorage.getItem('mindbloomData');
-        
-        if (savedData) {
-            const data = JSON.parse(savedData);
-            const history = data.assessmentHistory || [];
+        // ใช้ข้อมูลจาก historyData ที่โหลดมาแล้ว
+        if (historyData.length > 0) {
+            // เรียงจากล่าสุดไปเก่าสุด
+            const sortedHistory = [...historyData].sort((a, b) => {
+                const dateA = new Date(a.date || a.timestamp || a.completedAt || 0);
+                const dateB = new Date(b.date || b.timestamp || b.completedAt || 0);
+                return dateB - dateA;
+            });
             
-            if (history.length > 0) {
-                // เรียงจากล่าสุดไปเก่าสุด
-                const sortedHistory = history.sort((a, b) => {
-                    const dateA = new Date(a.date || a.timestamp || 0);
-                    const dateB = new Date(b.date || b.timestamp || 0);
-                    return dateB - dateA;
+            const lastTest = sortedHistory[0];
+            const lastTestDateElement = document.getElementById('lastTestDate');
+            
+            if (lastTestDateElement && (lastTest.date || lastTest.timestamp || lastTest.completedAt)) {
+                const date = new Date(lastTest.date || lastTest.timestamp || lastTest.completedAt);
+                const formattedDate = date.toLocaleDateString('th-TH', {
+                    day: 'numeric',
+                    month: 'short',
+                    year: 'numeric'
                 });
-                
-                const lastTest = sortedHistory[0];
-                const lastTestDateElement = document.getElementById('lastTestDate');
-                
-                if (lastTestDateElement && (lastTest.date || lastTest.timestamp)) {
-                    const date = new Date(lastTest.date || lastTest.timestamp);
-                    const formattedDate = date.toLocaleDateString('th-TH', {
-                        day: 'numeric',
-                        month: 'short',
-                        year: 'numeric'
-                    });
-                    lastTestDateElement.textContent = formattedDate;
-                }
+                lastTestDateElement.textContent = formattedDate;
             }
         }
     } catch (error) {
@@ -1904,3 +2278,4 @@ function setupEventListeners() {
     `;
     document.head.appendChild(style);
 })();
+// ==================== END OF FILE ====================
