@@ -1,8 +1,18 @@
 <!DOCTYPE html>
-<html lang="th" x-data="termsApp()" x-init="init()" :class="{ 'dark': darkMode }">
+<html lang="th" class="dark" x-data="termsApp()" x-init="init()">
 <head>
+    <!-- Immediate Dark Mode Script -->
     <script>
-        window.location.replace('login.html?legal=terms');
+        // Set dark mode immediately to prevent flash
+        (function() {
+            const savedDarkMode = localStorage.getItem('darkMode');
+            // Default to dark mode if no preference saved
+            if (savedDarkMode === null) {
+                localStorage.setItem('darkMode', 'true');
+            }
+            // Always apply dark mode immediately
+            document.documentElement.classList.add('dark');
+        })();
     </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">

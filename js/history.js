@@ -821,10 +821,6 @@ function showEmptyState() {
         }
     } catch (error) {
         console.error('showEmptyState error:', error);
-    }
-}
-
-// ==================== BASIC FUNCTIONS ====================
 
 function showItemDetails(index) {
     try {
@@ -888,28 +884,80 @@ function deleteItem(index) {
             return;
         }
         
-        const item = historyData[index];
+        const historyItem = historyData[index];
         
-        // สร้าง popup แจ้งเตือนการลบรายการเดียว
-        showConfirmDialog(
-            '⚠️ ยืนยันการลบข้อมูล',
-            `คุณแน่ใจหรือไม่ว่าต้องการลบประวัติการทดสอบนี้?\n\n📝 ชื่อ: ${item.title || 'ไม่มีชื่อ'}\n📊 คะแนน: ${item.score}\n📅 วันที่: ${new Date(item.date).toLocaleDateString('th-TH')}\n\nการดำเนินการนี้ไม่สามารถย้อนกลับได้`,
-            'ลบรายการนี้',
-            'ยกเลิก',
-            () => {
-                // ลบข้อมูล
-                historyData.splice(index, 1);
-                saveHistoryData();
-                updateUI();
-                showNotification('ลบประวัติเรียบร้อยแล้ว', 'success');
-            },
-            () => {
-                showNotification('ยกเลิกการลบประวัติ', 'info');
+        // อ่านข้อมูลประวัติจาก localStorage
+        const savedData = localStorage.getItem('mindbloomData');
+        if (!savedData) {
+            console.error('No data found in localStorage');
+            showNotification('ไม่พบข้อมูลที่จะลบ', 'error');
+            return;
+        }
+        
+        const data = JSON.parse(savedData);
+        const history = data.assessmentHistory || [];
+        
+        // ตรวจสอบ index
+        if (index < 0 || index >= history.length) {
+            console.error('Invalid index:', index, 'History length:', history.length);
+            showNotification('ข้อมูลไม่ถูกต้อง', 'error');
+            return;
+        }
+        
+        const item = history[index];
+        if (!item) {
+            console.log('Item not found at index:', index);
+            showNotification('ไม่พบข้อมูลรายการที่เลือก', 'error');
+            return;
+        }
+        
+        // แสดง SweetAlert2 ยืนยันการลบ
+        Swal.fire({
+            title: 'ยืนยันการลบ?',
+            html: `
+                <p class="text-gray-600 mb-3">คุณต้องการลบรายการนี้หรือไม่?</p>
+                <div class="bg-gray-50 p-3 rounded-lg text-left">
+                    <p class="font-semibold">${getShortTitle(item.title)}</p>
+                    <p class="text-sm text-gray-500">${formatDate(item.date)}</p>
+                    <p class="text-sm">คะแนน: ${item.score}</p>
+                </div>
+            `,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#ef4444',
+            cancelButtonColor: '#6b7280',
+            confirmButtonText: 'ลบรายการ',
+            cancelButtonText: 'ยกเลิก',
+            reverseButtons: true
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // ลบรายการจาก array
+                history.splice(index, 1);
+                
+                // บันทึกข้อมูลใหม่
+                data.assessmentHistory = history;
+                localStorage.setItem('mindbloomData', JSON.stringify(data));
+                
+                // โหลดข้อมูลใหม่
+                loadHistoryData();
+                
+                // แสดง SweetAlert2 สำเร็จ
+                Swal.fire({
+                    title: 'ลบสำเร็จ!',
+                    text: 'ลบรายการที่เลือกเรียบร้อยแล้ว',
+                    icon: 'success',
+                    timer: 2000,
+                    timerProgressBar: true,
+                    showConfirmButton: false
+                });
+                
+                console.log('Item deleted successfully');
             }
-        );
+        });
+        
     } catch (error) {
-        console.error('deleteItem error:', error);
-        showNotification('เกิดข้อผิดพลาดในการลบประวัติ', 'error');
+        console.error('Error deleting item:', error);
+        showNotification('เกิดข้อผิดพลาดในการลบ: ' + error.message, 'error');
     }
 }
 
@@ -920,26 +968,48 @@ function clearAllHistory() {
             return;
         }
         
-        // สร้าง popup แจ้งเตือนสำหรับมือถือ
-        showConfirmDialog(
-            '⚠️ ยืนยันการลบข้อมูล',
-            'คุณแน่ใจหรือไม่ว่าต้องการลบประวัติการทดสอบทั้งหมด?\n\nการดำเนินการนี้ไม่สามารถย้อนกลับได้',
-            'ลบทั้งหมด',
-            'ยกเลิก',
-            () => {
-                // ลบข้อมูล
+        // แสดง SweetAlert2 ยืนยันการลบทั้งหมด
+        Swal.fire({
+            title: 'ยืนยันการลบทั้งหมด?',
+            html: `
+                <p class="text-gray-600 mb-3">คุณต้องการลบประวัติทั้งหมดหรือไม่?</p>
+                <p class="text-sm text-gray-500">การดำเนินการนี้ไม่สามารถย้อนกลับได้</p>
+            `,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#ef4444',
+            cancelButtonColor: '#6b7280',
+            confirmButtonText: 'ลบทั้งหมด',
+            cancelButtonText: 'ยกเลิก',
+            reverseButtons: true
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // ลบข้อมูลทั้งหมด
                 historyData = [];
-                saveHistoryData();
-                updateUI();
-                showNotification('ลบประวัติทั้งหมดเรียบร้อยแล้ว', 'success');
-            },
-            () => {
-                showNotification('ยกเลิกการลบประวัติ', 'info');
+                
+                // บันทึกข้อมูลใหม่
+                localStorage.setItem('mindbloomData', JSON.stringify({ assessmentHistory: [] }));
+                
+                // โหลดข้อมูลใหม่
+                loadHistoryData();
+                
+                // แสดง SweetAlert2 สำเร็จ
+                Swal.fire({
+                    title: 'ลบทั้งหมดสำเร็จ!',
+                    text: 'ลบประวัติทั้งหมดเรียบร้อยแล้ว',
+                    icon: 'success',
+                    timer: 2000,
+                    timerProgressBar: true,
+                    showConfirmButton: false
+                });
+                
+                console.log('All history deleted successfully');
             }
-        );
+        });
+        
     } catch (error) {
-        console.error('clearAllHistory error:', error);
-        showNotification('เกิดข้อผิดพลาดในการล้างประวัติ', 'error');
+        console.error('Error clearing all history:', error);
+        showNotification('เกิดข้อผิดพลาดในการล้างประวัติ: ' + error.message, 'error');
     }
 }
 
@@ -1509,8 +1579,17 @@ function showNotification(message, type = 'info', duration = 3000) {
         
     } catch (error) {
         console.error('showNotification error:', error);
-        // Fallback ใช้ alert ธรรมดา
-        alert(`${type.toUpperCase()}: ${message}`);
+        // Fallback ใช้ SweetAlert2
+        Swal.fire({
+            icon: 'info',
+            title: type.toUpperCase(),
+            text: message,
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true
+        });
     }
 }
 

@@ -1,33 +1,17 @@
 <!DOCTYPE html>
-<html lang="th" x-data="authApp()" x-init="init()" :class="{ 'dark': darkMode }">
+<html lang="th" class="dark" x-data="authApp()" x-init="init()">
 <head>
     <!-- Immediate Dark Mode Script -->
     <script>
         // Set dark mode immediately to prevent flash
         (function() {
-            // Wait for DOM to be ready
-            if (document.readyState === 'loading') {
-                document.addEventListener('DOMContentLoaded', function() {
-                    const savedDarkMode = localStorage.getItem('darkMode');
-                    // Default to dark mode if no preference saved
-                    if (savedDarkMode === null) {
-                        localStorage.setItem('darkMode', 'true');
-                        document.documentElement.classList.add('dark');
-                    } else if (savedDarkMode === 'true') {
-                        document.documentElement.classList.add('dark');
-                    }
-                });
-            } else {
-                // DOM already loaded, run immediately
-                const savedDarkMode = localStorage.getItem('darkMode');
-                // Default to dark mode if no preference saved
-                if (savedDarkMode === null) {
-                    localStorage.setItem('darkMode', 'true');
-                    document.documentElement.classList.add('dark');
-                } else if (savedDarkMode === 'true') {
-                    document.documentElement.classList.add('dark');
-                }
+            const savedDarkMode = localStorage.getItem('darkMode');
+            // Default to dark mode if no preference saved
+            if (savedDarkMode === null) {
+                localStorage.setItem('darkMode', 'true');
             }
+            // Always apply dark mode immediately
+            document.documentElement.classList.add('dark');
         })();
     </script>
 
@@ -60,6 +44,9 @@
     <meta name="msapplication-TileColor" content="#6D9F71">
     
     <title>เข้าสู่ระบบ - Cloudy・Puk・Jai</title>
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Alpine.js -->
@@ -221,7 +208,7 @@
 <body class="min-h-screen bg-gradient-to-br from-gray-950 via-gray-900 to-gray-950 animate-bg-fade">
     <!-- Login Container -->
     <div class="min-h-screen flex items-center justify-center px-4 py-10 sm:py-12">
-        <div class="w-full max-w-md">
+        <div class="w-full max-w-4xl">
             <!-- Logo & Welcome -->
             <div class="text-center mb-8">
                 <div class="logo logo-cloudy-puk-jai-large animate-float-slow mx-auto mb-4"></div>

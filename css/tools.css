@@ -66,47 +66,51 @@
 @media (max-width: 768px) {
     .breathing-circle-container {
         flex-direction: column;
-        gap: 1.5rem;
+        gap: 1rem;
     }
     
     .breathing-circle {
-        width: 18rem;
-        height: 18rem;
-        min-width: 18rem;
-        min-height: 18rem;
-        max-width: 18rem;
-        max-height: 18rem;
+        width: 14rem;
+        height: 14rem;
+        min-width: 14rem;
+        min-height: 14rem;
+        max-width: 14rem;
+        max-height: 14rem;
         aspect-ratio: 1/1; /* บังคับวงกลมในมือถือ */
         flex-shrink: 0;
     }
     
     .breathing-circle .text-7xl {
-        font-size: 5rem;
+        font-size: 4rem; /* เพิ่มจาก 3.5rem */
     }
     
     .breathing-circle .text-xl {
-        font-size: 1.125rem;
+        font-size: 1.125rem; /* เพิ่มจาก 1rem */
     }
     
     .state-indicator {
-        gap: 1rem;
+        font-size: 1rem; /* เพิ่มจาก 0.875rem */
     }
 }
 
 @media (max-width: 480px) {
     .breathing-circle {
-        width: 16rem;
-        height: 16rem;
-        min-width: 16rem;
-        min-height: 16rem;
-        max-width: 16rem;
-        max-height: 16rem;
+        width: 12rem;
+        height: 12rem;
+        min-width: 12rem;
+        min-height: 12rem;
+        max-width: 12rem;
+        max-height: 12rem;
         aspect-ratio: 1/1; /* บังคับวงกลมในมือถือเล็ก */
         flex-shrink: 0;
     }
     
     .breathing-circle .text-7xl {
-        font-size: 4.5rem;
+        font-size: 3.5rem; /* เพิ่มจาก 3rem */
+    }
+    
+    .breathing-circle .text-xl {
+        font-size: 1rem; /* เพิ่มจาก 0.875rem */
     }
 }
 
@@ -125,7 +129,7 @@
 }
 
 .instruction-card:hover {
-    transform: translateY(-8px);
+    transform: translateY(-4px); /* ลดลงจาก -8px สำหรับมือถือ */
     box-shadow: var(--shadow-xl);
 }
 
@@ -173,186 +177,64 @@
     line-height: 1.6;
 }
 
-/* BREATHING ANIMATIONS */
-@keyframes breatheIn {
-    0% {
-        transform: scale(0.8);
-        opacity: 0.7;
-        box-shadow: 
-            0 25px 50px -12px rgba(5, 148, 103, 0.3),
-            inset 0 1px 2px rgba(255, 255, 255, 0.2);
-    }
-    50% {
-        transform: scale(1.2);
-        opacity: 1;
-        box-shadow: 
-            0 25px 50px -12px rgba(5, 148, 103, 0.5),
-            inset 0 1px 2px rgba(255, 255, 255, 0.3);
-    }
-    100% {
-        transform: scale(0.8);
-        opacity: 0.7;
-        box-shadow: 
-            0 25px 50px -12px rgba(5, 148, 103, 0.3),
-            inset 0 1px 2px rgba(255, 255, 255, 0.2);
-    }
-}
-
-@keyframes breatheHold {
-    0%, 100% {
-        transform: scale(1.1);
-        filter: brightness(1.1);
-        box-shadow: 
-            0 25px 50px -12px rgba(20, 184, 165, 0.4),
-            inset 0 1px 2px rgba(255, 255, 255, 0.3);
-    }
-    50% {
-        transform: scale(0.9);
-        filter: brightness(0.9);
-        box-shadow: 
-            0 25px 50px -12px rgba(20, 184, 165, 0.2),
-            inset 0 1px 2px rgba(255, 255, 255, 0.1);
-    }
-}
-
-@keyframes breatheOut {
-    0% {
-        transform: scale(1.2);
-        opacity: 1;
-        box-shadow: 
-            0 25px 50px -12px rgba(107, 114, 128, 0.4),
-            inset 0 1px 2px rgba(255, 255, 255, 0.2);
-    }
-    100% {
-        transform: scale(0.8);
-        opacity: 0.7;
-        box-shadow: 
-            0 25px 50px -12px rgba(107, 114, 128, 0.2),
-            inset 0 1px 2px rgba(255, 255, 255, 0.1);
-    }
-}
-
-@keyframes pulseGlow {
-    0%, 100% {
-        box-shadow: 
-            0 0 15px rgba(5, 148, 103, 0.2),
-            0 4px 6px -1px rgba(0, 0, 0, 0.05);
-    }
-    50% {
-        box-shadow: 
-            0 0 30px rgba(5, 148, 103, 0.3),
-            0 10px 15px -3px rgba(0, 0, 0, 0.08);
-    }
-}
-
-@keyframes notificationSlide {
-    0% {
-        transform: translateX(100%) scale(0.8);
-        opacity: 0;
-    }
-    100% {
-        transform: translateX(0) scale(1);
-        opacity: 1;
-    }
-}
-
-@keyframes slideDown {
-    0% {
-        transform: translateY(-8px);
-        opacity: 0;
-    }
-    100% {
-        transform: translateY(0);
-        opacity: 1;
-    }
-}
-
-/* STATE INDICATORS */
-.state-indicator {
-    display: flex;
-    gap: 2rem;
-    margin-top: 2rem;
-    justify-content: center;
-}
-
-.state-dot {
-    width: 1rem;
-    height: 1rem;
-    border-radius: 50%;
-    transition: all 0.3s;
-    position: relative;
-}
-
-.state-dot::before {
-    content: '';
-    position: absolute;
-    inset: -4px;
-    border-radius: 50%;
-    border: 2px solid currentColor;
-    opacity: 0;
-    transition: opacity 0.3s;
-}
-
-.state-dot.active {
-    transform: scale(1.4);
-}
-
-.state-dot.active::before {
-    opacity: 0.5;
-}
-
-.state-dot.inhale {
-    background-color: var(--color-primary-600);
-}
-
-.state-dot.hold {
-    background-color: var(--color-accent-500);
-}
-
-.state-dot.exhale {
-    background-color: var(--color-secondary-600);
-}
-
 /* RESPONSIVE ADJUSTMENTS */
 @media (max-width: 768px) {
     .instruction-card {
-        padding: 1.5rem;
+        padding: 1.25rem;
+        margin-bottom: 0.5rem;
     }
     
     .instruction-number {
-        font-size: 3rem;
+        font-size: 3rem; /* เพิ่มจาก 2.5rem */
+        margin-bottom: 0.75rem;
     }
     
     .instruction-title {
-        font-size: 1.25rem;
+        font-size: 1.25rem; /* เพิ่มจาก 1.125rem */
+        margin-bottom: 0.75rem;
+    }
+    
+    .instruction-text {
+        font-size: 1rem; /* เพิ่มจาก 0.875rem */
+        line-height: 1.6;
     }
     
     .state-indicator {
-        gap: 1.5rem;
+        gap: 1rem;
     }
 }
 
 @media (max-width: 480px) {
     .breathing-circle {
-        width: 14rem;
-        height: 14rem;
+        width: 10rem;
+        height: 10rem;
     }
     
-    .instruction-card {
-        padding: 1.25rem;
+    .breathing-circle .text-7xl {
+        font-size: 3rem; /* เพิ่มจาก 2.5rem */
+    }
+    
+    .breathing-circle .text-xl {
+        font-size: 0.875rem; /* เพิ่มจาก 0.75rem */
     }
     
     .instruction-number {
-        font-size: 2.5rem;
+        font-size: 2.5rem; /* เพิ่มจาก 2rem */
+        margin-bottom: 0.5rem;
     }
     
     .instruction-title {
-        font-size: 1.125rem;
+        font-size: 1.125rem; /* เพิ่มจาก 1rem */
+        margin-bottom: 0.5rem;
     }
     
-    .state-dot {
-        width: 0.75rem;
-        height: 0.75rem;
+    .instruction-text {
+        font-size: 0.875rem; /* เพิ่มจาก 0.8rem */
+        line-height: 1.5;
+    }
+    
+    .instruction-card {
+        padding: 1rem; /* เพิ่มจาก 0.75rem */
     }
 }
 
@@ -672,12 +554,22 @@
 
 @media (max-width: 640px) {
     .instruction-card {
-        padding: 1rem; /* น้อยลงสำหรับมือถือ */
+        padding: 1.25rem; /* เพิ่มจาก 1rem */
         border-radius: 0.75rem;
     }
     
     .instruction-number {
-        font-size: 1.75rem; /* เล็กลงสำหรับมือถือ */
-        margin-bottom: 0.5rem;
+        font-size: 2.25rem; /* เพิ่มจาก 1.75rem */
+        margin-bottom: 0.75rem; /* เพิ่มจาก 0.5rem */
+    }
+    
+    .instruction-title {
+        font-size: 1.125rem; /* เพิ่มจาก 1rem */
+        margin-bottom: 0.75rem; /* เพิ่มจาก 0.5rem */
+    }
+    
+    .instruction-text {
+        font-size: 1rem; /* เพิ่มจาก 0.875rem */
+        line-height: 1.6;
     }
 }

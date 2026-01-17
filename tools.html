@@ -1,44 +1,36 @@
 <!DOCTYPE html>
-<html lang="th" x-data="mindbloomApp()" x-init="init()" :class="{ 'dark': darkMode }">
+<html lang="th" class="dark" x-data="mindbloomApp()" x-init="init()">
   <head>
     <!-- Immediate Dark Mode Script -->
     <script>
         // Set dark mode immediately to prevent flash
         (function() {
-            // Wait for DOM to be ready
-            if (document.readyState === 'loading') {
-                document.addEventListener('DOMContentLoaded', function() {
-                    const savedDarkMode = localStorage.getItem('darkMode');
-                    // Default to dark mode if no preference saved
-                    if (savedDarkMode === null) {
-                        localStorage.setItem('darkMode', 'true');
-                        document.documentElement.classList.add('dark');
-                    } else if (savedDarkMode === 'true') {
-                        document.documentElement.classList.add('dark');
-                    }
-                });
-            } else {
-                // DOM already loaded, run immediately
-                const savedDarkMode = localStorage.getItem('darkMode');
-                // Default to dark mode if no preference saved
-                if (savedDarkMode === null) {
-                    localStorage.setItem('darkMode', 'true');
-                    document.documentElement.classList.add('dark');
-                } else if (savedDarkMode === 'true') {
-                        document.documentElement.classList.add('dark');
-                }
+            const savedDarkMode = localStorage.getItem('darkMode');
+            // Default to dark mode if no preference saved
+            if (savedDarkMode === null) {
+                localStorage.setItem('darkMode', 'true');
             }
+            // Always apply dark mode immediately
+            document.documentElement.classList.add('dark');
         })();
     </script>
     <link rel="icon" type="image/png" href="image/favicon.png">
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Theme Color -->
+    <meta name="theme-color" content="#4ade80">
+    <meta name="msapplication-TileColor" content="#4ade80">
+    <!-- Mobile Viewport -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Breathing Buddy - Cloudy・Puk・Jai</title>
     <meta name="description" content="เครื่องมือฝึกหายใจด้วยเทคนิคการ 4-7-8 กับ Cloudy・Puk・Jai">
     <meta name="keywords" content="ฝึกหายใจ, breathing, ความสงบ, สุขภาพจิต, ผ่อนคลาย">
     <meta name="author" content="Cloudy・Puk・Jai Team">
     <meta name="mobile-web-app-capable" content="yes">
+    <meta name="author" content="Cloudy・Puk・Jai Team">
+    <meta name="mobile-web-app-capable" content="yes">
     <meta name="theme-color" content="#6D9F71">
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Alpine.js -->
@@ -189,7 +181,7 @@
   <body class="bg-gradient-to-br from-gray-100 via-gray-50 to-gray-200 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 text-gray-800 dark:text-gray-200 min-h-screen transition-colors duration-300" x-data="breathingApp()" x-init="init()">
     <!-- Mobile Header -->
     <header class="sticky top-0 z-50 bg-white dark:bg-gray-800 shadow-md lg:hidden">
-        <div class="container mx-auto px-4 py-3">
+        <div class="max-w-7xl mx-auto px-4 py-3">
             <div class="flex items-center justify-between">
                 <div class="flex items-center space-x-2">
                     <div class="logo logo-cloudy-puk-jai-small animate-pulse-slow"></div>
@@ -198,18 +190,14 @@
                     </div>
                 </div>
                 <div class="flex items-center space-x-3">
-
-                  <button @click="openModal('help')" class="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700">
-                        <i class="fas fa-hands-helping text-lg text-primary"></i>
-                    </button>
                     <button @click="toggleDarkMode()" class="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700">
                         <i :class="darkMode ? 'fas fa-sun' : 'fas fa-moon'" class="text-lg fas fa-sun"></i>
                     </button>
-                    <div class="relative" x-data="{ userMenuOpen: false }">
-                        <button @click="userMenuOpen = !userMenuOpen" class="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700">
+                    <div class="relative" x-data="{ mobileMenuOpen: false }">
+                        <button @click="mobileMenuOpen = !mobileMenuOpen" class="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700">
                             <i class="fas fa-user-circle text-lg text-primary"></i>
                         </button>
-                        <div x-show="userMenuOpen" @click.away="userMenuOpen = false" x-transition="" class="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700 z-50" style="display: none;">
+                        <div x-show="mobileMenuOpen" @click.away="mobileMenuOpen = false" x-transition="" class="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700 z-50" style="display: none;">
                             <div class="p-3 border-b border-gray-200 dark:border-gray-700">
                                 <p class="text-sm font-medium text-gray-900 dark:text-gray-100" x-text="userDisplayName"></p>
                                 <p class="text-xs text-gray-500 dark:text-gray-400" x-text="getUserAuthInfo()"></p>
@@ -219,169 +207,160 @@
                             </button>
                         </div>
                     </div>
-
-                     
-                    <button @click="mobileMenuOpen = !mobileMenuOpen" class="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700">
-                        <i class="fas fa-bars text-lg"></i>
-                    </button>
                 </div>
             </div>
         </div>
     </header>
 
-    <!-- Mobile Navigation Menu -->
-    <div x-show="mobileMenuOpen" x-transition class="fixed inset-0 z-40 lg:hidden" style="display: none;">
-        <div class="fixed inset-0 bg-black/50" @click="mobileMenuOpen = false"></div>
-        <div class="fixed right-0 top-0 h-full w-80 bg-white dark:bg-gray-800 shadow-xl overflow-y-auto" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="translate-x-full" x-transition:enter-end="translate-x-0" x-transition:leave="transition ease-in duration-200" x-transition:leave-start="translate-x-0" x-transition:leave-end="translate-x-full">
-            <div class="p-4">
-                <div class="flex items-center justify-between mb-6">
-                    <div class="flex items-center gap-3">
-                        <div class="logo logo-cloudy-puk-jai-small animate-pulse-slow"></div>
-                        <div>
-                            <h3 class="text-xl font-bold text-primary">Cloudy・Puk・Jai</h3>
-                        </div>
+    <!-- Mobile Bottom Navigation -->
+    <nav class="fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 z-40 lg:hidden">
+      <div class="flex justify-around items-center py-2">
+        <a href="#home" @click="navigateTo('home')" class="flex flex-col items-center p-2 text-gray-600 dark:text-gray-500 hover:text-primary transition-colors">
+          <i class="fas fa-home-alt text-xl mb-1"></i>
+          <span class="text-xs">หน้าหลัก</span>
+        </a>
+        <a href="#journal" @click="navigateTo('journal')" class="flex flex-col items-center p-2 text-gray-600 dark:text-gray-500 hover:text-primary transition-colors">
+          <i class="fas fa-journal-whills text-xl mb-1"></i>
+          <span class="text-xs">บันทึก</span>
+        </a>
+        <a href="#articles" @click="navigateTo('articles')" class="flex flex-col items-center p-2 text-gray-600 dark:text-gray-500 hover:text-primary transition-colors">
+          <i class="fas fa-book-open text-xl mb-1"></i>
+          <span class="text-xs">บทความ</span>
+        </a>
+        <a href="#music" @click="navigateTo('music')" class="flex flex-col items-center p-2 text-gray-600 dark:text-gray-500 hover:text-primary transition-colors">
+          <i class="fas fa-headphones text-xl mb-1"></i>
+          <span class="text-xs">เพลง</span>
+        </a>
+        <div class="relative" x-data="{ mobileMenuOpen: false }">
+          <button @click="mobileMenuOpen = !mobileMenuOpen" class="flex flex-col items-center p-2 text-gray-600 dark:text-gray-500 hover:text-primary transition-colors">
+            <i class="fas fa-bars text-xl mb-1"></i>
+            <span class="text-xs">เมนู</span>
+          </button>
+          
+          <!-- Mobile More Menu Popup -->
+          <div x-show="mobileMenuOpen" @click.away="mobileMenuOpen = false" x-transition class="absolute bottom-full right-0 mb-2 w-56 bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700 z-50" style="display: none;">
+            <div class="p-2">
+              <!-- Tools (Current Page) -->
+              <a href="#" @click="mobileMenuOpen = false;" class="flex items-center px-3 py-2 rounded-xl bg-primary/10 text-primary font-medium">
+                <i class="fas fa-lungs mr-3 w-4"></i>
+                <span>เครื่องมือฝึกลมหายใจ</span>
+              </a>
+              
+              <!-- Assessments -->
+              <a href="#assessments" @click="navigateTo('assessments'); mobileMenuOpen = false;" class="flex items-center px-3 py-2 rounded-xl text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                <i class="fas fa-clipboard-list mr-3 w-4 text-primary"></i>
+                <span>แบบทดสอบ</span>
+              </a>
+              
+              <!-- History -->
+              <a href="history.html" @click="mobileMenuOpen = false;" class="flex items-center px-3 py-2 rounded-xl text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                <i class="fas fa-chart-line mr-3 w-4 text-primary"></i>
+                <span>ประวัติผลการทดสอบ</span>
+              </a>
+              
+              <!-- Help -->
+              <button @click="openModal('help'); mobileMenuOpen = false;" class="w-full flex items-center px-3 py-2 rounded-xl text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                <i class="fas fa-hands-helping mr-3 w-4 text-primary"></i>
+                <span>หน่วยงานช่วยเหลือ</span>
+              </button>
+              
+              <!-- User Profile -->
+              <div class="border-t border-gray-200 dark:border-gray-700 pt-2 mt-2">
+                <div class="px-3 py-2">
+                  <div class="flex items-center justify-between">
+                    <div class="flex items-center space-x-2">
+                      <i class="fas fa-user-circle text-lg text-primary"></i>
+                      <div>
+                        <p class="text-sm font-medium text-gray-900 dark:text-gray-100" x-text="userDisplayName"></p>
+                        <p class="text-xs text-gray-500 dark:text-gray-400" x-text="getUserAuthInfo()"></p>
+                      </div>
                     </div>
-                    <button @click="mobileMenuOpen = false" class="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700">
-                        <i class="fas fa-times text-lg"></i>
-                    </button>
+                  </div>
+                  <button @click="logout(); mobileMenuOpen = false;" class="w-full mt-2 flex items-center px-3 py-2 rounded-xl text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors">
+                    <i class="fas fa-sign-out-alt mr-2"></i>
+                    <span>ออกจากระบบ</span>
+                  </button>
                 </div>
-                
-                <div class="space-y-2">
-                    <a href="main-menu.html" @click="mobileMenuOpen = false" class="flex items-center px-3 py-3 rounded-2xl font-medium text-gray-600 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
-                        <i class="fas fa-home-alt mr-3 w-4"></i>หน้าหลัก
-                    </a>
-                    <a href="main-menu.html#journal" @click="mobileMenuOpen = false" class="flex items-center px-3 py-3 rounded-2xl font-medium text-gray-600 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
-                        <i class="fas fa-journal-whills mr-3 w-4"></i>บันทึกความรู้สึก
-                    </a>
-                    <a href="main-menu.html#music" @click="mobileMenuOpen = false" class="flex items-center px-3 py-3 rounded-2xl font-medium text-gray-600 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
-                        <i class="fas fa-headphones mr-3 w-4"></i>ผ่อนคลายด้วยเพลง
-                    </a>
-                    <a href="main-menu.html#articles" @click="mobileMenuOpen = false" class="flex items-center px-3 py-3 rounded-2xl font-medium text-gray-600 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
-                        <i class="fas fa-book-open mr-3 w-4"></i>ความรู้เพื่อสุขภาพจิต
-                    </a>
-                    <a href="#" @click="navigateTo('tools'); mobileMenuOpen = false" class="flex items-center px-3 py-3 rounded-2xl font-medium text-gray-600 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
-                        <i class="fas fa-lungs mr-3 w-4"></i>Breathing Buddy
-                    </a>
-                    <a href="main-menu.html#assessments" @click="mobileMenuOpen = false" class="flex items-center px-3 py-3 rounded-2xl font-medium text-gray-600 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
-                        <i class="fas fa-clipboard-list mr-3 w-4"></i>แบบทดสอบ
-                    </a>
-                    <a href="history.html" @click="mobileMenuOpen = false" class="flex items-center px-3 py-3 rounded-2xl font-medium text-gray-600 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
-                        <i class="fas fa-chart-line mr-3 w-4"></i>ประวัติผลการทดสอบ
-                    </a>
-                
-                       <!-- Help Section -->
-                    <div class="pt-4 border-t border-gray-200 dark:border-gray-700">
-                        <button @click="openModal('help'); mobileMenuOpen = false" class="w-full flex items-center px-3 py-3 rounded-2xl font-medium text-gray-600 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
-                            <i class="fas fa-hands-helping mr-3 w-4 text-primary"></i>
-                            <span>หน่วยงานช่วยเหลือ</span>
-                        </button>
-                    </div>
-                    
-                    <!-- User Section -->
-                    <div class="pt-4 border-t border-gray-200 dark:border-gray-700">
-                        <div class="relative" x-data="{ userMenuOpen: false }">
-                            <button @click="userMenuOpen = !userMenuOpen" class="w-full flex items-center px-3 py-3 rounded-2xl font-medium text-gray-600 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
-                                <i class="fas fa-user-circle mr-3 w-4 text-primary"></i>
-                                <span class="flex-1 text-left" x-text="userDisplayName"></span>
-                                <i class="fas fa-chevron-down text-xs"></i>
-                            </button>
-                            <div x-show="userMenuOpen" @click.away="userMenuOpen = false" x-transition class="absolute left-0 right-0 mt-1 bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700 z-50">
-                                <div class="p-3 border-b border-gray-200 dark:border-gray-700">
-                                    <p class="text-sm font-medium text-gray-900 dark:text-gray-100" x-text="userDisplayName"></p>
-                                    <p class="text-xs text-gray-500 dark:text-gray-400" x-text="getUserAuthInfo()"></p>
-                                </div>
-                                <button @click="logout(); mobileMenuOpen = false" class="w-full text-left px-3 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-b-2xl">
-                                    <i class="fas fa-sign-out-alt mr-2"></i>ออกจากระบบ
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+              </div>
             </div>
+          </div>
         </div>
-    </div>
+    </nav>
+    
+    <!-- Desktop Sidebar (Fixed Left) -->
+    <aside class="fixed top-0 left-0 h-full w-64 bg-white dark:bg-gray-800 shadow-lg z-30 hidden lg:block transform -translate-x-full lg:translate-x-0 transition-transform duration-300">
+      <div class="p-4 h-full overflow-y-auto">
+        <!-- Logo Section -->
+        <div class="text-center mb-6 pb-4 border-b border-gray-200 dark:border-gray-700">
+          <div class="flex items-center justify-center space-x-2">
+            <div class="logo logo-cloudy-puk-jai-medium animate-pulse-slow"></div>
+            <h3 class="text-xl font-bold text-primary">Cloudy・Puk・Jai</h3>
+          </div>
+        </div>
+        
+        <!-- Navigation Links -->
+        <div class="space-y-2">
+          <a href="#home" @click="navigateTo('home')" class="flex items-center px-3 py-3 rounded-2xl font-medium text-gray-600 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+            <i class="fas fa-home-alt mr-3 w-4"></i>หน้าหลัก
+          </a>
+          <a href="#journal" @click="navigateTo('journal')" class="flex items-center px-3 py-3 rounded-2xl font-medium text-gray-600 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+            <i class="fas fa-journal-whills mr-3 w-4"></i>บันทึกความรู้สึก
+          </a>
+          <a href="#articles" @click="navigateTo('articles')" class="flex items-center px-3 py-3 rounded-2xl font-medium text-gray-600 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+            <i class="fas fa-book-open mr-3 w-4"></i>ความรู้เพื่อสุขภาพจิต
+          </a>
+          <a href="#music" @click="navigateTo('music')" class="flex items-center px-3 py-3 rounded-2xl font-medium text-gray-600 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+            <i class="fas fa-headphones mr-3 w-4"></i>ผ่อนคลายด้วยเพลง
+          </a>
+          <a href="#" class="flex items-center px-3 py-3 rounded-2xl font-medium bg-primary/10 text-primary hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+            <i class="fas fa-lungs mr-3 w-4"></i>Breathing Buddy
+          </a>
+          <a href="#assessments" @click="navigateTo('assessments')" class="flex items-center px-3 py-3 rounded-2xl font-medium text-gray-600 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+            <i class="fas fa-clipboard-list mr-3 w-4"></i>แบบทดสอบ
+          </a>
+          <a href="history.html" class="flex items-center px-3 py-3 rounded-2xl font-medium text-gray-600 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+            <i class="fas fa-chart-line mr-3 w-4"></i>ประวัติผลการทดสอบ
+          </a>
+          
+          <!-- Help Section -->
+          <div class="pt-4 border-t border-gray-200 dark:border-gray-700">
+            <button @click="openModal('help')" class="w-full flex items-center px-3 py-3 rounded-2xl font-medium text-gray-600 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+              <i class="fas fa-hands-helping mr-3 w-4 text-primary"></i>
+              <span>หน่วยงานช่วยเหลือ</span>
+            </button>
+          </div>
+          
+          <!-- User Section -->
+          <div class="pt-4 border-t border-gray-200 dark:border-gray-700">
+            <div class="relative" x-data="{ userMenuOpen: false }">
+              <button @click="userMenuOpen = !userMenuOpen" class="w-full flex items-center px-3 py-3 rounded-2xl font-medium text-gray-600 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                <i class="fas fa-user-circle mr-3 w-4 text-primary"></i>
+                <span class="flex-1 text-left" x-text="userDisplayName"></span>
+                <i class="fas fa-chevron-down text-xs"></i>
+              </button>
+              
+              <div x-show="userMenuOpen" @click.away="userMenuOpen = false" x-transition="" class="absolute left-0 right-0 mt-1 bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700 z-50" style="display: none;">
+                <div class="p-3 border-b border-gray-200 dark:border-gray-700">
+                  <p class="text-sm font-medium text-gray-900 dark:text-gray-100" x-text="userDisplayName"></p>
+                  <p class="text-xs text-gray-500 dark:text-gray-400" x-text="getUserAuthInfo()"></p>
+                </div>
+                <button @click="logout()" class="w-full text-left px-3 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-b-2xl">
+                  <i class="fas fa-sign-out-alt mr-2"></i>ออกจากระบบ
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </aside>
     
     <!-- Main Content -->
-    <main class="container mx-auto px-4 pt-6 pb-12">
-      <div class="flex flex-col lg:flex-row gap-6">
-        <!-- Left Column: Menu Bar (Desktop Only) -->
-        <aside class="lg:w-64 lg:flex-shrink-0 hidden lg:block mt-6">
-          <!-- Desktop Sidebar Navigation -->
-          <nav class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-4 sticky top-6 h-fit">
-            <!-- Logo Section -->
-            <div class="text-center mb-6 pb-4 border-b border-gray-200 dark:border-gray-700">
-              <div class="logo logo-cloudy-puk-jai-medium animate-pulse-slow mb-2"></div>
-              <h3 class="text-xl font-bold text-primary">Cloudy・Puk・Jai</h3>
-            </div>
-            
-            <div class="space-y-2">
-              <a href="main-menu.html" class="flex items-center px-3 py-2 rounded-2xl font-medium text-gray-600 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
-                <i class="fas fa-home-alt mr-3 w-4"></i>หน้าหลัก
-              </a>
-              <a href="main-menu.html#journal" class="flex items-center px-3 py-2 rounded-2xl font-medium text-gray-600 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
-                <i class="fas fa-journal-whills mr-3 w-4"></i>บันทึกความรู้สึก
-              </a>
-              <a href="main-menu.html#music" class="flex items-center px-3 py-2 rounded-2xl font-medium text-gray-600 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
-                <i class="fas fa-headphones mr-3 w-4"></i>ผ่อนคลายด้วยเพลง
-              </a>
-              
-              <a href="main-menu.html#articles" class="flex items-center px-3 py-2 rounded-2xl font-medium text-gray-600 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
-                <i class="fas fa-book-open mr-3 w-4"></i>ความรู้เพื่อสุขภาพจิต
-              </a>
-              <a href="#" @click="navigateTo('tools')" class="flex items-center px-3 py-2 rounded-2xl font-medium text-gray-600 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
-                <i class="fas fa-lungs mr-3 w-4"></i>Breathing Buddy
-              </a>
-              <a href="main-menu.html#assessments" class="flex items-center px-3 py-2 rounded-2xl font-medium text-gray-600 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
-                <i class="fas fa-clipboard-list mr-3 w-4"></i>แบบทดสอบ
-              </a>
-              <a href="history.html" class="flex items-center px-3 py-2 rounded-2xl font-medium text-gray-600 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
-                <i class="fas fa-chart-line mr-3 w-4"></i>ประวัติผลการทดสอบ
-              </a>
-           
-              
-              <!-- Help Section -->
-              <div class="pt-4 border-t border-gray-200 dark:border-gray-700">
-                <button @click="openModal('help')" class="w-full flex items-center px-3 py-2 rounded-2xl font-medium text-gray-600 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
-                  <i class="fas fa-hands-helping mr-3 w-4 text-primary"></i>
-                  <span>หน่วยงานช่วยเหลือ</span>
-                </button>
-              </div>
-              
-              <!-- User Section -->
-              <div class="pt-4 border-t border-gray-200 dark:border-gray-700">
-                <div class="relative" x-data="{ userMenuOpen: false }">
-                    <button @click="userMenuOpen = !userMenuOpen" class="w-full flex items-center px-3 py-2 rounded-2xl font-medium text-gray-600 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
-                        <i class="fas fa-user-circle mr-3 w-4 text-primary"></i>
-                        <span class="flex-1 text-left" x-text="userDisplayName"></span>
-                        <i class="fas fa-chevron-down text-xs"></i>
-                    </button>
-                    <div x-show="userMenuOpen" @click.away="userMenuOpen = false" x-transition class="absolute left-0 right-0 mt-1 bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700 z-50">
-                        <div class="p-3 border-b border-gray-200 dark:border-gray-700">
-                            <p class="text-sm font-medium text-gray-900 dark:text-gray-100" x-text="userDisplayName"></p>
-                            <p class="text-xs text-gray-500 dark:text-gray-400" x-text="userDisplayName"></p>
-                        </div>
-                        <button @click="logout()" class="w-full text-left px-3 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-b-lg">
-                            <i class="fas fa-sign-out-alt mr-2"></i>ออกจากระบบ
-                        </button>
-                    </div>
-                </div>
-              </div>
-              
-              <!-- Theme Toggle -->
-              <div class="pt-4 border-t border-gray-200 dark:border-gray-700">
-                <button @click="toggleDarkMode()" class="w-full flex items-center px-3 py-2 rounded-2xl font-medium text-gray-600 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
-                  <i :class="darkMode ? 'fas fa-sun' : 'fas fa-moon'" class="mr-3 w-4"></i>
-                  <span x-text="darkMode ? 'โหมดสว่าง' : 'โหมดมืด'"></span>
-                </button>
-              </div>
-            </div>
-          </nav>
-        </aside>
-        
+    <main class="container mx-auto px-2 sm:px-4 pt-4 pb-8 lg:pb-12 lg:ml-64">
+      <div class="max-w-7xl mx-auto">
         <!-- Right Column: Main Content -->
         <div class="flex-1 mt-6">
           <!-- Breathing Circle Section -->
-          <div class="flex flex-col  gap-6 items-center justify-center">
+          <div class="flex flex-col gap-4 sm:gap-6 items-center justify-center px-2 sm:px-4">
             <!-- Breathing Circle -->
             <div class="breathing-circle-container">
               <!-- Particle Effects -->
@@ -424,23 +403,23 @@
 
                 <div class="text-center relative z-10">
                   <!-- Timer Display -->
-                  <div class="text-7xl font-black mb-2 transition-all duration-300" :class="{
+                  <div class="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black mb-2 transition-all duration-300" :class="{
                                       'text-gray-50': currentState === 'inhale',
                                       'text-gray-900 dark:text-gray-100': currentState === 'hold',
                                       'text-gray-100': currentState === 'exhale',
                                       'text-gray-100': !isRunning
                                    }" x-text="currentTime"></div>
                   <!-- State Label -->
-                  <div class="text-xl font-semibold tracking-wider flex items-center justify-center gap-2 transition-all duration-300" :class="{
+                  <div class="text-sm sm:text-base md:text-lg lg:text-xl font-semibold tracking-wider flex items-center justify-center gap-2 transition-all duration-300" :class="{
                                       'text-gray-200': currentState === 'inhale',
                                       'text-gray-800 dark:text-gray-300': currentState === 'hold',
                                       'text-gray-300': currentState === 'exhale',
                                       'text-gray-200': !isRunning
                                   }">
                     <span x-text="currentStateText"></span>
-                    <span x-show="currentState === 'inhale'" class="text-3xl animate-bounce">🌬️</span>
-                    <span x-show="currentState === 'hold'" class="text-4xl animate-pulse">✨</span>
-                    <span x-show="currentState === 'exhale'" class="text-3xl animate-bounce">💨</span>
+                    <span x-show="currentState === 'inhale'" class="text-xl sm:text-2xl md:text-3xl animate-bounce">🌬️</span>
+                    <span x-show="currentState === 'hold'" class="text-2xl sm:text-3xl md:text-4xl animate-pulse">✨</span>
+                    <span x-show="currentState === 'exhale'" class="text-xl sm:text-2xl md:text-3xl animate-bounce">💨</span>
                   </div>
                   <!-- Progress Indicator -->
                   <div class="absolute inset-0 flex items-center justify-center">
@@ -451,18 +430,18 @@
             </div>
             
             <!-- State Indicators -->
-            <div class="flex justify-between w-full max-w-md mx-auto mt-0 px-6">
+            <div class="flex justify-between w-full max-w-xs sm:max-w-md mx-auto mt-0 px-2 sm:px-6">
               <div class="flex flex-col items-center">
                 <div class="w-4 h-4 rounded-full bg-primary-600 mb-2 animate-pulse" :class="{ 'ring-2 ring-primary-400 ring-offset-2': currentState === 'inhale' }"></div>
-                <span class="text-base font-medium text-gray-700 dark:text-gray-300">หายใจเข้า</span>
+                <span class="text-xs sm:text-sm md:text-base font-medium text-gray-700 dark:text-gray-300">หายใจเข้า</span>
               </div>
               <div class="flex flex-col items-center">
                 <div class="w-4 h-4 rounded-full bg-accent-500 mb-2 animate-pulse" :class="{ 'ring-2 ring-accent-400 ring-offset-2': currentState === 'hold' }"></div>
-                <span class="text-base font-medium text-gray-700 dark:text-gray-300">กลั้นหายใจ</span>
+                <span class="text-xs sm:text-sm md:text-base font-medium text-gray-700 dark:text-gray-300">กลั้นหายใจ</span>
               </div>
               <div class="flex flex-col items-center">
                 <div class="w-4 h-4 rounded-full bg-gray-600 mb-2 animate-pulse" :class="{ 'ring-2 ring-gray-500 ring-offset-2': currentState === 'exhale' }"></div>
-                <span class="text-base font-medium text-gray-700 dark:text-gray-300">หายใจออก</span>
+                <span class="text-xs sm:text-sm md:text-base font-medium text-gray-700 dark:text-gray-300">หายใจออก</span>
               </div>
               <i> </i>
             </div>
@@ -561,22 +540,22 @@
           <div class="mb-16 w-full">
             <div class="guidance-card overflow-hidden">
               <!-- Header -->
-              <button @click="guidanceExpanded = !guidanceExpanded" class="w-full flex items-center justify-between p-6 text-left hover:bg-gray-50/50 dark:hover:bg-gray-800/50 transition-colors" :class="{ 'border-b border-gray-200/50 dark:border-gray-700/50': guidanceExpanded }">
-                <div class="flex items-center gap-4 w-full">
-                  <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-primary-500 to-accent-500 flex items-center justify-center text-gray-50">
+              <button @click="guidanceExpanded = !guidanceExpanded" class="w-full flex flex-col sm:flex-row items-center justify-between p-4 sm:p-6 text-left hover:bg-gray-50/50 dark:hover:bg-gray-800/50 transition-colors" :class="{ 'border-b border-gray-200/50 dark:border-gray-700/50': guidanceExpanded }">
+                <div class="flex items-center gap-3 sm:gap-4 w-full text-center sm:text-left">
+                  <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-gradient-to-br from-primary-500 to-accent-500 flex items-center justify-center text-gray-50">
                     <i class="fas fa-book-open text-xl"></i>
                   </div>
                   <div>
-                    <h2 class="text-2xl font-bold text-gray-800 dark:text-gray-100">คู่มือการฝึกหายใจลึกด้วยเทคนิค 4-7-8</h2>
-                    <p class="text-gray-600 dark:text-gray-400">ทำไมต้องฝึก? ได้ประโยชน์อะไร? วิทยาศาสตร์บอกอะไร?</p>
+                    <h2 class="text-lg sm:text-xl lg:text-2xl font-bold text-gray-800 dark:text-gray-100">คู่มือการฝึกหายใจลึกด้วยเทคนิค 4-7-8</h2>
+                    <p class="text-sm sm:text-base text-gray-600 dark:text-gray-400">ทำไมต้องฝึก? ได้ประโยชน์อะไร? วิทยาศาสตร์บอกอะไร?</p>
                   </div>
                 </div>
                 <div class="text-primary-600 dark:text-primary-400">
-                  <i :class="guidanceExpanded ? 'fas fa-chevron-up' : 'fas fa-chevron-down'" class="text-xl transition-transform duration-300"></i>
+                  <i :class="guidanceExpanded ? 'fas fa-chevron-up' : 'fas fa-chevron-down'" class="text-lg sm:text-xl transition-transform duration-300"></i>
                 </div>
               </button>
               <!-- Content -->
-              <div x-show="guidanceExpanded" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 -translate-y-4" x-transition:enter-end="opacity-100 translate-y-0" x-transition:leave="transition ease-in duration-200" x-transition:leave-start="opacity-100 translate-y-0" x-transition:leave-end="opacity-0 -translate-y-4" class="p-6 space-y-8">
+              <div x-show="guidanceExpanded" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 -translate-y-4" x-transition:enter-end="opacity-100 translate-y-0" x-transition:leave="transition ease-in duration-200" x-transition:leave-start="opacity-100 translate-y-0" x-transition:leave-end="opacity-0 -translate-y-4" class="p-4 sm:p-6 space-y-4 sm:space-y-6 lg:space-y-8">
                 <!-- Why Section -->
                 <div>
                   <h3 class="text-xl font-bold mb-4 text-primary-600 dark:text-primary-400 flex items-center gap-2">
@@ -694,66 +673,62 @@
             </div>
           </div>
         </div>
+      </div>
     </main>
-    <!-- Modern Footer -->
-    <footer class="mt-12 bg-gradient-to-br from-primary/5 via-primary/3 to-primary-light/5 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 border-t border-primary/10 dark:border-gray-700">
-        <!-- Floating Elements -->
-        <div class="absolute top-0 left-0 w-32 h-32 opacity-5">
+    <!-- Footer -->
+    <footer class="relative mt-12 mb-10 overflow-hidden border-t border-primary/10 dark:border-gray-800 bg-gradient-to-b from-transparent to-primary/5 dark:to-gray-900/50 z-60">
+        <!-- Background Blur Elements -->
+        <div class="absolute top-0 left-0 w-32 h-32 opacity-5 pointer-events-none">
             <div class="absolute top-4 left-4 text-6xl text-primary animate-float">
-                <div class="logo logo-cloudy-puk-jai-large"></div>
+                <div class="logo logo-cloudy-puk-jai-medium"></div>
             </div>
         </div>
-        <div class="absolute bottom-0 right-0 w-24 h-24 opacity-5">
-            <div class="absolute bottom-4 right-4 text-4xl text-primary-light animate-float" style="animation-delay: 3s;">💚</div>
+        <div class="absolute bottom-0 right-0 w-24 h-24 opacity-5 pointer-events-none">
+            <div class="absolute bottom-4 right-4 text-4xl animate-float" style="animation-delay: 3s;">💚</div>
         </div>
         
-        <div class="container mx-auto px-4 py-8 relative z-10">
-            <!-- Main Footer Content -->
-
-                        <div class="flex flex-col items-center space-y-6">
+        <div class="max-w-7xl mx-auto px-4 py-6 relative z-10 lg:ml-64">
+            <div class="flex flex-col items-center">
+                
                 <!-- Brand Section -->
-                <div class="text-center">
-                    <div class="flex items-center justify-center gap-3 mb-4">
-                        <div class="logo logo-cloudy-puk-jai-medium animate-pulse-slow"></div>
-                        <h3 class="text-xl font-bold text-gray-800 dark:text-white">Cloudy・Puk・Jai</h3>
+                <div class="text-center mb-5">
+                    <div class="flex items-center justify-center gap-3 mb-2">
+                        <div class="logo logo-cloudy-puk-jai-medium animate-pulse-slow scale-90"></div>
+                        <h3 class="text-lg font-bold text-gray-800 dark:text-white tracking-tight">Cloudy・Puk・Jai</h3>
                     </div>
-                    <p class="text-gray-600 dark:text-gray-400 text-sm leading-relaxed">
+                    <p class="text-gray-500 dark:text-gray-400 text-[13px] italic">
                         "พื้นที่พักใจที่คนอยากกลับมาใช้ทุกวัน"
                     </p>
                 </div>
-                
-                <!-- All Links in One Row -->
-                <div class="flex flex-wrap justify-center gap-6">
-                    <!-- Modal Links -->
-                    <button @click="openModal('crisis')" class="text-gray-600 dark:text-gray-400 hover:text-primary transition-colors text-sm flex items-center gap-2">
-                        <i class="fas fa-hands-helping text-xs"></i>แหล่งช่วยเหลือ
+
+                <!-- Divider -->
+                <div class="w-12 h-[2px] bg-primary/20 rounded-full mb-5"></div>
+
+                <!-- Navigation Links -->
+                <div class="flex flex-wrap justify-center items-center gap-x-5 gap-y-4 mb-5">
+                    <button @click="openModal('about')" class="text-[12px] text-gray-600 dark:text-gray-400 hover:text-primary transition-colors flex items-center gap-2">
+                        เกี่ยวกับเรา
                     </button>
-                    <button @click="openModal('privacy')" class="text-gray-600 dark:text-gray-400 hover:text-primary transition-colors text-sm flex items-center gap-2">
-                        <i class="fas fa-shield-alt text-xs"></i>ความเป็นส่วนตัว
+                    <button @click="openModal('privacy')" class="text-[12px] text-gray-600 dark:text-gray-400 hover:text-primary transition-colors flex items-center gap-2">
+                        ความเป็นส่วนตัว
                     </button>
-                    <button @click="openModal('about')" class="text-gray-600 dark:text-gray-400 hover:text-primary transition-colors text-sm flex items-center gap-2">
-                        <i class="fas fa-info-circle text-xs"></i>เกี่ยวกับเรา
-                    </button>
+                     
                     
-                    <!-- External Links -->
-                    <a href="https://forms.gle/XSqb8nqh2gWgLKwu6" target="_blank" class="text-gray-600 dark:text-gray-400 hover:text-primary transition-colors text-sm flex items-center gap-2">
-                        <i class="fas fa-comment-dots text-xs"></i>บอกความรู้สึกกับเรา
-                    </a>
-                    <a href="tel:1323" class="text-gray-600 dark:text-gray-400 hover:text-primary transition-colors text-sm flex items-center gap-2">
-                        <i class="fas fa-phone-alt text-xs"></i>สายด่วนสุขภาพจิต 1323
+                    <a href="https://forms.gle/XSqb8nqh2gWgLKwu6" target="_blank" class="text-[12px] text-gray-600 dark:text-gray-400 hover:text-primary transition-colors flex items-center gap-2 sm:border-l border-gray-200 dark:border-gray-700 pl-8">
+                        บอกความรู้สึกกับเรา
                     </a>
                 </div>
-                
-                <!-- Copyright -->
-                <div class="text-center">
-                    <p class="text-gray-500 dark:text-gray-400 text-sm">
-                        © 2026 Cloudy・Puk・Jai. พัฒนาด้วยความห่วงใย
+
+                <!-- Copyright-->
+                <div class="mb-5">
+                    <p class="text-gray-400 dark:text-gray-500 text-[10px] tracking-widest uppercase">
+                        2026 Cloudy・Puk・Jai. พัฒนาด้วยความห่วงใย
                     </p>
                 </div>
+            
+             </div>   
             </div>
         </div>
-
-
     </footer>
 
     <!-- Notification System -->
@@ -790,6 +765,28 @@
         </div>
       </div>
     </div>
+    <!-- Logout Confirmation Modal -->
+    <div x-show="modalOpen === 'logout'" x-transition class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+      <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl max-w-md w-full">
+        <div class="p-6">
+          <div class="text-center mb-6">
+            <div class="text-4xl mb-4">🚪</div>
+            <h3 class="text-2xl font-bold text-primary mb-2">ออกจากระบบ</h3>
+            <p class="text-gray-600 dark:text-gray-400">คุณต้องการออกจากระบบหรือไม่?</p>
+          </div>
+
+          <div class="flex gap-3">
+            <button @click="modalOpen = null" class="flex-1 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-300 font-medium py-3 px-4 rounded-2xl transition-colors">
+              ยกเลิก
+            </button>
+            <button @click="confirmLogout()" class="flex-1 bg-red-500 hover:bg-red-600 text-white font-medium py-3 px-4 rounded-2xl transition-colors">
+              ออกจากระบบ
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- Help Modal - หน่วยงานช่วยเหลือ -->
     <div x-show="modalOpen === 'help'" x-transition class="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center p-4 z-50">
       <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
@@ -820,29 +817,5 @@
     <script src="js/app.js"></script>
     <!-- Tools Script -->
     <script src="js/tools.js"></script>
-    
-    <!-- Ensure Dark Mode Default -->
-    <script>
-        // Ensure dark mode starts as default for tools page
-        document.addEventListener('alpine:init', () => {
-            // Check if dark mode is already set in HTML
-            const hasHtmlClass = document.documentElement.classList.contains('dark');
-            
-            if (hasHtmlClass) {
-                // HTML already has dark class, ensure localStorage is set
-                if (localStorage.getItem('darkMode') === null) {
-                    localStorage.setItem('darkMode', 'true');
-                }
-            } else {
-                // No HTML class, check localStorage
-                if (localStorage.getItem('darkMode') === null) {
-                    localStorage.setItem('darkMode', 'true');
-                    document.documentElement.classList.add('dark');
-                } else if (localStorage.getItem('darkMode') === 'true') {
-                    document.documentElement.classList.add('dark');
-                }
-            }
-        });
-    </script>
   </body>
 </html>

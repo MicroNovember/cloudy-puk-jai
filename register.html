@@ -1,6 +1,19 @@
 <!DOCTYPE html>
-<html lang="th" x-data="authApp()" x-init="init()" :class="{ 'dark': darkMode }">
+<html lang="th" class="dark" x-data="authApp()" x-init="init()">
 <head>
+    <!-- Immediate Dark Mode Script -->
+    <script>
+        // Set dark mode immediately to prevent flash
+        (function() {
+            const savedDarkMode = localStorage.getItem('darkMode');
+            // Default to dark mode if no preference saved
+            if (savedDarkMode === null) {
+                localStorage.setItem('darkMode', 'true');
+            }
+            // Always apply dark mode immediately
+            document.documentElement.classList.add('dark');
+        })();
+    </script>
     <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-XGTHRX1XR2"></script>
 <script>
@@ -39,6 +52,9 @@
     <meta name="msapplication-TileColor" content="#6D9F71">
     
     <title>สมัครสมาชิก - Cloudy・Puk・Jai</title>
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Alpine.js -->
