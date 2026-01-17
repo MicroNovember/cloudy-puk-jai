@@ -316,7 +316,7 @@ html {
 
 body {
   font-family: 'Anuphan', 'Noto Sans Thai', 'Segoe UI', system-ui, sans-serif;
-  font-size: 1rem;
+  font-size: 1rem; /* 16px - ฐานตัวสำหรับ mobile */
   line-height: 1.6;
   color: var(--color-text-primary);
   font-weight: 400;
@@ -325,6 +325,8 @@ body {
   background-color: var(--color-bg-primary);
   transition: background-color var(--transition-base), color var(--transition-base);
   min-height: 100vh;
+  width: 100%;
+  overflow-x: hidden;
 }
 
 /* Thai Language Optimization */
@@ -714,6 +716,52 @@ button:active {
 @media (max-width: 640px) {
   .health-overview-card {
     padding: 1rem;
+  }
+  
+  body {
+    font-size: 1rem; /* 16px สำหรับ mobile */
+  }
+  
+  h1 { font-size: 2rem; }      /* 32px */
+  h2 { font-size: 1.75rem; }    /* 28px */
+  h3 { font-size: 1.5rem; }     /* 24px */
+  h4 { font-size: 1.25rem; }    /* 20px */
+  h5 { font-size: 1.125rem; }   /* 18px */
+  h6 { font-size: 1rem; }      /* 16px */
+  
+  /* Mobile-specific improvements */
+  .container {
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+  }
+  
+  /* Better mobile spacing */
+  .space-y-8 > * + * {
+    margin-top: 1.5rem;
+  }
+  
+  /* Mobile mood buttons */
+  .menu-item {
+    min-height: 44px; /* iOS touch target minimum */
+  }
+  
+  /* Mobile text adjustments */
+  .text-xs {
+    font-size: 0.75rem; /* 12px */
+  }
+  
+  .text-sm {
+    font-size: 0.875rem; /* 14px */
+  }
+  
+  /* Mobile card improvements */
+  .rounded-2xl {
+    border-radius: 0.75rem; /* Slightly smaller on mobile */
+  }
+  
+  /* Mobile animations */
+  .animate-slide-up {
+    animation-duration: 0.2s; /* Faster on mobile */
   }
   
   .btn-gradient {

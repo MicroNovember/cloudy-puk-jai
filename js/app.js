@@ -721,8 +721,14 @@ const greetings = {
             this.showNotification('บันทึกเรียบร้อยแล้ว! 💕', 'success');
         },
 
-        // Logout user
+        // Logout user with modal confirmation
         async logout() {
+            // Show logout confirmation modal
+            this.modalOpen = 'logout';
+        },
+        
+        // Confirm logout
+        async confirmLogout() {
             try {
                 if (typeof window.AuthUtils !== 'undefined') {
                     await window.AuthUtils.logout();
