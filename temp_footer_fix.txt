@@ -1,0 +1,30 @@
+<!-- Footer Section -->
+          <div class="pt-4 border-t border-gray-200 dark:border-gray-700">
+            <div class="px-3 py-2">
+              <!-- Tagline -->
+              <p class="text-xs text-gray-500 dark:text-gray-400 italic text-center mb-2">
+                "พื้นที่พักใจที่คนอยากกลับมาใช้ทุกวัน"
+              </p>
+              
+              <!-- Divider -->
+              <div class="w-full h-px bg-primary/20 rounded-full mb-2"></div>
+              
+              <!-- Links -->
+              <div class="flex flex-col gap-1 mb-2">
+                <button @click="openModal('about')" class="text-xs text-gray-600 dark:text-gray-400 hover:text-primary transition-colors text-left">
+                  เกี่ยวกับเรา
+                </button>
+                <button @click="openModal('privacy')" class="text-xs text-gray-600 dark:text-gray-400 hover:text-primary transition-colors text-left">
+                  ความเป็นส่วนตัว
+                </button>
+                <a href="https://forms.gle/XSqb8nqh2gWgLKwu6" target="_blank" class="text-xs text-gray-600 dark:text-gray-400 hover:text-primary transition-colors text-left">
+                  บอกความรู้สึกกับเรา
+                </a>
+              </div>
+              
+              <!-- Copyright -->
+              <p class="text-[9px] text-gray-400 dark:text-gray-500 text-center tracking-widest uppercase">
+                © 2026 Cloudy・Puk・Jai
+              </p>
+            </div>
+          </div>

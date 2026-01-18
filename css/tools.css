@@ -36,6 +36,25 @@
     -webkit-mask: 
         linear-gradient(#fff 0 0) content-box, 
         linear-gradient(#fff 0 0);
+    mask: 
+        linear-gradient(#fff 0 0) content-box, 
+        linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+}
+
+.dark .breathing-circle::before {
+    background: linear-gradient(135deg, 
+        rgba(255, 255, 255, 0.1), 
+        rgba(255, 255, 255, 0.05), 
+        rgba(255, 255, 255, 0.02));
+    -webkit-mask: 
+        linear-gradient(#fff 0 0) content-box, 
+        linear-gradient(#fff 0 0);
+    mask: 
+        linear-gradient(#fff 0 0) content-box, 
+        linear-gradient(#fff 0 0);
     -webkit-mask-composite: xor;
     mask-composite: exclude;
     pointer-events: none;
@@ -51,7 +70,13 @@
         transparent 70%);
     pointer-events: none;
 }
- 
+
+.dark .breathing-circle::after {
+    background: radial-gradient(circle at 30% 30%, 
+        rgba(255, 255, 255, 0.08) 0%, 
+        transparent 70%);
+    pointer-events: none;
+}
 
 /* BREATHING CIRCLE CONTAINER */
 .breathing-circle-container {
@@ -67,6 +92,7 @@
     .breathing-circle-container {
         flex-direction: column;
         gap: 1rem;
+        padding: 0 1rem;
     }
     
     .breathing-circle {
@@ -81,15 +107,15 @@
     }
     
     .breathing-circle .text-7xl {
-        font-size: 4rem; /* เพิ่มจาก 3.5rem */
+        font-size: 3.5rem;
     }
     
     .breathing-circle .text-xl {
-        font-size: 1.125rem; /* เพิ่มจาก 1rem */
+        font-size: 1rem;
     }
     
     .state-indicator {
-        font-size: 1rem; /* เพิ่มจาก 0.875rem */
+        gap: 0.5rem;
     }
 }
 
@@ -106,11 +132,11 @@
     }
     
     .breathing-circle .text-7xl {
-        font-size: 3.5rem; /* เพิ่มจาก 3rem */
+        font-size: 3rem;
     }
     
     .breathing-circle .text-xl {
-        font-size: 1rem; /* เพิ่มจาก 0.875rem */
+        font-size: 0.875rem;
     }
 }
 
@@ -129,7 +155,7 @@
 }
 
 .instruction-card:hover {
-    transform: translateY(-4px); /* ลดลงจาก -8px สำหรับมือถือ */
+    transform: translateY(-8px);
     box-shadow: var(--shadow-xl);
 }
 
@@ -185,18 +211,18 @@
     }
     
     .instruction-number {
-        font-size: 3rem; /* เพิ่มจาก 2.5rem */
+        font-size: 2.5rem;
         margin-bottom: 0.75rem;
     }
     
     .instruction-title {
-        font-size: 1.25rem; /* เพิ่มจาก 1.125rem */
+        font-size: 1.125rem;
         margin-bottom: 0.75rem;
     }
     
     .instruction-text {
-        font-size: 1rem; /* เพิ่มจาก 0.875rem */
-        line-height: 1.6;
+        font-size: 0.875rem;
+        line-height: 1.5;
     }
     
     .state-indicator {
@@ -210,31 +236,29 @@
         height: 10rem;
     }
     
-    .breathing-circle .text-7xl {
-        font-size: 3rem; /* เพิ่มจาก 2.5rem */
-    }
-    
-    .breathing-circle .text-xl {
-        font-size: 0.875rem; /* เพิ่มจาก 0.75rem */
+    .instruction-card {
+        padding: 1rem;
+        margin-bottom: 0.5rem;
     }
     
     .instruction-number {
-        font-size: 2.5rem; /* เพิ่มจาก 2rem */
+        font-size: 2rem;
         margin-bottom: 0.5rem;
     }
     
     .instruction-title {
-        font-size: 1.125rem; /* เพิ่มจาก 1rem */
+        font-size: 1rem;
         margin-bottom: 0.5rem;
     }
     
     .instruction-text {
-        font-size: 0.875rem; /* เพิ่มจาก 0.8rem */
-        line-height: 1.5;
+        font-size: 0.8rem;
+        line-height: 1.4;
     }
     
-    .instruction-card {
-        padding: 1rem; /* เพิ่มจาก 0.75rem */
+    .state-dot {
+        width: 0.5rem;
+        height: 0.5rem;
     }
 }
 
@@ -411,7 +435,7 @@
     filter: blur(10px);
 }
 
-.inner-glow.bg-primary-400/20 {
+.inner-glow.bg-primary-400 {
     background: radial-gradient(circle at center, 
         rgba(5, 148, 103, 0.3) 0%, 
         rgba(5, 148, 103, 0.15) 50%, 
@@ -420,7 +444,16 @@
     animation: glowPulse 2s ease-in-out infinite;
 }
 
-.inner-glow.bg-accent-400/20 {
+.dark .inner-glow.bg-primary-400 {
+    background: radial-gradient(circle at center, 
+        rgba(74, 222, 140, 0.25) 0%, 
+        rgba(74, 222, 140, 0.12) 50%, 
+        transparent 100%);
+    opacity: 1;
+    animation: glowPulse 2s ease-in-out infinite;
+}
+
+.inner-glow.bg-accent-400 {
     background: radial-gradient(circle at center, 
         rgba(20, 184, 165, 0.3) 0%, 
         rgba(20, 184, 165, 0.15) 50%, 
@@ -429,10 +462,28 @@
     animation: glowPulse 2s ease-in-out infinite;
 }
 
-.inner-glow.bg-gray-400/20 {
+.dark .inner-glow.bg-accent-400 {
+    background: radial-gradient(circle at center, 
+        rgba(45, 212, 191, 0.25) 0%, 
+        rgba(45, 212, 191, 0.12) 50%, 
+        transparent 100%);
+    opacity: 1;
+    animation: glowPulse 2s ease-in-out infinite;
+}
+
+.inner-glow.bg-gray-400 {
     background: radial-gradient(circle at center, 
         rgba(107, 114, 128, 0.3) 0%, 
         rgba(107, 114, 128, 0.15) 50%, 
+        transparent 100%);
+    opacity: 1;
+    animation: glowPulse 2s ease-in-out infinite;
+}
+
+.dark .inner-glow.bg-gray-400 {
+    background: radial-gradient(circle at center, 
+        rgba(156, 163, 175, 0.25) 0%, 
+        rgba(156, 163, 175, 0.12) 50%, 
         transparent 100%);
     opacity: 1;
     animation: glowPulse 2s ease-in-out infinite;
@@ -554,22 +605,12 @@
 
 @media (max-width: 640px) {
     .instruction-card {
-        padding: 1.25rem; /* เพิ่มจาก 1rem */
+        padding: 1rem; /* น้อยลงสำหรับมือถือ */
         border-radius: 0.75rem;
     }
     
     .instruction-number {
-        font-size: 2.25rem; /* เพิ่มจาก 1.75rem */
-        margin-bottom: 0.75rem; /* เพิ่มจาก 0.5rem */
-    }
-    
-    .instruction-title {
-        font-size: 1.125rem; /* เพิ่มจาก 1rem */
-        margin-bottom: 0.75rem; /* เพิ่มจาก 0.5rem */
-    }
-    
-    .instruction-text {
-        font-size: 1rem; /* เพิ่มจาก 0.875rem */
-        line-height: 1.6;
+        font-size: 1.75rem; /* เล็กลงสำหรับมือถือ */
+        margin-bottom: 0.5rem;
     }
 }

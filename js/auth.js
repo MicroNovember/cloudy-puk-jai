@@ -11,6 +11,9 @@ const firebaseConfig = {
 // Initialize Firebase
 try {
     firebase.initializeApp(firebaseConfig);
+    // Initialize Firestore
+    window.db = firebase.firestore();
+    console.log('✅ Firebase and Firestore initialized successfully');
 } catch (error) {
     console.error('Firebase initialization error:', error);
 }
@@ -162,6 +165,9 @@ document.addEventListener('alpine:init', () => {
             this._initialized = true;
 
             try {
+                // Clean up expired guest data first
+                this.cleanupExpiredGuestData();
+                
                 const last = sessionStorage.getItem('authGuard:lastRedirect');
                 if (last) {
                     console.warn('🛡️ Auth Guard: last redirect info:', JSON.parse(last));
@@ -884,7 +890,30 @@ window.AuthUtils = {
     
     // Check if user is authenticated
     isAuthenticated() {
+        // Clean up expired guest data first
+        this.cleanupExpiredGuestData();
         return auth.currentUser !== null || localStorage.getItem('guestMode') === 'true';
+    },
+    
+    // Clean up expired guest data (7 days)
+    cleanupExpiredGuestData() {
+        const guestLoginTime = localStorage.getItem('guestLoginTime');
+        if (guestLoginTime) {
+            const loginDate = new Date(guestLoginTime);
+            const now = new Date();
+            const daysDiff = (now - loginDate) / (1000 * 60 * 60 * 24);
+            
+            if (daysDiff >= GUEST_SESSION_DAYS) {
+                console.log('Guest session expired, cleaning up data...');
+                localStorage.removeItem('mindbloomData_guest');
+                localStorage.removeItem('guestMode');
+                localStorage.removeItem('guestData');
+                localStorage.removeItem('userType');
+                localStorage.removeItem('guestLoginTime');
+                return true;
+            }
+        }
+        return false;
     },
     
     // Logout
@@ -894,12 +923,86 @@ window.AuthUtils = {
             const isGuest = localStorage.getItem('guestMode') === 'true';
             
             if (isGuest) {
-                // Clear guest data
-                localStorage.removeItem('guestMode');
-                localStorage.removeItem('guestData');
-                localStorage.removeItem('userType');
-                localStorage.removeItem('guestLoginTime');
+                // Check if guest has data before logout
+                const guestData = localStorage.getItem('guestData');
+                if (guestData) {
+                    const guest = JSON.parse(guestData);
+                    const storageKey = `mindbloomData_guest_${guest.uid}`;
+                    const userData = localStorage.getItem(storageKey);
+                    
+                    if (userData) {
+                        try {
+                            const decryptedData = this.decryptData ? this.decryptData(userData) : userData;
+                            const parsedData = JSON.parse(decryptedData);
+                            const hasJournal = parsedData.journalEntries && parsedData.journalEntries.length > 0;
+                            const hasAssessments = parsedData.assessmentHistory && parsedData.assessmentHistory.length > 0;
+                            
+                            if (hasJournal || hasAssessments) {
+                                // Show info for guest with data - auto keep for 7 days by default
+                                const message = [];
+                                if (hasJournal) message.push('บันทึกประจำวัน');
+                                if (hasAssessments) message.push('ผลการทดสอบ');
+                                
+                                const result = await Swal.fire({
+                                    title: '📦 เก็บข้อมูลไว้ 7 วัน',
+                                    html: `
+                                        <div class="text-left">
+                                            <p class="mb-3">คุณมี${message.join('และ')}ที่บันทึกไว้</p>
+                                            <p class="text-sm text-green-600 mb-4"><strong>ข้อมูลของคุณจะถูกเก็บไว้ 7 วัน</strong> สามารถกลับมาใช้งานต่อได้</p>
+                                            <div class="bg-green-50 border border-green-200 rounded-lg p-3 mb-4">
+                                                <p class="text-sm text-green-800"><strong>✨ ข้อมูลของคุณปลอดภัย:</strong></p>
+                                                <p class="text-sm text-green-700 mt-1">• เก็บข้อมูลไว้ 7 วันโดยอัตโนมัติ</p>
+                                                <p class="text-sm text-green-700">• กลับมาใช้งานได้ภายใน 7 วัน</p>
+                                                <p class="text-sm text-green-700">• หากต้องการเก็บข้อมูลถาวร ลงทะเบียนได้</p>
+                                            </div>
+                                        </div>
+                                    `,
+                                    icon: 'success',
+                                    showCancelButton: true,
+                                    showDenyButton: true,
+                                    confirmButtonText: '✅ เก็บไว้ 7 วันและออกจากระบบ',
+                                    cancelButtonText: '📝 ลงทะเบียนเพื่อเก็บข้อมูลถาวร',
+                                    denyButtonText: '🗑️ ลบข้อมูลทันที',
+                                    confirmButtonColor: '#10b981',
+                                    cancelButtonColor: '#3b82f6',
+                                    denyButtonColor: '#ef4444'
+                                });
+                                
+                                if (result.isConfirmed) {
+                                    // Keep data for 7 days and logout (DEFAULT)
+                                    await this.keepGuestDataFor7Days();
+                                    setTimeout(() => {
+                                        window.location.href = 'index.html';
+                                    }, 100);
+                                    return;
+                                } else if (result.isDenied) {
+                                    // Delete data and logout
+                                    this.clearGuestData();
+                                    setTimeout(() => {
+                                        window.location.href = 'index.html';
+                                    }, 100);
+                                    return;
+                                } else if (result.isDismissed) {
+                                    // Go to registration
+                                    window.location.href = 'register.html';
+                                    return;
+                                }
+                            }
+                        } catch (error) {
+                            console.error('Error checking guest data:', error);
+                        }
+                    }
+                }
+                
+                // Keep guest data for 7 days by default (no data to worry about)
+                await this.keepGuestDataFor7Days();
+                setTimeout(() => {
+                    window.location.href = 'index.html';
+                }, 100);
+                return;
             } else {
+                // Clear logged-in user data
+                localStorage.removeItem('mindbloomData_user');
                 // Logout from Firebase
                 await auth.signOut();
             }
@@ -917,6 +1020,121 @@ window.AuthUtils = {
             setTimeout(() => {
                 window.location.href = 'index.html';
             }, 100);
+        }
+    },
+
+    // Clear guest data completely
+    clearGuestData() {
+        const guestData = localStorage.getItem('guestData');
+        if (guestData) {
+            const guest = JSON.parse(guestData);
+            const storageKey = `mindbloomData_guest_${guest.uid}`;
+            localStorage.removeItem(storageKey);
+        }
+        
+        localStorage.removeItem('guestMode');
+        localStorage.removeItem('guestData');
+        localStorage.removeItem('userType');
+        localStorage.removeItem('guestLoginTime');
+        
+        console.log('✅ Guest data cleared completely');
+    },
+
+    // Keep guest data for 7 days
+    async keepGuestDataFor7Days() {
+        const guestData = localStorage.getItem('guestData');
+        if (guestData) {
+            const guest = JSON.parse(guestData);
+            const storageKey = `mindbloomData_guest_${guest.uid}`;
+            const userData = localStorage.getItem(storageKey);
+            
+            if (userData) {
+                // Add expiration timestamp
+                try {
+                    const decryptedData = this.decryptData ? this.decryptData(userData) : userData;
+                    const parsedData = JSON.parse(decryptedData);
+                    
+                    // Add expiration info
+                    parsedData._guestDataExpiry = new Date(Date.now() + (7 * 24 * 60 * 60 * 1000)).toISOString();
+                    parsedData._isGuestData = true;
+                    
+                    // Save back with expiration
+                    const updatedData = JSON.stringify(parsedData);
+                    const encryptedData = this.encryptData ? this.encryptData(updatedData) : updatedData;
+                    localStorage.setItem(storageKey, encryptedData);
+                    
+                    // Also save to a temporary key for easier cleanup
+                    const tempKey = `guestDataTemp_${guest.uid}`;
+                    localStorage.setItem(tempKey, JSON.stringify({
+                        expiry: parsedData._guestDataExpiry,
+                        storageKey: storageKey
+                    }));
+                    
+                    console.log('✅ Guest data saved for 7 days');
+                } catch (error) {
+                    console.error('Error saving guest data for 7 days:', error);
+                }
+            }
+        }
+        
+        // Clear guest session but keep data
+        localStorage.removeItem('guestMode');
+        localStorage.removeItem('guestData');
+        localStorage.removeItem('userType');
+        localStorage.removeItem('guestLoginTime');
+        
+        console.log('✅ Guest session cleared, data kept for 7 days');
+    },
+
+    // Clean up expired guest data
+    cleanupExpiredGuestData() {
+        try {
+            const now = new Date();
+            let cleanedCount = 0;
+            
+            // Check all localStorage keys for expired guest data
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                
+                // Check for guest data temp keys
+                if (key && key.startsWith('guestDataTemp_')) {
+                    const tempData = JSON.parse(localStorage.getItem(key) || '{}');
+                    if (tempData.expiry && new Date(tempData.expiry) < now) {
+                        localStorage.removeItem(key);
+                        localStorage.removeItem(tempData.storageKey);
+                        cleanedCount++;
+                        console.log(`🗑️ Cleaned expired guest data: ${tempData.storageKey}`);
+                    }
+                }
+                
+                // Also check for guest data with embedded expiry
+                if (key && key.startsWith('mindbloomData_guest_')) {
+                    try {
+                        const userData = localStorage.getItem(key);
+                        if (userData) {
+                            const decryptedData = this.decryptData ? this.decryptData(userData) : userData;
+                            const parsedData = JSON.parse(decryptedData);
+                            
+                            if (parsedData._guestDataExpiry && new Date(parsedData._guestDataExpiry) < now) {
+                                localStorage.removeItem(key);
+                                cleanedCount++;
+                                console.log(`🗑️ Cleaned expired guest data: ${key}`);
+                            }
+                        }
+                    } catch (error) {
+                        // If we can't parse, remove it
+                        localStorage.removeItem(key);
+                        cleanedCount++;
+                        console.log(`🗑️ Cleaned corrupted guest data: ${key}`);
+                    }
+                }
+            }
+            
+            if (cleanedCount > 0) {
+                console.log(`✅ Cleaned up ${cleanedCount} expired guest data entries`);
+            }
+        } catch (error) {
+            console.error('Error cleaning up expired guest data:', error);
         }
     },
     

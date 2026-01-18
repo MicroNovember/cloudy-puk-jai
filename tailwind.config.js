@@ -37,7 +37,7 @@ module.exports = {
         neutral: '#F0F0F0',
       },
       fontFamily: {
-        'sans': ['Anuphan', 'Noto Sans Thai', 'sans-serif'],
+        'sans': ['Anuphan', 'Noto Sans Thai', 'Sarabun', 'Kanit', 'Prompt', 'Thai', 'Segoe UI', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
       },
       animation: {
         'pulse-slow': 'pulse 3s ease-in-out infinite',

@@ -1,20 +1,200 @@
 <!DOCTYPE html>
-<html lang="th" class="dark" x-data="authApp()" x-init="init()">
+<html lang="th" x-data="authApp()" x-init="init()" :class="{ 'dark': darkMode }">
 <head>
     <!-- Immediate Dark Mode Script -->
     <script>
-        // Set dark mode immediately to prevent flash
+        // Set dark mode immediately to prevent flash (only for initial load)
         (function() {
+            // Get theme values first
+            const savedDefaultTheme = localStorage.getItem('defaultTheme');
             const savedDarkMode = localStorage.getItem('darkMode');
-            // Default to dark mode if no preference saved
-            if (savedDarkMode === null) {
-                localStorage.setItem('darkMode', 'true');
+            
+            // Function to apply theme
+            function applyTheme() {
+                // Use defaultTheme if available, otherwise default to dark
+                let isDark;
+                if (savedDefaultTheme) {
+                    isDark = savedDefaultTheme === 'dark';
+                } else if (savedDarkMode) {
+                    isDark = savedDarkMode === 'true';
+                } else {
+                    // Force dark mode for login page
+                    isDark = true;
+                    localStorage.setItem('defaultTheme', 'dark');
+                    localStorage.setItem('darkMode', 'true');
+                    console.log('Login page: Forcing dark mode as default');
+                }
+                
+                // Apply theme
+                if (isDark) {
+                    document.documentElement.classList.add('dark');
+                } else {
+                    document.documentElement.classList.remove('dark');
+                }
+                
+                console.log('Theme applied:', isDark ? 'dark' : 'light');
             }
-            // Always apply dark mode immediately
-            document.documentElement.classList.add('dark');
+            
+            // Apply immediately ONLY for initial page load
+            if (!window.themeManagerLoaded) {
+                applyTheme();
+                
+                // Log theme information
+                console.log('=== LOGIN PAGE THEME INFO ===');
+                console.log('savedDefaultTheme:', savedDefaultTheme);
+                console.log('savedDarkMode:', savedDarkMode);
+                console.log('Final isDark:', savedDefaultTheme ? savedDefaultTheme === 'dark' : (savedDarkMode ? savedDarkMode === 'true' : true));
+                console.log('localStorage defaultTheme:', localStorage.getItem('defaultTheme'));
+                console.log('localStorage darkMode:', localStorage.getItem('darkMode'));
+                console.log('Login page using mode:', (savedDefaultTheme === 'dark' || savedDarkMode === 'true' || (!savedDefaultTheme && !savedDarkMode)) ? 'DARK' : 'LIGHT');
+                console.log('==========================');
+            }
+            
+            // Also apply on DOM ready (only if not already handled by ThemeManager)
+            if (document.readyState === 'loading' && !window.themeManagerLoaded) {
+                document.addEventListener('DOMContentLoaded', applyTheme);
+            }
         })();
     </script>
-
+    
+    <!-- Theme Configuration -->
+    <script src="js/theme-config.js"></script>
+    
+    <!-- Override ThemeManager for login page -->
+    <script>
+        let retryCount = 0;
+        const MAX_RETRIES = 10;
+        
+        // Wait for ThemeManager to be available, then override
+        function setupThemeOverride() {
+            if (window.ThemeManager && window.ThemeManager.setTheme) {
+                console.log('ThemeManager found, setting up override...');
+                
+                // Store original function
+                const originalSetTheme = window.ThemeManager.setTheme;
+                
+                // Override global setTheme for our buttons
+                window.setTheme = function(theme) {
+                    console.log('=== LOGIN PAGE SET THEME ===');
+                    console.log('Setting theme to:', theme);
+                    
+                    // Call original ThemeManager.setTheme
+                    originalSetTheme.call(window.ThemeManager, theme);
+                    
+                    // Also update Alpine.js darkMode variable if available
+                    if (window.authApp && window.authApp.darkMode !== undefined) {
+                        window.authApp.darkMode = (theme === 'dark');
+                    }
+                    
+                    // Log final state
+                    console.log('Final theme state:');
+                    console.log('- localStorage defaultTheme:', localStorage.getItem('defaultTheme'));
+                    console.log('- localStorage darkMode:', localStorage.getItem('darkMode'));
+                    console.log('- Document has dark class:', document.documentElement.classList.contains('dark'));
+                    console.log('- Theme applied:', theme === 'dark' ? 'DARK MODE' : 'LIGHT MODE');
+                    console.log('============================');
+                };
+                
+                console.log('Theme override setup complete');
+                return true; // Success
+            } else {
+                retryCount++;
+                if (retryCount <= MAX_RETRIES) {
+                    console.log(`ThemeManager not ready, retrying... (${retryCount}/${MAX_RETRIES})`);
+                    // Retry after a short delay
+                    setTimeout(setupThemeOverride, 100);
+                } else {
+                    console.log('Max retries reached, using fallback theme system');
+                    // Fallback: Use our own theme system
+                    window.setTheme = function(theme) {
+                        console.log('=== FALLBACK SET THEME ===');
+                        console.log('Setting theme to:', theme);
+                        
+                        // Set both variables to ensure consistency
+                        localStorage.setItem('defaultTheme', theme);
+                        localStorage.setItem('darkMode', theme === 'dark' ? 'true' : 'false');
+                        
+                        // Apply theme immediately
+                        if (theme === 'dark') {
+                            document.documentElement.classList.add('dark');
+                        } else {
+                            document.documentElement.classList.remove('dark');
+                        }
+                        
+                        // Force Alpine.js reactivity update
+                        setTimeout(() => {
+                            // Method 1: Direct variable update
+                            if (window.authApp && window.authApp.darkMode !== undefined) {
+                                window.authApp.darkMode = (theme === 'dark');
+                                console.log('Updated authApp.darkMode to:', theme === 'dark');
+                            }
+                            
+                            // Method 2: Trigger Alpine reactivity on body
+                            if (window.Alpine && window.Alpine.version) {
+                                const bodyElement = document.body;
+                                if (bodyElement) {
+                                    // Force Alpine to re-evaluate all bindings
+                                    bodyElement._x_dataStack?.forEach(stack => {
+                                        if (stack[0] && stack[0].darkMode !== undefined) {
+                                            stack[0].darkMode = (theme === 'dark');
+                                        }
+                                    });
+                                    
+                                    // Alternative: Dispatch custom event
+                                    bodyElement.dispatchEvent(new CustomEvent('theme-change', { 
+                                        detail: { theme: theme, darkMode: (theme === 'dark') }
+                                    }));
+                                }
+                            }
+                            
+                            // Method 3: Direct DOM manipulation for immediate effect
+                            const htmlElement = document.documentElement;
+                            if (htmlElement) {
+                                // Force re-evaluation of Alpine binding
+                                const currentClass = htmlElement.getAttribute('x-bind:class');
+                                if (currentClass) {
+                                    htmlElement.setAttribute('x-bind:class', currentClass);
+                                    // Remove and re-add to trigger reactivity
+                                    htmlElement.removeAttribute('x-bind:class');
+                                    setTimeout(() => {
+                                        htmlElement.setAttribute('x-bind:class', currentClass);
+                                    }, 5);
+                                }
+                            }
+                        }, 10);
+                        
+                        // Log final state
+                        console.log('Fallback theme state:');
+                        console.log('- localStorage defaultTheme:', localStorage.getItem('defaultTheme'));
+                        console.log('- localStorage darkMode:', localStorage.getItem('darkMode'));
+                        console.log('- Document has dark class:', document.documentElement.classList.contains('dark'));
+                        console.log('- Theme applied:', theme === 'dark' ? 'DARK MODE' : 'LIGHT MODE');
+                        console.log('============================');
+                    };
+                    console.log('Fallback theme system activated');
+                }
+                return false;
+            }
+        }
+        
+        // Wait for Alpine.js to be ready as well
+        function waitForAlpine() {
+            if (window.Alpine && window.Alpine.version) {
+                console.log('Alpine.js is ready, setting up theme override...');
+                setupThemeOverride();
+            } else {
+                console.log('Alpine.js not ready, retrying...');
+                setTimeout(waitForAlpine, 100);
+            }
+        }
+        
+        // Start setup when DOM is ready
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', waitForAlpine);
+        } else {
+            waitForAlpine();
+        }
+    </script>
     <link rel="icon" type="image/png" href="image/favicon.png">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -23,7 +203,7 @@
     <meta name="author" content="Cloudy・Puk・Jai Team">
     
     <!-- Open Graph Meta Tags -->
-    <meta property="og:title" content="Cloudy・Puk・Jai - ดูแลสุขภาพจิตของคุณ">
+    <meta property="og:title" content="Cloudy・Puk・Jai - มาดูแลใจไปด้วยกัน">
     <meta property="og:description" content="แอปพลิเคชันดูแลสุขภาพจิต พร้อมเครื่องมือผ่อนคลายและบันทึกความรู้สึก">
     <meta property="og:type" content="website">
     <meta property="og:image" content="http://127.0.0.1:5500/image/og-image.jpg">
@@ -32,7 +212,7 @@
     <!-- Twitter Card Meta Tags -->
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Cloudy・Puk・Jai - ดูแลสุขภาพจิตของคุณ">
+    <meta name="twitter:title" content="Cloudy・Puk・Jai - มาดูแลใจไปด้วยกัน">
     <meta name="twitter:description" content="แอปพลิเคชันดูแลสุขภาพจิต พร้อมเครื่องมือผ่อนคลายและบันทึกความรู้สึก">
     <meta name="twitter:image" content="http://127.0.0.1:5500/image/twitter-image.jpg">
     
@@ -56,7 +236,7 @@
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Anuphan:wght@300;400;500;600;700&family=Noto+Sans+Thai:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Anuphan:wght@300;400;500;600;700&family=Noto+Sans+Thai:wght@300;400;500;600;700&family=Sarabun:wght@300;400;500;600;700&family=Kanit:wght@300;400;500;600;700&family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <!-- Logo CSS -->
     <link rel="stylesheet" href="assets/css/logo.css">
     <!-- Custom CSS -->
@@ -81,7 +261,7 @@
               neutral: '#F0F0F0',
             },
             fontFamily: {
-              'sans': ['Anuphan', 'Noto Sans Thai', 'sans-serif'],
+              'sans': ['Anuphan', 'Noto Sans Thai', 'Sarabun', 'Kanit', 'Prompt', 'Thai', 'Segoe UI', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
             },
             animation: {
               'pulse-slow': 'pulse 3s ease-in-out infinite',
@@ -97,6 +277,7 @@
     <!-- Firebase -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
     <!-- Custom Scripts -->
     <script src="js/auth.js"></script>
     
@@ -142,6 +323,11 @@
         .animate-bg-fade {
             animation: bgFade 8s ease-in-out infinite;
             background-size: 200% 200%;
+        }
+        
+        /* Light mode background */
+        body:not(.dark) .animate-bg-fade {
+            background: linear-gradient(to bottom right, #f8fafc, #f1f5f9, #f8fafc);
         }
         
         /* Greeting emoji animation */
@@ -205,12 +391,18 @@
         }, 60000); // Update every minute
     </script>
 </head>
-<body class="min-h-screen bg-gradient-to-br from-gray-950 via-gray-900 to-gray-950 animate-bg-fade">
+<body class="min-h-screen bg-gradient-to-br from-gray-950 via-gray-900 to-gray-950 animate-bg-fade" :class="{ 'dark': darkMode }">
     <!-- Login Container -->
     <div class="min-h-screen flex items-center justify-center px-4 py-10 sm:py-12">
         <div class="w-full max-w-4xl">
             <!-- Logo & Welcome -->
             <div class="text-center mb-8">
+                <!-- Simple Theme Selector -->
+                <div style="margin-bottom: 20px;">
+                    <button onclick="setTheme('light')" style="background: white; color: black; border: 2px solid #ccc; padding: 8px 15px; margin: 5px; border-radius: 20px; cursor: pointer;">☀️ Light</button>
+                    <button onclick="setTheme('dark')" style="background: #333; color: white; border: 2px solid #666; padding: 8px 15px; margin: 5px; border-radius: 20px; cursor: pointer;">🌙 Dark</button>
+                </div>
+                
                 <div class="logo logo-cloudy-puk-jai-large animate-float-slow mx-auto mb-4"></div>
                 <h3 class="text-3xl sm:text-4xl font-bold tracking-tight text-white">Cloudy・Puk・Jai</h3>
               
@@ -492,7 +684,7 @@
                                 <div class="bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 dark:from-blue-900/30 dark:via-indigo-900/30 dark:to-purple-900/30 border border-blue-200/50 dark:border-blue-700/50 rounded-2xl p-6 shadow-lg backdrop-blur-sm">
                                     <h4 class="text-lg font-bold text-blue-900 dark:text-blue-100 mb-2">ข้อความแนะนำ</h4>
                                     <p class="leading-relaxed">
-                                        ยินดีต้อนรับสู่ Cloudy・Puk・Jai แอปพลิเคชันดูแลสุขภาพจิตของคุณ
+                                        ยินดีต้อนรับสู่ Cloudy・Puk・Jai แอปพลิเคชันมาดูแลใจไปด้วยกัน
                                         การใช้งานแอปพลิเคชันของเราถือว่าคุณได้อ่าน ทำความเข้าใจ และยอมรับเงื่อนไขการใช้งานเหล่านี้
                                     </p>
                                 </div>

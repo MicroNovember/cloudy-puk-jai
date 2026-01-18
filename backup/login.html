@@ -5,28 +5,51 @@
     <script>
         // Set dark mode immediately to prevent flash
         (function() {
-            // Wait for DOM to be ready
-            if (document.readyState === 'loading') {
-                document.addEventListener('DOMContentLoaded', function() {
-                    const savedDarkMode = localStorage.getItem('darkMode');
-                    // Default to dark mode if no preference saved
-                    if (savedDarkMode === null) {
-                        localStorage.setItem('darkMode', 'true');
-                        document.documentElement.classList.add('dark');
-                    } else if (savedDarkMode === 'true') {
-                        document.documentElement.classList.add('dark');
-                    }
-                });
-            } else {
-                // DOM already loaded, run immediately
+            // Function to apply theme
+            function applyTheme() {
+                const savedDefaultTheme = localStorage.getItem('defaultTheme');
                 const savedDarkMode = localStorage.getItem('darkMode');
-                // Default to dark mode if no preference saved
-                if (savedDarkMode === null) {
+                
+                // Use defaultTheme if available, otherwise default to dark
+                let isDark;
+                if (savedDefaultTheme) {
+                    isDark = savedDefaultTheme === 'dark';
+                } else if (savedDarkMode) {
+                    isDark = savedDarkMode === 'true';
+                } else {
+                    // Force dark mode for login page
+                    isDark = true;
+                    localStorage.setItem('defaultTheme', 'dark');
                     localStorage.setItem('darkMode', 'true');
-                    document.documentElement.classList.add('dark');
-                } else if (savedDarkMode === 'true') {
-                    document.documentElement.classList.add('dark');
+                    console.log('Login page: Forcing dark mode as default');
                 }
+                
+                // Apply theme
+                if (isDark) {
+                    document.documentElement.classList.add('dark');
+                } else {
+                    document.documentElement.classList.remove('dark');
+                }
+                
+                console.log('Theme applied:', isDark ? 'dark' : 'light');
+            }
+            
+            // Apply immediately
+            applyTheme();
+            
+            // Log theme information
+            console.log('=== LOGIN PAGE THEME INFO ===');
+            console.log('savedDefaultTheme:', savedDefaultTheme);
+            console.log('savedDarkMode:', savedDarkMode);
+            console.log('Final isDark:', isDark);
+            console.log('localStorage defaultTheme:', localStorage.getItem('defaultTheme'));
+            console.log('localStorage darkMode:', localStorage.getItem('darkMode'));
+            console.log('Login page using mode:', isDark ? 'DARK' : 'LIGHT');
+            console.log('==========================');
+            
+            // Also apply on DOM ready
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', applyTheme);
             }
         })();
     </script>
@@ -110,6 +133,7 @@
     <!-- Firebase -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
     <!-- Custom Scripts -->
     <script src="js/auth.js"></script>
     <script src="js/auth-guard.js"></script>
@@ -219,12 +243,18 @@
         }, 60000); // Update every minute
     </script>
 </head>
-<body class="min-h-screen bg-gradient-to-br from-gray-950 via-gray-900 to-gray-950 animate-bg-fade">
+<body class="min-h-screen bg-gradient-to-br from-gray-950 via-gray-900 to-gray-950 animate-bg-fade dark">
     <!-- Login Container -->
     <div class="min-h-screen flex items-center justify-center px-4 py-10 sm:py-12">
         <div class="w-full max-w-md">
             <!-- Logo & Welcome -->
             <div class="text-center mb-8">
+                <!-- Simple Theme Selector -->
+                <div style="margin-bottom: 20px;">
+                    <button onclick="setTheme('light')" style="background: white; color: black; border: 2px solid #ccc; padding: 8px 15px; margin: 5px; border-radius: 20px; cursor: pointer;">☀️ Light</button>
+                    <button onclick="setTheme('dark')" style="background: #333; color: white; border: 2px solid #666; padding: 8px 15px; margin: 5px; border-radius: 20px; cursor: pointer;">🌙 Dark</button>
+                </div>
+                
                 <div class="logo logo-cloudy-puk-jai-large animate-float-slow mx-auto mb-4"></div>
                 <h3 class="text-3xl sm:text-4xl font-bold tracking-tight text-white">Cloudy・Puk・Jai</h3>
               
@@ -257,7 +287,8 @@
                         <h3 class="text-2xl sm:text-3xl font-semibold text-gray-900 dark:text-gray-100 flex items-center justify-center">
                             <span x-text="getGreetingMessage()"></span>
                         </h3>
-                       
+
+ 
                     </div>
                     
                     <!-- Email Field -->
@@ -729,6 +760,44 @@
             </div>
         </div>
     </div>
+    
+    <!-- Simple Theme Script -->
+    <script>
+        function setTheme(theme) {
+            console.log('=== SET THEME FUNCTION ===');
+            console.log('Setting theme to:', theme);
+            
+            // Set both variables to ensure consistency
+            localStorage.setItem('defaultTheme', theme);
+            localStorage.setItem('darkMode', theme === 'dark' ? 'true' : 'false');
+            
+            // Apply theme immediately
+            if (theme === 'dark') {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+            
+            // Log all values after setting
+            console.log('After setting theme:');
+            console.log('- localStorage defaultTheme:', localStorage.getItem('defaultTheme'));
+            console.log('- localStorage darkMode:', localStorage.getItem('darkMode'));
+            console.log('- Document has dark class:', document.documentElement.classList.contains('dark'));
+            console.log('- Theme applied:', theme === 'dark' ? 'DARK MODE' : 'LIGHT MODE');
+            console.log('========================');
+            
+            // Show feedback
+            alert('ธีม' + (theme === 'dark' ? 'มืด' : 'สว่าง') + 'ถูกตั้งเป็นค่าเริ่มต้นแล้ว!\nค่า defaultTheme = ' + theme + '\nค่า darkMode = ' + (theme === 'dark' ? 'true' : 'false'));
+        }
+        
+        // Initialize on load
+        document.addEventListener('DOMContentLoaded', function() {
+            const savedTheme = localStorage.getItem('defaultTheme') || 'dark';
+            console.log('=== INITIALIZING LOGIN PAGE ===');
+            console.log('Initializing with theme:', savedTheme);
+            setTheme(savedTheme);
+        });
+    </script>
     
     </body>
 </html>
