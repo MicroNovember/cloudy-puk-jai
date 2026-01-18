@@ -46,42 +46,17 @@
         theme: {
           extend: {
             colors: {
-              primary: {
-                50: '#f0fdf8',
-                100: '#dcfcec',
-                200: '#bbf7d6',
-                300: '#86efb3',
-                400: '#4ade8c',
-                500: '#059467', // primary main
-                600: '#047a56',
-                700: '#036045',
-                800: '#024d37',
-                900: '#023a29',
-              },
-              accent: {
-                50: '#f0fdfa',
-                100: '#ccfbef',
-                200: '#99f6e4',
-                300: '#5eead4',
-                400: '#2dd4bf',
-                500: '#14b8a5', // accent main
-                600: '#0d9488',
-                700: '#0f766e',
-                800: '#115e59',
-                900: '#134e4a',
-              },
-              secondary: {
-                50: '#f9fafb',
-                100: '#f3f4f6',
-                200: '#e5e7eb',
-                300: '#d1d5db',
-                400: '#9ca3af',
-                500: '#6b7280',
-                600: '#4b5563',
-                700: '#374151',
-                800: '#1f2937',
-                900: '#111827',
-              },
+              primary: '#6D9F71',
+              'primary-light': '#8FBC8F',
+              'primary-dark': '#4A7C59',
+              secondary: '#FFB6C1',
+              accent: '#FFD166',
+              happy: '#FFEAA7',
+              calm: '#A7E6FF',
+              sad: '#D8C3FF',
+              anxious: '#FFB8B8',
+              energetic: '#C5FFB8',
+              neutral: '#F0F0F0',
               success: '#10b981',
               warning: '#f59e0b',
               info: '#3b82f6',
@@ -167,7 +142,7 @@
       }
     </script>
   </head>
-  <body class="bg-gradient-to-br from-gray-100 via-gray-50 to-gray-200 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 text-gray-800 dark:text-gray-200 min-h-screen transition-colors duration-300" x-data="breathingApp()" x-init="init()">
+  <body class="bg-gray-50 text-gray-800 dark:bg-gray-900 dark:text-gray-200 min-h-screen transition-colors duration-300" x-data="breathingApp()" x-init="init()">
     <!-- Mobile Header -->
     <header class="sticky top-0 z-50 bg-white dark:bg-gray-800 shadow-md lg:hidden">
         <div class="max-w-7xl mx-auto px-4 py-3">
@@ -175,13 +150,21 @@
                 <div class="flex items-center space-x-2">
                     <div class="logo logo-cloudy-puk-jai-small animate-pulse-slow"></div>
                     <div>
-                        <h1 class="text-xl font-bold text-primary">Cloudy・Puk・Jai</h1>
+                        <h1 class="text-xl font-bold bg-gradient-to-r from-primary to-primary-light bg-clip-text text-transparent">Cloudy・Puk・Jai</h1>
                     </div>
                 </div>
                 <div class="flex items-center space-x-3">
-                    <button @click="toggleDarkMode()" class="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700">
-                        <i :class="darkMode ? 'fas fa-sun' : 'fas fa-moon'" class="text-lg fas fa-sun"></i>
-                    </button>
+                    <div class="flex bg-gray-100 dark:bg-gray-800/50 p-1 rounded-xl">
+                        <button onclick="ThemeManager.setTheme('light')" 
+                                class="flex-1 flex items-center justify-center py-1.5 text-[14px] font-medium rounded-lg transition-all text-gray-500 dark:text-gray-400 hover:bg-white dark:hover:bg-gray-700 hover:text-primary dark:hover:text-white hover:shadow-sm">
+                            <i class="fas fa-sun mr-1.5"></i> สว่าง
+                        </button>
+                        
+                        <button onclick="ThemeManager.setTheme('dark')" 
+                                class="flex-1 flex items-center justify-center py-1.5 text-[14px] font-medium rounded-lg transition-all text-gray-500 dark:text-gray-400 hover:bg-white dark:hover:bg-gray-700 hover:text-primary dark:hover:text-white hover:shadow-sm">
+                            <i class="fas fa-moon mr-1.5"></i> มืด
+                        </button>
+                    </div>
                     <div class="relative" x-data="{ mobileMenuOpen: false }">
                         <button @click="mobileMenuOpen = !mobileMenuOpen" class="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700">
                             <i class="fas fa-user-circle text-lg text-primary"></i>
@@ -234,7 +217,7 @@
     <div class="space-y-0.5">
       <a href="tools.html" @click="mobileMoreMenuOpen = false;" 
          class="flex items-center px-4 py-2.5 rounded-xl transition-all" 
-         :class="window.location.pathname.includes('tools.html') ? 'bg-primary/10 text-primary' : 'text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700/50'">
+         :class="window.location.pathname.includes('tools.html') ? 'bg-primary/10 text-primary' : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700/50'">
         <i class="fas fa-lungs mr-3 w-5 text-lg"></i>
         <span class="font-medium text-sm">เครื่องมือฝึกลมหายใจ</span>
       </a>
@@ -275,7 +258,7 @@
     <div class="mt-3 pt-3 border-t border-gray-100 dark:border-gray-800 text-center">
       <div class="flex items-center justify-center gap-2 mb-2">
         <div class="logo logo-cloudy-puk-jai-small scale-75"></div>
-        <span class="text-[11px] font-bold text-gray-600 dark:text-gray-400">Cloudy・Puk・Jai</span>
+        <span class="text-[11px] font-bold bg-gradient-to-r from-primary to-primary-light bg-clip-text text-transparent">Cloudy・Puk・Jai</span>
       </div>
       
       <div class="flex flex-wrap justify-center items-center gap-x-2 text-[10px] text-gray-400 dark:text-gray-500 mb-2">
@@ -325,49 +308,49 @@
         
         <!-- Navigation Links -->
         <div class="space-y-0.5 mb-2">
-          <a href="main-menu.html" @click="navigateTo('home')" class="group flex items-center px-4 py-2 rounded-xl font-medium transition-all duration-200 hover:scale-[1.02]" :class="currentPage === 'home' ? 'bg-gradient-to-r from-primary/10 to-primary-light/10 text-primary shadow-sm border border-primary/20' : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700/50'">
+          <a href="main-menu.html" class="group flex items-center px-4 py-2 rounded-xl font-medium transition-all duration-200 hover:scale-[1.02] text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700/50">
             <i class="fas fa-home-alt mr-3 w-5 text-lg group-hover:scale-110 transition-transform"></i>
             <span class="font-medium">หน้าหลัก</span>
             <div class="ml-auto opacity-0 group-hover:opacity-100 transition-opacity">
               <i class="fas fa-chevron-right text-xs"></i>
             </div>
           </a>
-          <a href="main-menu.html#journal" @click="navigateTo('journal')" class="group flex items-center px-4 py-2 rounded-xl font-medium transition-all duration-200 hover:scale-[1.02]" :class="currentPage === 'journal' ? 'bg-gradient-to-r from-primary/10 to-primary-light/10 text-primary shadow-sm border border-primary/20' : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700/50'">
+          <a href="main-menu.html#journal" class="group flex items-center px-4 py-2 rounded-xl font-medium transition-all duration-200 hover:scale-[1.02] text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700/50">
             <i class="fas fa-journal-whills mr-3 w-5 text-lg group-hover:scale-110 transition-transform"></i>
             <span class="font-medium">บันทึกความรู้สึก</span>
             <div class="ml-auto opacity-0 group-hover:opacity-100 transition-opacity">
               <i class="fas fa-chevron-right text-xs"></i>
             </div>
           </a>
-          <a href="main-menu.html#articles" @click="navigateTo('articles')" class="group flex items-center px-4 py-2 rounded-xl font-medium transition-all duration-200 hover:scale-[1.02]" :class="currentPage === 'articles' ? 'bg-gradient-to-r from-primary/10 to-primary-light/10 text-primary shadow-sm border border-primary/20' : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700/50'">
+          <a href="main-menu.html#articles" class="group flex items-center px-4 py-2 rounded-xl font-medium transition-all duration-200 hover:scale-[1.02] text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700/50">
             <i class="fas fa-book-open mr-3 w-5 text-lg group-hover:scale-110 transition-transform"></i>
             <span class="font-medium">ความรู้เพื่อสุขภาพจิต</span>
             <div class="ml-auto opacity-0 group-hover:opacity-100 transition-opacity">
               <i class="fas fa-chevron-right text-xs"></i>
             </div>
           </a>
-          <a href="main-menu.html#music" @click="navigateTo('music')" class="group flex items-center px-4 py-2 rounded-xl font-medium transition-all duration-200 hover:scale-[1.02]" :class="currentPage === 'music' ? 'bg-gradient-to-r from-primary/10 to-primary-light/10 text-primary shadow-sm border border-primary/20' : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700/50'">
+          <a href="main-menu.html#music" class="group flex items-center px-4 py-2 rounded-xl font-medium transition-all duration-200 hover:scale-[1.02] text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700/50">
             <i class="fas fa-headphones mr-3 w-5 text-lg group-hover:scale-110 transition-transform"></i>
             <span class="font-medium">ผ่อนคลายด้วยเพลง</span>
             <div class="ml-auto opacity-0 group-hover:opacity-100 transition-opacity">
               <i class="fas fa-chevron-right text-xs"></i>
             </div>
           </a>
-          <a href="tools.html" class="group flex items-center px-4 py-2 rounded-xl font-medium transition-all duration-200 hover:scale-[1.02]" :class="window.location.pathname.includes('tools.html') ? 'bg-gradient-to-r from-primary/10 to-primary-light/10 text-primary shadow-sm border border-primary/20' : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700/50'">
+          <a href="tools.html" class="group flex items-center px-4 py-2 rounded-xl font-medium transition-all duration-200 hover:scale-[1.02] bg-gradient-to-r from-primary/10 to-primary-light/10 text-primary shadow-sm border border-primary/20">
             <i class="fas fa-lungs mr-3 w-5 text-lg group-hover:scale-110 transition-transform"></i>
             <span class="font-medium">Breathing Buddy</span>
             <div class="ml-auto opacity-0 group-hover:opacity-100 transition-opacity">
               <i class="fas fa-chevron-right text-xs"></i>
             </div>
           </a>
-          <a href="main-menu.html#assessments" @click="navigateTo('assessments')" class="group flex items-center px-4 py-2 rounded-xl font-medium transition-all duration-200 hover:scale-[1.02]" :class="currentPage === 'assessments' ? 'bg-gradient-to-r from-primary/10 to-primary-light/10 text-primary shadow-sm border border-primary/20' : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700/50'">
+          <a href="main-menu.html#assessments" class="group flex items-center px-4 py-2 rounded-xl font-medium transition-all duration-200 hover:scale-[1.02] text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700/50">
             <i class="fas fa-clipboard-list mr-3 w-5 text-lg group-hover:scale-110 transition-transform"></i>
             <span class="font-medium">แบบทดสอบ</span>
             <div class="ml-auto opacity-0 group-hover:opacity-100 transition-opacity">
               <i class="fas fa-chevron-right text-xs"></i>
             </div>
           </a>
-          <a href="history.html" class="group flex items-center px-4 py-2 rounded-xl font-medium transition-all duration-200 hover:scale-[1.02]" :class="window.location.pathname.includes('history.html') ? 'bg-gradient-to-r from-primary/10 to-primary-light/10 text-primary shadow-sm border border-primary/20' : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700/50'">
+          <a href="history.html" class="group flex items-center px-4 py-2 rounded-xl font-medium transition-all duration-200 hover:scale-[1.02] text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700/50">
             <i class="fas fa-chart-line mr-3 w-5 text-lg group-hover:scale-110 transition-transform"></i>
             <span class="font-medium">ประวัติผลการทดสอบ</span>
             <div class="ml-auto opacity-0 group-hover:opacity-100 transition-opacity">
@@ -424,7 +407,7 @@
 
  <div class="px-3 py-4 mt-auto border-t border-gray-100 dark:border-gray-800 text-center">
   <div class="flex flex-wrap justify-center items-center gap-x-2 gap-y-1 text-[12px] text-gray-400 dark:text-gray-500 mb-1">
-    <span class="font-bold text-gray-600 dark:text-gray-400">Cloudy・Puk・Jai</span>
+    <span class="font-bold bg-gradient-to-r from-primary to-primary-light bg-clip-text text-transparent">Cloudy・Puk・Jai</span>
     <span class="opacity-30">|</span>
     <button @click="openModal('about')" class="hover:text-primary transition-colors">เกี่ยวกับเรา</button>
     <span class="opacity-30">|</span>
@@ -481,16 +464,16 @@
 
               <!-- Main Circle -->
               <div class="breathing-circle shadow-2xl border-4 border-gray-300/50 dark:border-gray-600/50" :class="{
-                              'animate-breathe-in bg-gradient-to-br from-primary-600 to-primary-700': currentState === 'inhale' && isRunning,
-                              'animate-breathe-hold bg-gradient-to-br from-accent-500 to-accent-600': currentState === 'hold' && isRunning,
+                              'animate-breathe-in bg-gradient-to-br from-primary to-primary-dark': currentState === 'inhale' && isRunning,
+                              'animate-breathe-hold bg-gradient-to-br from-accent to-secondary': currentState === 'hold' && isRunning,
                               'animate-breathe-out bg-gradient-to-br from-gray-600 to-gray-700': currentState === 'exhale' && isRunning,
-                              'bg-gradient-to-br from-primary-500 to-primary-700': !isRunning
+                              'bg-gradient-to-br from-primary to-primary-dark': !isRunning
                            }">
                 <!-- Inner Glow -->
                 <div class="inner-glow" :class="{
-                              'bg-primary-400/20': currentState === 'inhale',
-                              'bg-accent-400/20': currentState === 'hold',
-                              'bg-gray-400/20': currentState === 'exhale'
+                              'bg-primary/30': currentState === 'inhale',
+                              'bg-accent/30': currentState === 'hold',
+                              'bg-gray-400/30': currentState === 'exhale'
                             }"></div>
 
                 <!-- Wave Animation -->
@@ -522,7 +505,7 @@
                   </div>
                   <!-- Progress Indicator -->
                   <div class="absolute inset-0 flex items-center justify-center">
-                    <div class="progress-ring" :style="`background: conic-gradient(from 0deg, ${currentState === 'inhale' ? '#059467' : currentState === 'hold' ? '#14b8a5' : '#6b7280'} ${(currentTime / (currentState === 'inhale' ? 4 : currentState === 'hold' ? 7 : 8)) * 360}deg, transparent 0deg)`"></div>
+                    <div class="progress-ring" :style="`background: conic-gradient(from 0deg, ${currentState === 'inhale' ? '#6D9F71' : currentState === 'hold' ? '#FFD166' : '#6b7280'} ${(currentTime / (currentState === 'inhale' ? 4 : currentState === 'hold' ? 7 : 8)) * 360}deg, transparent 0deg)`"></div>
                   </div>
                 </div>
               </div>
@@ -531,11 +514,11 @@
             <!-- State Indicators -->
             <div class="flex justify-between w-full max-w-xs sm:max-w-md mx-auto mt-0 px-2 sm:px-6">
               <div class="flex flex-col items-center">
-                <div class="w-4 h-4 rounded-full bg-primary-600 mb-2 animate-pulse" :class="{ 'ring-2 ring-primary-400 ring-offset-2': currentState === 'inhale' }"></div>
+                <div class="w-4 h-4 rounded-full bg-primary mb-2 animate-pulse" :class="{ 'ring-2 ring-primary/50 ring-offset-2': currentState === 'inhale' }"></div>
                 <span class="text-xs sm:text-sm md:text-base font-medium text-gray-700 dark:text-gray-300">หายใจเข้า</span>
               </div>
               <div class="flex flex-col items-center">
-                <div class="w-4 h-4 rounded-full bg-accent-500 mb-2 animate-pulse" :class="{ 'ring-2 ring-accent-400 ring-offset-2': currentState === 'hold' }"></div>
+                <div class="w-4 h-4 rounded-full bg-accent mb-2 animate-pulse" :class="{ 'ring-2 ring-accent/50 ring-offset-2': currentState === 'hold' }"></div>
                 <span class="text-xs sm:text-sm md:text-base font-medium text-gray-700 dark:text-gray-300">กลั้นหายใจ</span>
               </div>
               <div class="flex flex-col items-center">
