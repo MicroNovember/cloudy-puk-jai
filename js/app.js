@@ -2003,6 +2003,12 @@ const greetings = {
                 this.darkMode = savedDarkMode === 'true' || savedDarkMode === null ? true : prefersDark;
                 this.applyDarkMode();
             }
+
+            // Listen for theme-change events from ThemeManager
+            window.addEventListener('theme-change', (e) => {
+                this.darkMode = e.detail.darkMode;
+                console.log('Theme change event received, darkMode updated to:', this.darkMode);
+            });
         },
 
         applyDarkMode() {
@@ -2343,6 +2349,12 @@ const greetings = {
     }))
 });
 
-
-
-
+// Expose app globally for ThemeManager access
+document.addEventListener('alpine:initialized', () => {
+    // Get the app instance from the root element
+    const rootElement = document.querySelector('[x-data*="mindbloomApp"]');
+    if (rootElement && rootElement._x_dataStack) {
+        window.mindbloomApp = rootElement._x_dataStack[0][0];
+        console.log('mindbloomApp exposed globally');
+    }
+});
