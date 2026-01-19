@@ -862,8 +862,7 @@ const greetings = {
                     
                     if (encryptedData) {
                         try {
-                            const decryptedData = this.decryptData(encryptedData);
-                            const savedData = JSON.parse(decryptedData);
+                            const savedData = this.decryptData(encryptedData);
                             this.journalEntries = savedData.journalEntries || [];
                             this.assessmentHistory = savedData.assessmentHistory || [];
                             this.tree = savedData.tree || this.tree;
@@ -896,8 +895,7 @@ const greetings = {
                     
                     if (encryptedData) {
                         try {
-                            const decryptedData = this.decryptData(encryptedData);
-                            const savedData = JSON.parse(decryptedData);
+                            const savedData = this.decryptData(encryptedData);
                             this.journalEntries = savedData.journalEntries || [];
                             this.assessmentHistory = savedData.assessmentHistory || [];
                             this.tree = savedData.tree || this.tree;
@@ -1184,12 +1182,15 @@ const greetings = {
                     encrypted += String.fromCharCode(charCode ^ keyChar);
                 }
                 
-                return btoa(encrypted);
+                // ใช้ TextEncoder และ btoa ที่เข้ารหัสถูกต้องสำหรับ Unicode
+                const utf8Bytes = new TextEncoder().encode(encrypted);
+                return btoa(String.fromCharCode(...utf8Bytes));
             } catch (error) {
                 console.error('Encryption failed:', error);
                 // fallback: ใช้ JSON.stringify และ btoa ตรงๆ
                 try {
-                    return btoa(JSON.stringify(data));
+                    const utf8Bytes = new TextEncoder().encode(JSON.stringify(data));
+                    return btoa(String.fromCharCode(...utf8Bytes));
                 } catch (fallbackError) {
                     console.error('Fallback encryption failed:', fallbackError);
                     return JSON.stringify(data);
@@ -1197,11 +1198,63 @@ const greetings = {
             }
         },
         
+        // Safe Base64 decoder that handles Unicode
+        safeAtob(base64) {
+            try {
+                // First try standard atob
+                return atob(base64);
+            } catch (error) {
+                // If atob fails, try manual decoding
+                const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
+                let result = '';
+                let buffer = 0;
+                let bitsRemaining = 0;
+                
+                for (let i = 0; i < base64.length; i++) {
+                    const char = base64[i];
+                    if (char === '=') break;
+                    
+                    const index = chars.indexOf(char);
+                    if (index === -1) continue;
+                    
+                    buffer = (buffer << 6) | index;
+                    bitsRemaining += 6;
+                    
+                    if (bitsRemaining >= 8) {
+                        bitsRemaining -= 8;
+                        result += String.fromCharCode((buffer >> bitsRemaining) & 0xFF);
+                    }
+                }
+                
+                return result;
+            }
+        },
+
         // ถอดรหัสข้อมูล
         decryptData(encryptedData) {
+            // Pre-check if data contains invalid Base64 characters
+            if (!encryptedData || typeof encryptedData !== 'string') {
+                console.error('Invalid encrypted data');
+                return {};
+            }
+
+            // Check if data looks like corrupted Base64 (contains non-Base64 chars)
+            const base64Pattern = /^[A-Za-z0-9+/]*={0,2}$/;
+            if (!base64Pattern.test(encryptedData)) {
+                console.error('Data contains invalid Base64 characters, clearing corrupted data');
+                // Clear the corrupted data
+                const userStorageKey = this.getUserStorageKey();
+                localStorage.removeItem(userStorageKey);
+                return {};
+            }
+
             try {
                 const secretKey = this.getSecretKey();
-                const decoded = atob(encryptedData);
+                
+                // ใช้ safeAtob และ TextDecoder ที่ถูกต้องสำหรับ Unicode
+                const binaryString = this.safeAtob(encryptedData);
+                const utf8Bytes = new Uint8Array([...binaryString].map(char => char.charCodeAt(0)));
+                const decoded = new TextDecoder().decode(utf8Bytes);
                 
                 // ย้อนกลับการสับเปลี่ยนตัวอักษร
                 let decrypted = '';
@@ -1220,10 +1273,43 @@ const greetings = {
                 console.error('Decryption failed:', error);
                 // fallback: ลองแปลงตรงๆ
                 try {
-                    return JSON.parse(atob(encryptedData));
+                    const binaryString = this.safeAtob(encryptedData);
+                    const utf8Bytes = new Uint8Array([...binaryString].map(char => char.charCodeAt(0)));
+                    const decoded = new TextDecoder().decode(utf8Bytes);
+                    return JSON.parse(decoded);
                 } catch (fallbackError) {
                     console.error('Fallback decryption failed:', fallbackError);
-                    return {};
+                    
+                    // Try legacy decryption (old format)
+                    try {
+                        const secretKey = this.getSecretKey();
+                        const decoded = this.safeAtob(encryptedData);
+                        
+                        // ย้อนกลับการสับเปลี่ยนตัวอักษร (legacy)
+                        let decrypted = '';
+                        for (let i = 0; i < decoded.length; i++) {
+                            const charCode = decoded.charCodeAt(i);
+                            const keyChar = secretKey.charCodeAt(i % secretKey.length);
+                            decrypted += String.fromCharCode(charCode ^ keyChar);
+                        }
+                        
+                        // ใช้ decodeURIComponent เพื่อรองรับภาษาไทย
+                        const decodedString = decodeURIComponent(decrypted);
+                        return JSON.parse(decodedString);
+                    } catch (legacyError) {
+                        console.error('Legacy decryption failed:', legacyError);
+                        
+                        // Final fallback: try direct safeAtob
+                        try {
+                            return JSON.parse(this.safeAtob(encryptedData));
+                        } catch (finalError) {
+                            console.error('All decryption methods failed, clearing corrupted data:', finalError);
+                            // Clear the corrupted data and return empty object
+                            const userStorageKey = this.getUserStorageKey();
+                            localStorage.removeItem(userStorageKey);
+                            return {};
+                        }
+                    }
                 }
             }
         },
@@ -1552,6 +1638,16 @@ const greetings = {
                     return this.quizScore >= result.min && this.quizScore <= result.max;
                 }) || this.currentQuiz.results[0];
 
+                // ตรวจสอบข้อมูล user ก่อนบันทึก
+                let user = null;
+                if (window.currentUser && window.currentUser.email) {
+                    user = window.currentUser;
+                } else if (window.AuthUtils && window.AuthUtils.getCurrentUser) {
+                    user = window.AuthUtils.getCurrentUser();
+                } else if (firebase.auth().currentUser) {
+                    user = firebase.auth().currentUser;
+                }
+
                 // บันทึกประวัติ
                 const assessmentEntry = {
                     id: Date.now().toString(),
@@ -1560,7 +1656,13 @@ const greetings = {
                     score: this.quizScore,
                     result: this.quizResult,
                     date: new Date().toISOString(),
-                    answers: this.quizAnswers
+                    answers: this.quizAnswers,
+                    // เพิ่มข้อมูล user ถ้ามี
+                    ...(user && !user.isGuest ? {
+                        userEmail: user.email,
+                        userId: user.uid,
+                        completedAt: new Date().toISOString()
+                    } : {})
                 };
                 
                 this.assessmentHistory.unshift(assessmentEntry);
@@ -1570,8 +1672,12 @@ const greetings = {
                 this.tree.progress += 1;
                 this.updateTreeAnimation();
 
-                // บันทึกข้อมูลไป Firebase Firestore
-                this.saveAssessmentToFirebase(assessmentEntry);
+                // บันทึกข้อมูลไป Firebase Firestore (เฉพาะ user ที่ login)
+                if (user && !user.isGuest) {
+                    this.saveAssessmentToFirebase(assessmentEntry);
+                } else {
+                    console.log('📝 Guest user or no user detected, using localStorage only');
+                }
 
                 // บันทึกข้อมูลแบบเดิม (fallback)
                 this.saveData();
@@ -1637,24 +1743,67 @@ const greetings = {
             }
 
             try {
-                const user = window.AuthUtils ? window.AuthUtils.getCurrentUser() : null;
-                if (!user || user.isGuest) {
-                    console.warn('User not authenticated or is guest, using localStorage only');
+                // ตรวจสอบ user จากหลายแหล่งเพื่อความถูกต้อง
+                let user = null;
+                
+                // 1. ตรวจสอบจาก currentUser (Firebase Auth)
+                if (window.currentUser && window.currentUser.email) {
+                    user = window.currentUser;
+                }
+                // 2. ตรวจสอบจาก AuthUtils
+                else if (window.AuthUtils && window.AuthUtils.getCurrentUser) {
+                    user = window.AuthUtils.getCurrentUser();
+                }
+                // 3. ตรวจสอบจาก Firebase Auth โดยตรง
+                else if (firebase.auth().currentUser) {
+                    user = firebase.auth().currentUser;
+                }
+                
+                if (!user) {
+                    console.warn('❌ User not authenticated, cannot save to Firebase');
+                    // พยายามรอ user และลองใหม่
+                    setTimeout(() => {
+                        this.retrySaveToFirebase(assessment);
+                    }, 2000);
+                    return;
+                }
+                
+                if (user.isGuest) {
+                    console.warn('⚠️ Guest user, using localStorage only');
                     return;
                 }
 
-                console.log('🔄 กำลังบันทึก assessment ลง Firebase...');
+                console.log('🔄 กำลังบันทึก assessment ลง Firebase...', 'User:', user.email);
+                
+                // เพิ่มข้อมูล user ลงใน assessment
+                const assessmentWithUser = {
+                    ...assessment,
+                    userEmail: user.email,
+                    userId: user.uid,
+                    completedAt: new Date().toISOString()
+                };
+                
                 await window.db
                     .collection('users')
                     .doc(user.uid)
                     .collection('assessments')
                     .doc(assessment.id)
-                    .set(assessment);
+                    .set(assessmentWithUser);
 
                 console.log('✅ บันทึก assessment ลง Firebase สำเร็จ');
             } catch (error) {
                 console.error('❌ ไม่สามารถบันทึก assessment ลง Firebase:', error);
+                // ลองบันทึกใหม่หลังจาก delay
+                setTimeout(() => {
+                    this.retrySaveToFirebase(assessment);
+                }, 3000);
             }
+        },
+        
+        // ฟังก์ชัน retry สำหรับบันทึกลง Firebase
+        async retrySaveToFirebase(assessment) {
+            console.log('🔄 Retrying to save assessment to Firebase...');
+            await this.saveAssessmentToFirebase(assessment);
         },
 
         // บันทึก journal ลง Firebase Firestore
