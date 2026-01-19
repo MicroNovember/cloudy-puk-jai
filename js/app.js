@@ -1863,7 +1863,13 @@ const greetings = {
                     .get();
 
                 const assessments = assessmentSnapshot.docs
-                    .map(doc => ({ id: doc.id, ...doc.data() }))
+                    .map(doc => ({ 
+                        id: doc.id, 
+                        ...doc.data(),
+                        // เพิ่ม field ที่จำเป็นสำหรับ history.js
+                        title: doc.data().title || doc.data().quizTitle || 'ไม่ระบุชื่อ',
+                        quizTitle: doc.data().title || doc.data().quizTitle || 'ไม่ระบุชื่อ'
+                    }))
                     .filter(assessment => assessment.id !== 'init');
 
                 this.assessmentHistory = assessments;

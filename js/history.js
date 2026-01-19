@@ -360,14 +360,36 @@ async function loadHistoryData() {
         // Fallback: Get data from app.js Alpine store
         let app = Alpine.store('mindbloomApp');
         let retries = 0;
-        const maxRetries = 10;
+        const maxRetries = 20; // เพิ่ม retries
         
         // Wait for Alpine store to be available
         while (!app && retries < maxRetries) {
             console.log(`Waiting for Alpine store... attempt ${retries + 1}/${maxRetries}`);
-            await new Promise(resolve => setTimeout(resolve, 100));
+            await new Promise(resolve => setTimeout(resolve, 200)); // เพิ่ม delay
             app = Alpine.store('mindbloomApp');
             retries++;
+        }
+        
+        if (!app) {
+            console.warn('Alpine store not available after retries, trying alternative methods...');
+            // ลองวิธีอื่น: ดึงจาก window.Alpine
+            try {
+                if (window.Alpine && window.Alpine.store) {
+                    const stores = window.Alpine.store();
+                    console.log('Available Alpine stores:', Object.keys(stores));
+                    
+                    // ลองดูว่ามี store อื่นที่ใช้ได้ไหม
+                    for (const [storeName, storeData] of Object.entries(stores)) {
+                        if (storeData && storeData.assessmentHistory) {
+                            console.log(`Found assessment data in store: ${storeName}`);
+                            app = storeData;
+                            break;
+                        }
+                    }
+                }
+            } catch (e) {
+                console.error('Error accessing Alpine stores:', e);
+            }
         }
         
         console.log('Alpine store found:', !!app);
@@ -403,6 +425,11 @@ async function loadHistoryData() {
         console.error('เกิดข้อผิดพลาดในการโหลดข้อมูล:', error);
         historyData = [];
     }
+    
+    // สร้างกราฟแนวโน้มหลังจากโหลดข้อมูลเสร็จ
+    setTimeout(() => {
+        createTrendChart();
+    }, 500);
     
     return historyData;
 }
@@ -487,6 +514,11 @@ function loadHistoryFromLocalStorage() {
         console.error('เกิดข้อผิดพลาดในการโหลดจาก localStorage:', error);
         guestHistoryData = [];
     }
+    
+    // สร้างกราฟแนวโน้มหลังจากโหลดข้อมูลจาก localStorage
+    setTimeout(() => {
+        createTrendChart();
+    }, 500);
 }
 async function loadHistoryFromFirebase() {
     if (!window.db) {
@@ -564,6 +596,11 @@ async function loadHistoryFromFirebase() {
         
         // อัปเดต UI
         updateUI();
+        
+        // สร้างกราฟแนวโน้มหลังจากโหลดข้อมูลจาก Firebase
+        setTimeout(() => {
+            createTrendChart();
+        }, 500);
         
         return historyData;
 
@@ -2437,4 +2474,294 @@ function setupEventListeners() {
     `;
     document.head.appendChild(style);
 })();
+
+// ==================== TREND CHART FUNCTIONS ====================
+
+let trendChart = null;
+
+// สร้างกราฟแนวโน้ม
+function createTrendChart() {
+    const ctx = document.getElementById('trendChart');
+    if (!ctx) return;
+
+    // ทำลายกราฟเก่าถ้ามี
+    if (trendChart) {
+        trendChart.destroy();
+    }
+
+    // เตรียมข้อมูลสำหรับกราฟ
+    const chartData = prepareChartData('all');
+    
+    // สร้างกราฟ
+    trendChart = new Chart(ctx, {
+        type: 'line',
+        data: chartData,
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                title: {
+                    display: true,
+                    text: 'แนวโน้มคะแนนการทดสอบ',
+                    font: {
+                        size: 16,
+                        family: 'Anuphan, sans-serif'
+                    },
+                    color: document.documentElement.classList.contains('dark') ? '#fff' : '#333'
+                },
+                legend: {
+                    display: true,
+                    position: 'top',
+                    labels: {
+                        font: {
+                            family: 'Anuphan, sans-serif'
+                        },
+                        color: document.documentElement.classList.contains('dark') ? '#fff' : '#333'
+                    }
+                },
+                tooltip: {
+                    backgroundColor: document.documentElement.classList.contains('dark') ? '#374151' : '#fff',
+                    titleColor: document.documentElement.classList.contains('dark') ? '#fff' : '#333',
+                    bodyColor: document.documentElement.classList.contains('dark') ? '#fff' : '#333',
+                    borderColor: document.documentElement.classList.contains('dark') ? '#4B5563' : '#E5E7EB',
+                    borderWidth: 1,
+                    callbacks: {
+                        label: function(context) {
+                            return context.dataset.label + ': ' + context.parsed.y + ' คะแนน';
+                        }
+                    }
+                }
+            },
+            scales: {
+                x: {
+                    display: true,
+                    title: {
+                        display: true,
+                        text: 'วันที่',
+                        font: {
+                            family: 'Anuphan, sans-serif'
+                        },
+                        color: document.documentElement.classList.contains('dark') ? '#fff' : '#333'
+                    },
+                    ticks: {
+                        font: {
+                            family: 'Anuphan, sans-serif'
+                        },
+                        color: document.documentElement.classList.contains('dark') ? '#fff' : '#333'
+                    },
+                    grid: {
+                        color: document.documentElement.classList.contains('dark') ? '#374151' : '#E5E7EB'
+                    }
+                },
+                y: {
+                    display: true,
+                    title: {
+                        display: true,
+                        text: 'คะแนน',
+                        font: {
+                            family: 'Anuphan, sans-serif'
+                        },
+                        color: document.documentElement.classList.contains('dark') ? '#fff' : '#333'
+                    },
+                    ticks: {
+                        font: {
+                            family: 'Anuphan, sans-serif'
+                        },
+                        color: document.documentElement.classList.contains('dark') ? '#fff' : '#333'
+                    },
+                    grid: {
+                        color: document.documentElement.classList.contains('dark') ? '#374151' : '#E5E7EB'
+                    }
+                }
+            }
+        }
+    });
+}
+
+// เตรียมข้อมูลสำหรับกราฟ
+function prepareChartData(filter = 'all') {
+    const filteredData = filterHistoryData(filter);
+    console.log('Preparing chart data with', filteredData.length, 'items for filter:', filter);
+    
+    const labels = [];
+    const dataPoints = {}; // เก็บข้อมูลตามวันที่
+    const validData = filteredData.filter(item => {
+        const title = getTestTitle(item);
+        return item && item.date && title && title !== 'ไม่ระบุชื่อแบบทดสอบ';
+    });
+    
+    console.log('Valid data for chart:', validData.length, 'items from', filteredData.length, 'total');
+    
+    // จัดกลุ่มข้อมูลตามวันที่ก่อน
+    validData.forEach(item => {
+        // ใช้ helper function เพื่อความสม่ำเสมอ
+        const title = getTestTitle(item);
+        
+        // Debug: แสดงข้อมูลทั้งหมดของ item
+        console.log('Processing item:', {
+            id: item.id,
+            title: title,
+            quizTitle: item.quizTitle,
+            score: item.score,
+            date: item.date,
+            hasTitle: !!item.title,
+            hasQuizTitle: !!item.quizTitle
+        });
+        
+        // ตรวจสอบว่ามีข้อมูลครบถ้วน
+        if (!title || title === 'ไม่ระบุชื่อแบบทดสอบ') {
+            console.warn('Skipping item with invalid title:', item);
+            console.warn('Item details:', {
+                originalItem: item,
+                getTestTitleResult: title,
+                hasTitle: !!item.title,
+                hasQuizTitle: !!item.quizTitle,
+                hasAssessmentTitle: !!item.assessmentTitle,
+                titleValue: item.title,
+                quizTitleValue: item.quizTitle,
+                assessmentTitleValue: item.assessmentTitle
+            });
+            return; // ข้ามรายการที่ไม่มีชื่อ
+        }
+        
+        const date = new Date(item.date).toLocaleDateString('th-TH', {
+            day: 'numeric',
+            month: 'short'
+        });
+        
+        // เพิ่มวันที่ถ้ายังไม่มี
+        if (!labels.includes(date)) {
+            labels.push(date);
+        }
+        
+        // เก็บข้อมูลตามวันที่และประเภท
+        if (!dataPoints[date]) {
+            dataPoints[date] = {};
+        }
+        
+        const type = getTestType(title);
+        dataPoints[date][type] = item.score;
+    });
+    
+    // สร้าง datasets จากข้อมูลที่จัดกลุ่มแล้ว
+    const datasets = {};
+    const typeColors = {
+        'depression': 'rgb(239, 68, 68)',     // แดง
+        'anxiety': 'rgb(59, 130, 246)',       // น้ำเงิน
+        'stress': 'rgb(34, 197, 94)',         // เขียว
+        'wellbeing': 'rgb(168, 85, 247)',     // ม่วง
+        'sleep': 'rgb(251, 146, 60)'          // ส้ม
+    };
+    
+    // สร้าง datasets จากข้อมูลที่จัดกลุ่มแล้ว
+    labels.forEach((date, dateIndex) => {
+        const dayData = dataPoints[date];
+        Object.keys(dayData).forEach(type => {
+            if (!datasets[type]) {
+                datasets[type] = {
+                    label: getTestTypeLabel(type),
+                    data: new Array(labels.length).fill(null),
+                    borderColor: typeColors[type] || 'rgb(107, 114, 128)',
+                    backgroundColor: typeColors[type] ? typeColors[type].replace('rgb', 'rgba').replace(')', ', 0.1)') : 'rgba(107, 114, 128, 0.1)',
+                    tension: 0.4,
+                    fill: false,
+                    pointRadius: 5,
+                    pointHoverRadius: 7
+                };
+            }
+            datasets[type].data[dateIndex] = dayData[type];
+        });
+    });
+    
+    return {
+        labels: labels,
+        datasets: Object.values(datasets)
+    };
+}
+
+// กรองข้อมูลประวัติตามประเภท
+function filterHistoryData(filter) {
+    // เลือกข้อมูลตามประเภทผู้ใช้
+    const currentData = getCurrentHistoryData();
+    
+    if (filter === 'all') {
+        return currentData;
+    }
+    
+    return currentData.filter(item => {
+        const title = getTestTitle(item);
+        const type = getTestType(title);
+        return type === filter;
+    });
+}
+
+// ดึงข้อมูลประวัติปัจจุบันตามประเภทผู้ใช้
+function getCurrentHistoryData() {
+    const user = window.AuthUtils ? window.AuthUtils.getCurrentUser() : null;
+    
+    if (user && user.isGuest) {
+        console.log('Using guestHistoryData for chart:', guestHistoryData.length, 'items');
+        return guestHistoryData;
+    } else {
+        console.log('Using historyData for chart:', historyData.length, 'items');
+        return historyData;
+    }
+}
+
+// ดึงประเภทการทดสอบจากชื่อ
+function getTestType(quizTitle) {
+    if (!quizTitle || typeof quizTitle !== 'string') {
+        console.warn('Invalid quizTitle:', quizTitle);
+        return 'other';
+    }
+    
+    const title = quizTitle.toLowerCase();
+    if (title.includes('ซึมเศร้า') || title.includes('depression')) return 'depression';
+    if (title.includes('วิตก') || title.includes('กังวล') || title.includes('anxiety')) return 'anxiety';
+    if (title.includes('เครียด') || title.includes('stress')) return 'stress';
+    if (title.includes('สุขภาพ') || title.includes('wellbeing')) return 'wellbeing';
+    if (title.includes('นอน') || title.includes('sleep')) return 'sleep';
+    return 'other';
+}
+
+// ดึงชื่อประเภทการทดสอบ
+function getTestTypeLabel(type) {
+    const labels = {
+        'depression': 'ภาวะซึมเศร้า',
+        'anxiety': 'ความวิตกกังวล',
+        'stress': 'ความเครียด',
+        'wellbeing': 'สุขภาพจิตใจ',
+        'sleep': 'คุณภาพการนอน',
+        'other': 'อื่นๆ'
+    };
+    return labels[type] || 'อื่นๆ';
+}
+
+// อัปเดตกราฟตามตัวกรอง
+function updateTrendChart(filter, buttonElement) {
+    console.log('Updating trend chart with filter:', filter);
+    
+    if (!trendChart) {
+        createTrendChart();
+        return;
+    }
+    
+    const chartData = prepareChartData(filter);
+    trendChart.data = chartData;
+    trendChart.update();
+    
+    // อัปเดตสถานะปุ่ม
+    const buttons = document.querySelectorAll('.mt-4 button');
+    buttons.forEach(btn => {
+        btn.classList.remove('bg-primary', 'text-white');
+        btn.classList.add('bg-gray-100', 'dark:bg-gray-700');
+    });
+    
+    // ไฮไลฟดูว่ามี buttonElement ส่งมาหรือไม่
+    if (buttonElement) {
+        buttonElement.classList.remove('bg-gray-100', 'dark:bg-gray-700');
+        buttonElement.classList.add('bg-primary', 'text-white');
+    }
+}
+
 // ==================== END OF FILE ====================

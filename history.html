@@ -31,6 +31,9 @@
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -370,8 +373,10 @@
 <!-- END Deskto Sidebar -->
     
     <!-- Main Content -->
-    <main class="container mx-auto px-2 sm:px-4 pt-4 pb-20 lg:pb-12 lg:ml-64">
-      <div class="max-w-7xl mx-auto">
+    <main class="flex-1 min-w-0 lg:pl-72 w-full transition-all duration-300">
+  <div class="max-w-[1400px] mx-auto p-4 md:p-6 lg:p-8">
+
+    
         <!-- Right Column: Main Content -->
         <div class="flex-1 mt-6">
         <div class="space-y-6">
@@ -530,7 +535,42 @@
                 </div>
             </div>
 
-            <!-- ส่วนที่ 2: รายการประวัติทั้งหมด -->
+            <!-- ส่วนที่ 2: กราฟแนวโน้มสภาพจิตใจ -->
+            <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl overflow-hidden mb-6">
+                <div class="p-4 sm:p-6 border-b border-gray-200 dark:border-gray-700">
+                    <h3 class="text-xl sm:text-2xl font-bold text-primary flex items-center">
+                        <i class="fas fa-chart-line mr-3 text-2xl sm:text-3xl"></i>
+                        แนวโน้มสภาพจิตใจ
+                    </h3>
+                    <p class="text-gray-600 dark:text-gray-400 text-sm mt-2">
+                        กราฟแสดงการเปลี่ยนแปลงของคะแนนการทดสอบตามเวลา
+                    </p>
+                </div>
+
+                <div class="p-4 sm:p-6">
+                    <div class="relative" style="height: 400px;">
+                        <canvas id="trendChart"></canvas>
+                    </div>
+                    
+                    <!-- ตัวกรองข้อมูล -->
+                    <div class="mt-4 flex flex-wrap gap-2 justify-center">
+                        <button onclick="updateTrendChart('all', this)" class="px-3 py-1.5 bg-gray-100 dark:bg-gray-700 hover:bg-primary hover:text-white rounded-lg text-sm transition-colors">
+                            ทั้งหมด
+                        </button>
+                        <button onclick="updateTrendChart('depression', this)" class="px-3 py-1.5 bg-gray-100 dark:bg-gray-700 hover:bg-primary hover:text-white rounded-lg text-sm transition-colors">
+                            ภาวะซึมเศร้า
+                        </button>
+                        <button onclick="updateTrendChart('anxiety', this)" class="px-3 py-1.5 bg-gray-100 dark:bg-gray-700 hover:bg-primary hover:text-white rounded-lg text-sm transition-colors">
+                            ความวิตกกังวล
+                        </button>
+                        <button onclick="updateTrendChart('stress', this)" class="px-3 py-1.5 bg-gray-100 dark:bg-gray-700 hover:bg-primary hover:text-white rounded-lg text-sm transition-colors">
+                            ความเครียด
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ส่วนที่ 3: รายการประวัติทั้งหมด -->
             <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl overflow-hidden">
                 <div class="p-4 sm:p-6 border-b border-gray-200 dark:border-gray-700">
                     <h3 class="text-xl sm:text-2xl font-bold text-primary flex items-center">
