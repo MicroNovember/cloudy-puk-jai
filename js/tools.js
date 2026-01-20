@@ -19,6 +19,174 @@ document.addEventListener('alpine:init', () => {
         guidanceText: 'พร้อมเริ่มฝึกหายใจ 4-7-8',
         totalSeconds: 0,
         
+        // User Type Detection
+        get isGuestUser() {
+            return !this.currentUser || this.currentUser.isAnonymous;
+        },
+        
+        get isLoggedInUser() {
+            return this.currentUser && !this.currentUser.isAnonymous;
+        },
+        
+        get currentUser() {
+            // Get current Firebase user
+            return firebase.auth().currentUser;
+        },
+        
+        // Storage Keys
+        get storageKey() {
+            return this.isGuestUser ? 'guestBreathingData' : null;
+        },
+        
+        // Data Management
+        get breathingData() {
+            if (this.isGuestUser) {
+                // Get from localStorage for guest
+                const data = localStorage.getItem('guestBreathingData');
+                return data ? JSON.parse(data) : this.getDefaultData();
+            } else {
+                // Get from Firebase store for logged in users
+                return Alpine.store('breathing');
+            }
+        },
+        
+        set breathingData(data) {
+            if (this.isGuestUser) {
+                // Save to localStorage for guest
+                localStorage.setItem('guestBreathingData', JSON.stringify(data));
+            } else {
+                // Update Firebase store for logged in users
+                Object.assign(Alpine.store('breathing'), data);
+                // Also save to Firestore
+                this.saveToFirebase(data);
+            }
+        },
+        
+        getDefaultData() {
+            return {
+                cycleCount: 0,
+                sessionCount: 0,
+                totalMinutes: 0,
+                dailyProgress: 0,
+                lastSessionDate: null,
+                totalSeconds: 0,
+                totalTime: '0:00'
+            };
+        },
+        
+        // Firebase save function
+        async saveToFirebase(data) {
+            if (this.isLoggedInUser && this.currentUser) {
+                try {
+                    const db = firebase.firestore();
+                    await db.collection('users').doc(this.currentUser.uid).set({
+                        breathingData: data,
+                        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                    }, { merge: true });
+                } catch (error) {
+                    console.error('Error saving to Firebase:', error);
+                }
+            }
+        },
+        
+        // Load from Firebase
+        async loadFromFirebase() {
+            if (this.isLoggedInUser && this.currentUser) {
+                try {
+                    const db = firebase.firestore();
+                    const doc = await db.collection('users').doc(this.currentUser.uid).get();
+                    if (doc.exists && doc.data().breathingData) {
+                        const data = doc.data().breathingData;
+                        Object.assign(Alpine.store('breathing'), data);
+                        return data;
+                    }
+                } catch (error) {
+                    console.error('Error loading from Firebase:', error);
+                }
+            }
+            return null;
+        },
+        
+        // Migrate guest data to Firebase when user logs in
+        async migrateGuestDataToFirebase() {
+            if (this.isLoggedInUser) {
+                try {
+                    // Check if user has existing Firebase data
+                    const existingData = await this.loadFromFirebase();
+                    
+                    // Get guest data from localStorage
+                    const guestData = localStorage.getItem('guestBreathingData');
+                    
+                    if (guestData) {
+                        const parsedGuestData = JSON.parse(guestData);
+                        
+                        // Merge data - prioritize Firebase data if exists, otherwise use guest data
+                        let mergedData;
+                        if (existingData) {
+                            // Merge with existing Firebase data (take higher values)
+                            mergedData = {
+                                cycleCount: Math.max(existingData.cycleCount || 0, parsedGuestData.cycleCount || 0),
+                                sessionCount: Math.max(existingData.sessionCount || 0, parsedGuestData.sessionCount || 0),
+                                totalMinutes: Math.max(existingData.totalMinutes || 0, parsedGuestData.totalMinutes || 0),
+                                dailyProgress: Math.max(existingData.dailyProgress || 0, parsedGuestData.dailyProgress || 0),
+                                totalSeconds: Math.max(existingData.totalSeconds || 0, parsedGuestData.totalSeconds || 0),
+                                lastSessionDate: existingData.lastSessionDate || parsedGuestData.lastSessionDate,
+                                lastUpdated: new Date().toISOString()
+                            };
+                        } else {
+                            // No existing data, use guest data
+                            mergedData = {
+                                ...parsedGuestData,
+                                lastUpdated: new Date().toISOString()
+                            };
+                        }
+                        
+                        // Save merged data to Firebase
+                        await this.saveToFirebase(mergedData);
+                        
+                        // Update local store with merged data
+                        Object.assign(Alpine.store('breathing'), mergedData);
+                        
+                        // Clear guest data after successful migration
+                        localStorage.removeItem('guestBreathingData');
+                        
+                        console.log('Guest data migrated to Firebase successfully');
+                        this.showNotification('success', '🎉 ยินดีต้อนรับ!', 'ข้อมูลการฝึกหายใจของคุณถูกโอนย้ายเรียบร้อย', 'fas fa-check-circle');
+                        
+                        return true;
+                    }
+                } catch (error) {
+                    console.error('Error migrating guest data:', error);
+                    this.showNotification('error', '❌ ข้อผิดพลาด', 'ไม่สามารถโอนย้ายข้อมูลได้', 'fas fa-exclamation-triangle');
+                }
+            }
+            return false;
+        },
+        
+        // Listen for auth state changes
+        initAuthListener() {
+            firebase.auth().onAuthStateChanged(async (user) => {
+                if (user && !user.isAnonymous) {
+                    // User just logged in with email
+                    console.log('User logged in:', user.email);
+                    
+                    // Migrate guest data if exists
+                    await this.migrateGuestDataToFirebase();
+                    
+                    // Reload data from Firebase
+                    await this.loadProgress();
+                } else if (user && user.isAnonymous) {
+                    // User is guest
+                    console.log('Guest user detected');
+                    await this.loadProgress();
+                } else {
+                    // User logged out
+                    console.log('User logged out');
+                    await this.loadProgress();
+                }
+            });
+        },
+        
         // UI State
         mobileMenuOpen: false,
         showModal: false,
@@ -26,6 +194,7 @@ document.addEventListener('alpine:init', () => {
         modalContent: '',
         notifications: [],
         guidanceExpanded: false,
+        scheduleExpanded: false,
         
         // Computed Properties
         get currentStateText() {
@@ -56,6 +225,9 @@ document.addEventListener('alpine:init', () => {
         
         // Methods
         init() {
+            // Initialize auth listener for guest to Firebase migration
+            this.initAuthListener();
+            
             // โหลดข้อมูลการฝึกหายใจ
             this.loadBreathingData();
             
@@ -106,16 +278,34 @@ document.addEventListener('alpine:init', () => {
             return `${mins}:${secs.toString().padStart(2, '0')}`;
         },
         
-        loadProgress() {
+        async loadProgress() {
             try {
-                const saved = localStorage.getItem('breathingProgress');
-                if (saved) {
-                    const data = JSON.parse(saved);
+                let data;
+                
+                if (this.isGuestUser) {
+                    // Load from localStorage for guest users
+                    const saved = localStorage.getItem('guestBreathingData');
+                    if (saved) {
+                        data = JSON.parse(saved);
+                    }
+                } else {
+                    // Load from Firebase for logged in users
+                    await this.loadFromFirebase();
+                    data = this.$store.breathing;
+                }
+                
+                if (data) {
                     this.$store.breathing.cycleCount = data.cycleCount || 0;
                     this.$store.breathing.dailyProgress = data.dailyProgress || 0;
                     this.totalSeconds = data.totalSeconds || 0;
                     this.$store.breathing.sessionCount = data.sessionCount || 0;
                     this.$store.breathing.lastSessionDate = data.lastSessionDate;
+                    
+                    // Restore current state and time if session was interrupted
+                    if (data.currentState && data.currentTime) {
+                        this.currentState = data.currentState;
+                        this.currentTime = data.currentTime;
+                    }
                     
                     this.updateTotalTimeDisplay();
                     this.checkDailyReset();
@@ -133,9 +323,21 @@ document.addEventListener('alpine:init', () => {
                 totalSeconds: this.totalSeconds,
                 sessionCount: this.sessionCount,
                 lastSessionDate: new Date().toISOString(),
-                lastUpdated: new Date().toISOString()
+                lastUpdated: new Date().toISOString(),
+                // Save current state for resume functionality
+                currentState: this.currentState,
+                currentTime: this.currentTime
             };
-            localStorage.setItem('breathingProgress', JSON.stringify(data));
+            
+            if (this.isGuestUser) {
+                // Save to localStorage for guest users
+                localStorage.setItem('guestBreathingData', JSON.stringify(data));
+            } else {
+                // Save to Firebase for logged in users
+                this.saveToFirebase(data);
+                // Also update local store for immediate UI updates
+                Object.assign(Alpine.store('breathing'), data);
+            }
         },
         
         resetProgress() {
@@ -164,15 +366,33 @@ document.addEventListener('alpine:init', () => {
         startBreathing() {
             if (this.isRunning) return;
             
-            this.isRunning = true;
-            this.currentState = 'inhale';
-            this.currentTime = 4;
-            this.$store.breathing.sessionCount++;
-            this.guidanceText = 'เริ่มหายใจเข้า... นับ 1-4';
+            // Check if we're resuming from pause (not starting fresh)
+            const isResuming = this.currentState !== 'inhale' || this.currentTime !== 4;
             
-            // First session notification
-            if (this.sessionCount === 1) {
-                this.showNotification('success', '🎉 ยินดีต้อนรับ!', 'นี่คือการฝึกหายใจครั้งแรกของคุณ ทำได้ดีที่สุดนะ!', 'fas fa-heart');
+            this.isRunning = true;
+            
+            if (!isResuming) {
+                // Starting fresh session
+                this.currentState = 'inhale';
+                this.currentTime = 4;
+                this.$store.breathing.sessionCount++;
+                this.guidanceText = 'เริ่มหายใจเข้า... นับ 1-4';
+                
+                // First session notification
+                if (this.sessionCount === 1) {
+                    this.showNotification('success', '🎉 ยินดีต้อนรับ!', 'นี่คือการฝึกหายใจครั้งแรกของคุณ ทำได้ดีที่สุดนะ!', 'fas fa-heart');
+                }
+            } else {
+                // Resuming from pause - set correct target time for current state
+                if (this.currentState === 'inhale') {
+                    this.currentTime = 4;
+                } else if (this.currentState === 'hold') {
+                    this.currentTime = 7;
+                } else if (this.currentState === 'exhale') {
+                    this.currentTime = 8;
+                }
+                this.guidanceText = 'ทำต่อ... ' + this.currentStateText;
+                this.showNotification('success', '▶️ ทำต่อ', 'กลับมาฝึกหายใจต่อจากที่ค้างไว้', 'fas fa-play');
             }
             
             this.startTimer();
@@ -232,7 +452,14 @@ document.addEventListener('alpine:init', () => {
                         if (this.currentTime <= 0) {
                             clearInterval(this.breakTimer);
                             // Break finished, start breathing again
-                            this.startBreathing();
+                            this.breakTimer = null;
+                            this.isRunning = true;
+                            this.currentState = 'inhale';
+                            this.currentTime = 4;
+                            this.guidanceText = 'เริ่มรอบใหม่... หายใจเข้า';
+                            
+                            this.startTimer();
+                            this.startTotalTimer();
                         }
                     }, 1000);
                     
@@ -266,8 +493,8 @@ document.addEventListener('alpine:init', () => {
             clearInterval(this.timer);
             clearInterval(this.totalTimer);
             
-            this.guidanceText = 'หยุดพักชั่วคราว';
-            this.showNotification('info', '⏸️ หยุดพัก', 'คุณสามารถเริ่มใหม่เมื่อพร้อม', 'fas fa-pause');
+            this.guidanceText = 'หยุดพักชั่วคราว - กดปุ่มเริ่มเพื่อทำต่อ';
+            this.showNotification('info', '⏸️ หยุดพัก', 'คุณสามารถกดปุ่มเริ่มเพื่อทำต่อจากจุดนี้', 'fas fa-pause');
         },
         
         resetBreathing() {
@@ -275,6 +502,9 @@ document.addEventListener('alpine:init', () => {
             this.currentState = 'inhale';
             this.currentTime = 4;
             this.guidanceText = 'พร้อมเริ่มฝึกใหม่';
+            
+            // Clear saved state to start fresh
+            this.saveProgress();
             
             this.showNotification('info', '🔄 เริ่มใหม่', 'พร้อมเริ่มฝึกหายใจใหม่', 'fas fa-redo');
         },
@@ -454,6 +684,80 @@ document.addEventListener('alpine:init', () => {
         toggleGuidance() {
             this.guidanceExpanded = !this.guidanceExpanded;
             localStorage.setItem('guidanceExpanded', this.guidanceExpanded);
+        },
+        
+        // Confirm reset progress
+        confirmResetProgress() {
+            this.modalTitle = '🔄 รีเซ็ตข้อมูลการฝึกหายใจ';
+            this.modalContent = `
+                <div class="space-y-4">
+                    <div class="bg-red-50 dark:bg-red-900/20 rounded-lg p-4 border border-red-200 dark:border-red-800">
+                        <h4 class="text-lg font-bold text-red-700 dark:text-red-300 mb-3 flex items-center gap-2">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            ข้อมูลที่จะถูกล้าง
+                        </h4>
+                        <div class="space-y-2 text-sm text-red-600 dark:text-red-400">
+                            <div class="flex items-center gap-2">
+                                <i class="fas fa-chart-line w-4"></i>
+                                <span>รอบที่ทำทั้งหมด: <strong x-text="sessionCount"></strong> รอบ</span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <i class="fas fa-clock w-4"></i>
+                                <span>เวลาทั้งหมด: <strong x-text="totalTime"></strong></span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <i class="fas fa-calendar-day w-4"></i>
+                                <span>รอบวันนี้: <strong x-text="dailyProgress"></strong> รอบ</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-amber-50 dark:bg-amber-900/20 rounded-lg p-4 border border-amber-200 dark:border-amber-800">
+                        <p class="text-sm text-amber-700 dark:text-amber-300">
+                            <i class="fas fa-info-circle mr-2"></i>
+                            การดำเนินการนี้ไม่สามารถกู้นได้ กรุณาตรวจสอบให้แน่ใจก่อนดำเนินการ
+                        </p>
+                    </div>
+                </div>
+            `;
+            this.showModal = true;
+        },
+        
+        // Reset all progress
+        resetAllProgress() {
+            console.log('Resetting all progress...');
+            
+            // Clear all breathing data
+            this.$store.breathing.cycleCount = 0;
+            this.$store.breathing.dailyProgress = 0;
+            this.totalSeconds = 0;
+            this.totalTime = '0:00';
+            this.$store.breathing.sessionCount = 0;
+            this.$store.breathing.lastSessionDate = null;
+            
+            // Reset current state
+            this.currentState = 'inhale';
+            this.currentTime = 4;
+            this.guidanceText = 'พร้อมเริ่มฝึกใหม่';
+            this.isRunning = false;
+            
+            // Clear all timers
+            if (this.timer) clearInterval(this.timer);
+            if (this.totalTimer) clearInterval(this.totalTimer);
+            if (this.breakTimer) clearInterval(this.breakTimer);
+            
+            // Clear storage based on user type
+            if (this.isGuestUser) {
+                // Clear localStorage for guest users
+                localStorage.removeItem('guestBreathingData');
+            } else {
+                // Clear Firebase data for logged in users
+                this.saveToFirebase(this.getDefaultData());
+            }
+            
+            // Show notification
+            this.showNotification('success', '🔄 รีเซ็ตสำเร็จ', 'ข้อมูลการฝึกหายใจทั้งหมดถูกล้างแล้ว', 'fas fa-check-circle');
+            
+            console.log('Reset completed successfully');
         }
     }));
 });

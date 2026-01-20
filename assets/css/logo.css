@@ -134,7 +134,7 @@
 }
 
 .logo-text {
-  font-family: 'Anuphan', 'Noto Sans Thai', sans-serif;
+  font-family: 'Anuphan', 'Noto Sans Thai', 'Leelawadee UI', 'Thonburi', 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
   font-weight: 600;
   color: #6D9F71;
 }

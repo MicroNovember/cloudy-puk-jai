@@ -315,13 +315,16 @@ html {
 }
 
 body {
-  font-family: 'Anuphan', 'Noto Sans Thai', 'Sarabun', 'Kanit', 'Prompt', 'Thai', 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: 'Anuphan', 'Noto Sans Thai', 'Leelawadee UI', 'Thonburi', 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
   font-size: 1rem; /* 16px - ฐานตัวสำหรับ mobile */
-  line-height: 1.6;
+  line-height: 1.7; /* เพิ่มจาก 1.6 เป็น 1.7 เพื่อให้สระบน-ล่างของภาษาไทยมีพื้นที่หายใจ */
   color: var(--color-text-primary);
   font-weight: 400;
+  letter-spacing: 0.015em; /* เพิ่มช่องไฟจางๆ ให้ภาษาไทยอ่านง่ายขึ้น */
+  word-break: break-word; /* ป้องกันคำไทยยาวๆ หลุดขอบจอ */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility; /* เพิ่มเพื่อให้ Browser วาดตัวอักษรสวยที่สุด */
   background-color: var(--color-bg-primary);
   transition: background-color var(--transition-base), color var(--transition-base);
   min-height: 100vh;
@@ -331,8 +334,22 @@ body {
 
 /* Thai Language Optimization */
 :lang(th) {
-  letter-spacing: 0.02em;
+  letter-spacing: 0.015em;
   word-spacing: 0.1em;
+  word-break: break-word;
+}
+
+/* ปรับขนาดตัวหนังสือเมื่อเป็นจอ iPad ขึ้นไป */
+@media (min-width: 768px) {
+  body {
+    font-size: 1.05rem; /* 17px สำหรับ iPad/Tablet */
+  }
+}
+
+@media (min-width: 1024px) {
+  body {
+    font-size: 1.0625rem; /* 17.5px สำหรับ Desktop */
+  }
 }
 
 /* ============================================================================

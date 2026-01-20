@@ -236,7 +236,7 @@
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Anuphan:wght@300;400;500;600;700&family=Noto+Sans+Thai:wght@300;400;500;600;700&family=Sarabun:wght@300;400;500;600;700&family=Kanit:wght@300;400;500;600;700&family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Anuphan:wght@300;400;500;600;700&family=Noto+Sans+Thai:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <!-- Logo CSS -->
     <link rel="stylesheet" href="assets/css/logo.css">
     <!-- Custom CSS -->
@@ -261,7 +261,7 @@
               neutral: '#F0F0F0',
             },
             fontFamily: {
-              'sans': ['Anuphan', 'Noto Sans Thai', 'Sarabun', 'Kanit', 'Prompt', 'Thai', 'Segoe UI', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+              'sans': ['Anuphan', 'Noto Sans Thai', 'Leelawadee UI', 'Thonburi', 'Segoe UI', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
             },
             animation: {
               'pulse-slow': 'pulse 3s ease-in-out infinite',
@@ -413,19 +413,19 @@
             </div>
             
             <!-- Combined Login/Register Card -->
-            <div class="rounded-2xl border border-white/20 bg-white/95 shadow-2xl backdrop-blur-xl ring-1 ring-white/10 dark:bg-gray-800/90 p-6 sm:p-8">
+            <div class="rounded-2xl border border-white/20 glass-effect shadow-2xl backdrop-blur-xl ring-1 ring-white/10 p-6 sm:p-8">
                 <!-- Tab Navigation -->
                 <div class="mb-6 rounded-2xl bg-gray-100/80 backdrop-blur-sm p-1 dark:bg-gray-900/60 ring-1 ring-white/5">
                     <div class="flex flex-row gap-2">
                         <button 
                             @click="activeTab = 'login'"
-                            :class="activeTab === 'login' ? 'bg-white/90 text-gray-900 shadow-lg ring-1 ring-white/20 dark:bg-gray-800/90 dark:text-white' : 'text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white'"
+                            :class="activeTab === 'login' ? 'bg-white/90 text-primary shadow-lg ring-1 ring-white/20 dark:bg-gray-800/90 dark:text-white' : 'text-secondary hover:text-primary dark:text-tertiary dark:hover:text-white'"
                             class="flex-1 rounded-xl px-6 py-3 text-base font-semibold transition-all duration-300 shadow-sm hover:shadow-md hover:scale-[1.02]">
                             เข้าสู่ระบบ
                         </button>
                         <button 
                             @click="activeTab = 'register'"
-                            :class="activeTab === 'register' ? 'bg-white/90 text-gray-900 shadow-lg ring-1 ring-white/20 dark:bg-gray-800/90 dark:text-white' : 'text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white'"
+                            :class="activeTab === 'register' ? 'bg-white/90 text-primary shadow-lg ring-1 ring-white/20 dark:bg-gray-800/90 dark:text-white' : 'text-secondary hover:text-primary dark:text-tertiary dark:hover:text-white'"
                             class="flex-1 rounded-xl px-6 py-3 text-base font-semibold transition-all duration-300 shadow-sm hover:shadow-md hover:scale-[1.02]">
                             สมัครสมาชิก
                         </button>
@@ -480,7 +480,7 @@
                     <div class="flex items-center justify-between">
                         <label class="flex items-center">
                             <input type="checkbox" x-model="form.remember" class="mr-3 w-4 h-4 rounded-xl">
-                            <span class="text-sm text-gray-600 dark:text-gray-400">จดจำฉันไว้</span>
+                            <span class="text-sm text-secondary">จดจำฉันไว้</span>
                         </label>
                         <a href="#" class="text-sm font-medium text-primary hover:text-primary-dark">ลืมรหัสผ่าน?</a>
                     </div>
@@ -516,7 +516,7 @@
                     
                     <!-- Email Field -->
                     <div>
-                        <label class="block text-xs font-bold uppercase tracking-wider text-gray-600 dark:text-gray-400 mb-2">
+                        <label class="block text-xs font-bold uppercase tracking-wider text-secondary mb-2">
                             <i class="fas fa-envelope mr-2"></i>อีเมล
                         </label>
                         <input 
@@ -525,7 +525,7 @@
                             x-model="registerForm.email"
                             class="w-full rounded-xl border border-gray-200/50 bg-white/80 backdrop-blur-sm px-6 py-4 text-base text-gray-900 placeholder-gray-400 shadow-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 dark:border-gray-600/50 dark:bg-gray-700/80 dark:text-white dark:placeholder-gray-400 transition-all duration-300 hover:border-gray-300/70 hover:shadow-md"
                             placeholder="your@email.com">
-                        <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                        <p class="text-sm text-tertiary mt-1">
                             ใช้อีเมลอะไรก็ได้ที่คุณจำได้ - ไม่ต้องเป็นอีเมลจริง
                         </p>
                     </div>
@@ -579,7 +579,7 @@
                     <div>
                         <label class="flex items-start">
                             <input type="checkbox" x-model="registerForm.agreedToTerms" class="mr-3 mt-1 w-4 h-4 rounded-xl">
-                            <span class="text-sm text-gray-600 dark:text-gray-400">
+                            <span class="text-sm text-secondary">
                                 ฉันได้อ่านและยอมรับ
                                 <button type="button" @click="openLegal('terms')" class="text-primary hover:text-primary-dark underline underline-offset-2">เงื่อนไขการใช้งาน</button>
                                 และ

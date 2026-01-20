@@ -341,17 +341,17 @@
 }
 
 .ripple-1 {
-    border-color: rgba(5, 148, 103, 0.3);
+    border-color: rgba(109, 159, 113, 0.3);
     animation-delay: 0s;
 }
 
 .ripple-2 {
-    border-color: rgba(20, 184, 165, 0.3);
+    border-color: rgba(216, 195, 255, 0.3);
     animation-delay: 1s;
 }
 
 .ripple-3 {
-    border-color: rgba(107, 114, 128, 0.3);
+    border-color: rgba(167, 230, 255, 0.3);
     animation-delay: 2s;
 }
 
@@ -484,6 +484,42 @@
     background: radial-gradient(circle at center, 
         rgba(156, 163, 175, 0.25) 0%, 
         rgba(156, 163, 175, 0.12) 50%, 
+        transparent 100%);
+    opacity: 1;
+    animation: glowPulse 2s ease-in-out infinite;
+}
+
+.inner-glow.bg-sad {
+    background: radial-gradient(circle at center, 
+        rgba(216, 195, 255, 0.3) 0%, 
+        rgba(216, 195, 255, 0.15) 50%, 
+        transparent 100%);
+    opacity: 1;
+    animation: glowPulse 2s ease-in-out infinite;
+}
+
+.dark .inner-glow.bg-sad {
+    background: radial-gradient(circle at center, 
+        rgba(216, 195, 255, 0.25) 0%, 
+        rgba(216, 195, 255, 0.12) 50%, 
+        transparent 100%);
+    opacity: 1;
+    animation: glowPulse 2s ease-in-out infinite;
+}
+
+.inner-glow.bg-calm {
+    background: radial-gradient(circle at center, 
+        rgba(167, 230, 255, 0.3) 0%, 
+        rgba(167, 230, 255, 0.15) 50%, 
+        transparent 100%);
+    opacity: 1;
+    animation: glowPulse 2s ease-in-out infinite;
+}
+
+.dark .inner-glow.bg-calm {
+    background: radial-gradient(circle at center, 
+        rgba(167, 230, 255, 0.25) 0%, 
+        rgba(167, 230, 255, 0.12) 50%, 
         transparent 100%);
     opacity: 1;
     animation: glowPulse 2s ease-in-out infinite;
