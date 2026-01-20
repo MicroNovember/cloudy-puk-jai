@@ -329,6 +329,29 @@ document.addEventListener('alpine:init', () => {
             this.showGuestModal = true;
         },
         
+        // Toggle Theme Function
+        toggleTheme() {
+            const newTheme = this.darkMode ? 'light' : 'dark';
+            
+            if (typeof setTheme === 'function') {
+                setTheme(newTheme);
+                // Also update local state immediately for responsive UI
+                this.darkMode = !this.darkMode;
+            } else {
+                // Fallback: direct theme toggle
+                this.darkMode = !this.darkMode;
+                if (this.darkMode) {
+                    document.documentElement.classList.add('dark');
+                    localStorage.setItem('defaultTheme', 'dark');
+                    localStorage.setItem('darkMode', 'true');
+                } else {
+                    document.documentElement.classList.remove('dark');
+                    localStorage.setItem('defaultTheme', 'light');
+                    localStorage.setItem('darkMode', 'false');
+                }
+            }
+        },
+        
         // Debug Register Function
         debugRegister() {
             // ตรวจสอบว่ามีข้อมูลครบถ้วนหรือไม่

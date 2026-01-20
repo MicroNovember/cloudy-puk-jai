@@ -392,16 +392,20 @@
     </script>
 </head>
 <body class="min-h-screen bg-gradient-to-br from-gray-950 via-gray-900 to-gray-950 animate-bg-fade" :class="{ 'dark': darkMode }">
+    <!-- Theme Toggle Button - Fixed Top Right -->
+    <div class="fixed top-4 right-4 z-50">
+        <button 
+            @click="toggleTheme()"
+            class="w-12 h-12 rounded-full bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm border-2 border-gray-200/50 dark:border-gray-600/50 shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center group hover:scale-110 ring-1 ring-white/20 dark:ring-white/10">
+            <i x-show="darkMode" class="fas fa-sun text-yellow-500 text-lg group-hover:text-yellow-400 transition-colors"></i>
+            <i x-show="!darkMode" class="fas fa-moon text-gray-700 text-lg group-hover:text-primary transition-colors"></i>
+        </button>
+    </div>
     <!-- Login Container -->
     <div class="min-h-screen flex items-center justify-center px-4 py-10 sm:py-12">
-        <div class="w-full max-w-4xl">
+        <div class="w-full max-w-md">
             <!-- Logo & Welcome -->
             <div class="text-center mb-8">
-                <!-- Simple Theme Selector -->
-                <div style="margin-bottom: 20px;">
-                    <button onclick="ThemeManager.setTheme('light')" style="background: white; color: black; border: 2px solid #ccc; padding: 8px 15px; margin: 5px; border-radius: 20px; cursor: pointer;">☀️ Light</button>
-                    <button onclick="ThemeManager.setTheme('dark')" style="background: #333; color: white; border: 2px solid #666; padding: 8px 15px; margin: 5px; border-radius: 20px; cursor: pointer;">🌙 Dark</button>
-                </div>
                 
                 <div class="logo logo-cloudy-puk-jai-large animate-float-slow mx-auto mb-4"></div>
                 <h3 class="text-3xl sm:text-4xl font-bold tracking-tight text-white">Cloudy・Puk・Jai</h3>
@@ -409,20 +413,20 @@
             </div>
             
             <!-- Combined Login/Register Card -->
-            <div class="rounded-2xl border border-white/10 bg-white/95 shadow-2xl backdrop-blur dark:bg-gray-800/90 p-6 sm:p-8">
+            <div class="rounded-2xl border border-white/20 bg-white/95 shadow-2xl backdrop-blur-xl ring-1 ring-white/10 dark:bg-gray-800/90 p-6 sm:p-8">
                 <!-- Tab Navigation -->
-                <div class="mb-6 rounded-2xl bg-gray-100 p-1 dark:bg-gray-900/60">
+                <div class="mb-6 rounded-2xl bg-gray-100/80 backdrop-blur-sm p-1 dark:bg-gray-900/60 ring-1 ring-white/5">
                     <div class="flex flex-row gap-2">
                         <button 
                             @click="activeTab = 'login'"
-                            :class="activeTab === 'login' ? 'bg-white text-gray-900 shadow-md dark:bg-gray-800 dark:text-white' : 'text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white'"
-                            class="flex-1 rounded-full px-6 py-3 text-base sm:text-lg font-semibold transition shadow-sm hover:shadow-md">
+                            :class="activeTab === 'login' ? 'bg-white/90 text-gray-900 shadow-lg ring-1 ring-white/20 dark:bg-gray-800/90 dark:text-white' : 'text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white'"
+                            class="flex-1 rounded-xl px-6 py-3 text-base font-semibold transition-all duration-300 shadow-sm hover:shadow-md hover:scale-[1.02]">
                             เข้าสู่ระบบ
                         </button>
                         <button 
                             @click="activeTab = 'register'"
-                            :class="activeTab === 'register' ? 'bg-white text-gray-900 shadow-md dark:bg-gray-800 dark:text-white' : 'text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white'"
-                            class="flex-1 rounded-full px-6 py-3 text-base sm:text-lg font-semibold transition shadow-sm hover:shadow-md">
+                            :class="activeTab === 'register' ? 'bg-white/90 text-gray-900 shadow-lg ring-1 ring-white/20 dark:bg-gray-800/90 dark:text-white' : 'text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white'"
+                            class="flex-1 rounded-xl px-6 py-3 text-base font-semibold transition-all duration-300 shadow-sm hover:shadow-md hover:scale-[1.02]">
                             สมัครสมาชิก
                         </button>
                     </div>
@@ -432,7 +436,7 @@
                 <form x-show="activeTab === 'login'" x-transition class="space-y-4" @submit.prevent="login()">
                     <!-- Welcome Message -->
                     <div class="text-center mb-6">
-                        <h3 class="text-2xl sm:text-3xl font-semibold text-gray-900 dark:text-gray-100 flex items-center justify-center">
+                        <h3 class="text-2xl sm:text-3xl font-semibold text-gray-900 dark:text-gray-100 flex items-center justify-center tracking-wide">
                             <span x-text="getGreetingMessage()"></span>
                         </h3>
                        
@@ -440,20 +444,20 @@
                     
                     <!-- Email Field -->
                     <div>
-                        <label class="block text-base sm:text-lg font-medium text-gray-700 dark:text-gray-300 mb-2">
+                        <label class="block text-xs font-bold uppercase tracking-wider text-gray-600 dark:text-gray-400 mb-2">
                             <i class="fas fa-envelope mr-2"></i>อีเมล
                         </label>
                         <input 
                             type="email" 
                             autocomplete="email"
                             x-model="form.email"
-                            class="w-full rounded-full border border-gray-300 bg-white px-6 py-4 text-base sm:text-lg text-gray-900 placeholder-gray-400 shadow-sm focus:border-primary focus:outline-none focus:ring-4 focus:ring-primary/20 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
+                            class="w-full rounded-xl border border-gray-200/50 bg-white/80 backdrop-blur-sm px-6 py-3 text-base text-gray-900 placeholder-gray-400 shadow-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 dark:border-gray-600/50 dark:bg-gray-700/80 dark:text-white dark:placeholder-gray-400 transition-all duration-300 hover:border-gray-300/70 hover:shadow-md"
                             placeholder="your@email.com">
                     </div>
                     
                     <!-- Password Field -->
                     <div>
-                        <label class="block text-base sm:text-lg font-medium text-gray-700 dark:text-gray-300 mb-2">
+                        <label class="block text-xs font-bold uppercase tracking-wider text-gray-600 dark:text-gray-400 mb-2">
                             <i class="fas fa-lock mr-2"></i>รหัสผ่าน
                         </label>
                         <div class="relative">
@@ -461,12 +465,12 @@
                                 :type="showPassword ? 'text' : 'password'"
                                 autocomplete="current-password"
                                 x-model="form.password"
-                                class="w-full rounded-full border border-gray-300 bg-white px-6 py-4 pr-14 text-base sm:text-lg text-gray-900 placeholder-gray-400 shadow-sm focus:border-primary focus:outline-none focus:ring-4 focus:ring-primary/20 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
+                                class="w-full rounded-xl border border-gray-200/50 bg-white/80 backdrop-blur-sm px-6 py-4 pr-14 text-base text-gray-900 placeholder-gray-400 shadow-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 dark:border-gray-600/50 dark:bg-gray-700/80 dark:text-white dark:placeholder-gray-400 transition-all duration-300 hover:border-gray-300/70 hover:shadow-md"
                                 placeholder="••••••••">
                             <button 
                                 type="button"
                                 @click="showPassword = !showPassword"
-                                class="absolute right-3 top-1/2 transform -translate-y-1/2 rounded-full p-2 text-gray-500 hover:bg-gray-100 hover:text-gray-700 dark:hover:bg-gray-700 shadow-sm hover:shadow-md transition-all">
+                                class="absolute right-3 top-1/2 transform -translate-y-1/2 rounded-xl p-2 text-gray-500 hover:bg-gray-100/80 hover:text-gray-700 dark:hover:bg-gray-700/80 shadow-sm hover:shadow-md transition-all duration-300 hover:scale-110">
                                 <i :class="showPassword ? 'fas fa-eye-slash' : 'fas fa-eye'"></i>
                             </button>
                         </div>
@@ -475,17 +479,17 @@
                     <!-- Remember Me & Forgot Password -->
                     <div class="flex items-center justify-between">
                         <label class="flex items-center">
-                            <input type="checkbox" x-model="form.remember" class="mr-3 w-4 h-4 rounded-full">
-                            <span class="text-base sm:text-lg text-gray-600 dark:text-gray-400">จดจำฉันไว้</span>
+                            <input type="checkbox" x-model="form.remember" class="mr-3 w-4 h-4 rounded-xl">
+                            <span class="text-sm text-gray-600 dark:text-gray-400">จดจำฉันไว้</span>
                         </label>
-                        <a href="#" class="text-base sm:text-lg font-medium text-primary hover:text-primary-dark">ลืมรหัสผ่าน?</a>
+                        <a href="#" class="text-sm font-medium text-primary hover:text-primary-dark">ลืมรหัสผ่าน?</a>
                     </div>
                     
                     <!-- Login Button -->
                     <button 
                         type="submit"
                         :disabled="loading"
-                        class="w-full btn-primary text-lg sm:text-xl py-4 rounded-full shadow-lg shadow-primary/20 hover:shadow-xl hover:shadow-primary/30 disabled:opacity-60 disabled:cursor-not-allowed transition-all duration-300 font-semibold">
+                        class="w-full btn-primary text-base py-3 rounded-xl shadow-xl shadow-black/5 hover:shadow-xl hover:shadow-black/10 hover:scale-[1.02] disabled:opacity-60 disabled:cursor-not-allowed transition-all duration-300 font-semibold">
                         <span x-show="!loading">เข้าสู่ระบบ</span>
                         <span x-show="loading" class="flex items-center justify-center">
                             <i class="fas fa-spinner fa-spin mr-2"></i>
@@ -498,7 +502,7 @@
                 <form x-show="activeTab === 'register'" x-transition class="space-y-4" @submit.prevent="register()">
                     <!-- Welcome Message -->
                     <div class="text-center mb-6">
-                        <h3 class="text-2xl sm:text-3xl font-semibold text-gray-800 dark:text-gray-200 flex items-center justify-center">
+                        <h3 class="text-2xl sm:text-3xl font-semibold text-gray-800 dark:text-gray-200 flex items-center justify-center tracking-wide">
                             สร้างบัญชีใหม่
                             <span class="ml-2 text-2xl sm:text-3xl">✨</span>
                         </h3>
@@ -507,23 +511,23 @@
                     
                     <!-- Email Field -->
                     <div>
-                        <label class="block text-base sm:text-lg font-medium text-gray-700 dark:text-gray-300 mb-2">
+                        <label class="block text-xs font-bold uppercase tracking-wider text-gray-600 dark:text-gray-400 mb-2">
                             <i class="fas fa-envelope mr-2"></i>อีเมล
                         </label>
                         <input 
                             type="email" 
                             autocomplete="email"
                             x-model="registerForm.email"
-                            class="w-full rounded-full border border-gray-300 bg-white px-6 py-4 text-base sm:text-lg text-gray-900 placeholder-gray-400 shadow-sm focus:border-primary focus:outline-none focus:ring-4 focus:ring-primary/20 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
+                            class="w-full rounded-xl border border-gray-200/50 bg-white/80 backdrop-blur-sm px-6 py-4 text-base text-gray-900 placeholder-gray-400 shadow-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 dark:border-gray-600/50 dark:bg-gray-700/80 dark:text-white dark:placeholder-gray-400 transition-all duration-300 hover:border-gray-300/70 hover:shadow-md"
                             placeholder="your@email.com">
-                        <p class="text-sm sm:text-base text-gray-500 dark:text-gray-400 mt-1">
+                        <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">
                             ใช้อีเมลอะไรก็ได้ที่คุณจำได้ - ไม่ต้องเป็นอีเมลจริง
                         </p>
                     </div>
                     
                     <!-- Password Field -->
                     <div>
-                        <label class="block text-base sm:text-lg font-medium text-gray-700 dark:text-gray-300 mb-2">
+                        <label class="block text-xs font-bold uppercase tracking-wider text-gray-600 dark:text-gray-400 mb-2">
                             <i class="fas fa-lock mr-2"></i>รหัสผ่าน
                         </label>
                         <div class="relative">
@@ -531,23 +535,23 @@
                                 :type="showRegisterPassword ? 'text' : 'password'"
                                 autocomplete="new-password"
                                 x-model="registerForm.password"
-                                class="w-full rounded-full border border-gray-300 bg-white px-6 py-4 pr-14 text-base sm:text-lg text-gray-900 placeholder-gray-400 shadow-sm focus:border-primary focus:outline-none focus:ring-4 focus:ring-primary/20 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
+                                class="w-full rounded-xl border border-gray-200/50 bg-white/80 backdrop-blur-sm px-6 py-4 pr-14 text-base text-gray-900 placeholder-gray-400 shadow-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 dark:border-gray-600/50 dark:bg-gray-700/80 dark:text-white dark:placeholder-gray-400 transition-all duration-300 hover:border-gray-300/70 hover:shadow-md"
                                 placeholder="••••••••">
                             <button 
                                 type="button"
                                 @click="showRegisterPassword = !showRegisterPassword"
-                                class="absolute right-3 top-1/2 transform -translate-y-1/2 rounded-full p-2 text-gray-500 hover:bg-gray-100 hover:text-gray-700 dark:hover:bg-gray-700 shadow-sm hover:shadow-md transition-all">
+                                class="absolute right-3 top-1/2 transform -translate-y-1/2 rounded-xl p-2 text-gray-500 hover:bg-gray-100/80 hover:text-gray-700 dark:hover:bg-gray-700/80 shadow-sm hover:shadow-md transition-all duration-300 hover:scale-110">
                                 <i :class="showRegisterPassword ? 'fas fa-eye-slash' : 'fas fa-eye'"></i>
                             </button>
                         </div>
-                        <p class="text-sm sm:text-base text-gray-500 dark:text-gray-400 mt-1">
+                        <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">
                             ควรมีอย่างน้อย 6 ตัวอักษร
                         </p>
                     </div>
                     
                     <!-- Confirm Password Field -->
                     <div>
-                        <label class="block text-base sm:text-lg font-medium text-gray-700 dark:text-gray-300 mb-2">
+                        <label class="block text-xs font-bold uppercase tracking-wider text-gray-600 dark:text-gray-400 mb-2">
                             <i class="fas fa-lock mr-2"></i>ยืนยันรหัสผ่าน
                         </label>
                         <div class="relative">
@@ -555,12 +559,12 @@
                                 :type="showConfirmPassword ? 'text' : 'password'"
                                 autocomplete="new-password"
                                 x-model="registerForm.confirmPassword"
-                                class="w-full rounded-full border border-gray-300 bg-white px-6 py-4 pr-14 text-base sm:text-lg text-gray-900 placeholder-gray-400 shadow-sm focus:border-primary focus:outline-none focus:ring-4 focus:ring-primary/20 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
+                                class="w-full rounded-xl border border-gray-200/50 bg-white/80 backdrop-blur-sm px-6 py-4 pr-14 text-base text-gray-900 placeholder-gray-400 shadow-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 dark:border-gray-600/50 dark:bg-gray-700/80 dark:text-white dark:placeholder-gray-400 transition-all duration-300 hover:border-gray-300/70 hover:shadow-md"
                                 placeholder="••••••••">
                             <button 
                                 type="button"
                                 @click="showConfirmPassword = !showConfirmPassword"
-                                class="absolute right-3 top-1/2 transform -translate-y-1/2 rounded-full p-2 text-gray-500 hover:bg-gray-100 hover:text-gray-700 dark:hover:bg-gray-700 shadow-sm hover:shadow-md transition-all">
+                                class="absolute right-3 top-1/2 transform -translate-y-1/2 rounded-xl p-2 text-gray-500 hover:bg-gray-100/80 hover:text-gray-700 dark:hover:bg-gray-700/80 shadow-sm hover:shadow-md transition-all duration-300 hover:scale-110">
                                 <i :class="showConfirmPassword ? 'fas fa-eye-slash' : 'fas fa-eye'"></i>
                             </button>
                         </div>
@@ -569,8 +573,8 @@
                     <!-- Terms Agreement -->
                     <div>
                         <label class="flex items-start">
-                            <input type="checkbox" x-model="registerForm.agreedToTerms" class="mr-3 mt-1 w-4 h-4 rounded-full">
-                            <span class="text-sm sm:text-base text-gray-600 dark:text-gray-400">
+                            <input type="checkbox" x-model="registerForm.agreedToTerms" class="mr-3 mt-1 w-4 h-4 rounded-xl">
+                            <span class="text-sm text-gray-600 dark:text-gray-400">
                                 ฉันได้อ่านและยอมรับ
                                 <button type="button" @click="openLegal('terms')" class="text-primary hover:text-primary-dark underline underline-offset-2">เงื่อนไขการใช้งาน</button>
                                 และ
@@ -584,7 +588,7 @@
                     <button 
                         type="submit"
                         :disabled="loading || !registerForm.agreedToTerms"
-                        class="w-full btn-primary text-lg sm:text-xl py-4 rounded-full shadow-lg shadow-primary/20 hover:shadow-xl hover:shadow-primary/30 disabled:opacity-60 disabled:cursor-not-allowed transition-all duration-300 font-semibold">
+                        class="w-full btn-primary text-base py-4 rounded-xl shadow-xl shadow-black/5 hover:shadow-xl hover:shadow-black/10 hover:scale-[1.02] disabled:opacity-60 disabled:cursor-not-allowed transition-all duration-300 font-semibold">
                         <span x-show="!loading">สมัครสมาชิก</span>
                         <span x-show="loading" class="flex items-center justify-center">
                             <i class="fas fa-spinner fa-spin mr-2"></i>
@@ -598,7 +602,7 @@
                     <button 
                         @click="showGuestModalFunc()"
                         :disabled="loading"
-                        class="w-full btn-outline text-lg sm:text-xl py-4 rounded-full flex items-center justify-center shadow-md hover:shadow-lg transition-all duration-300 font-semibold">
+                        class="w-full btn-outline text-base py-3 rounded-xl flex items-center justify-center shadow-md hover:shadow-lg hover:scale-[1.02] transition-all duration-300 font-semibold">
                         <i class="fas fa-user-astronaut mr-3 text-lg sm:text-xl"></i>
                         <span x-show="!loading">ทดลองใช้งาน (Guest)</span>
                         <span x-show="loading" class="flex items-center justify-center">
@@ -623,7 +627,7 @@
             
                         
             <!-- Privacy Notice -->
-            <div class="mt-6 text-center text-sm sm:text-base text-gray-500 dark:text-gray-400">
+            <div class="mt-6 text-center text-sm text-gray-500 dark:text-gray-400">
                 <p>
                     ด้วยการเข้าใช้งาน คุณยอมรับ
                     <button type="button" @click="openLegal('terms')" class="text-primary hover:text-primary-dark underline underline-offset-2">เงื่อนไขการใช้งาน</button>
@@ -637,7 +641,7 @@
             <div x-show="showLegalModal" x-transition class="fixed inset-0 z-50 flex items-center justify-center p-4" style="display: none;">
                 <div class="fixed inset-0 bg-black/60 backdrop-blur-sm" @click="closeLegal()"></div>
 
-                <div class="relative w-full max-w-4xl bg-white dark:bg-gray-800 rounded-2xl shadow-2xl border border-gray-200 dark:border-gray-700 overflow-hidden">
+                <div class="relative w-full max-w-md bg-white dark:bg-gray-800 rounded-2xl shadow-2xl border border-gray-200 dark:border-gray-700 overflow-hidden">
                     <div class="flex items-center justify-between px-5 py-4 border-b border-gray-200 dark:border-gray-700">
                         <div class="flex items-center gap-3">
                             <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
