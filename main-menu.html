@@ -86,9 +86,13 @@
                 </div>
                 <div class="flex items-center space-x-3">
                      
-                    <button @click="toggleDarkMode()" class="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700">
-                        <i :class="darkMode ? 'fas fa-sun' : 'fas fa-moon'" class="text-lg"></i>
-                    </button>
+                      <button @click="toggleDarkMode()" 
+                              class="w-12 h-12 rounded-full bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm border-2 border-gray-200/50 dark:border-gray-600/50 shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center group hover:scale-110 ring-1 ring-white/20 dark:ring-white/10 pointer-events-auto">
+                          <i :class="darkMode ? 'fas fa-sun text-yellow-500' : 'fas fa-moon text-gray-700 dark:text-gray-300'" 
+                            class="text-lg group-hover:text-primary transition-colors"></i>
+                      </button>
+
+
                     <div class="relative" x-data="{ userMenuOpen: false }">
                         <button @click="userMenuOpen = !userMenuOpen" class="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700">
                             <i class="fas fa-user-circle text-lg text-primary"></i>
