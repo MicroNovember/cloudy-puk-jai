@@ -25,22 +25,24 @@ const GUEST_SESSION_DAYS = 7;
 
 // Test Firebase functionality
 auth.onAuthStateChanged((user) => {
-    // อัปเดต currentUser ทั่วโลก
-    window.currentUser = user ? {
-        uid: user.uid,
-        email: user.email,
-        displayName: user.displayName
-    } : null;  // Updating AuthUtils with new user
+    // ทำให้ผู้ใช้พร้อมใช้งานทั่วโลก - ใช้ user object ต้นฉบับเพื่อความสมบูรณ์
+    window.currentUser = user;
+    
     if (user) {
-        // ทำให้ผู้ใช้พร้อมใช้งานทั่วโลก
-        window.currentUser = user;
+        console.log('🔥 Firebase user authenticated:', user.email);
         
-        // อัปเดต AuthUtils
+        // อัปเดต AuthUtils ถ้ามี
         if (window.AuthUtils) {
-            // Updating AuthUtils with new user
+            window.AuthUtils._userCache = {
+                uid: user.uid,
+                email: user.email,
+                displayName: user.displayName,
+                isGuest: false
+            };
+            window.AuthUtils._lastCheck = Date.now();
         }
     } else {
-        // No user in auth state change
+        console.log('🔥 No user authenticated');
         window.currentUser = null;
         
         // Clear AuthUtils cache when user logs out
@@ -325,6 +327,29 @@ document.addEventListener('alpine:init', () => {
             this.guestAgreed = false; // Reset agreement
             this.error = ''; // Clear any previous errors
             this.showGuestModal = true;
+        },
+        
+        // Toggle Theme Function
+        toggleTheme() {
+            const newTheme = this.darkMode ? 'light' : 'dark';
+            
+            if (typeof setTheme === 'function') {
+                setTheme(newTheme);
+                // Also update local state immediately for responsive UI
+                this.darkMode = !this.darkMode;
+            } else {
+                // Fallback: direct theme toggle
+                this.darkMode = !this.darkMode;
+                if (this.darkMode) {
+                    document.documentElement.classList.add('dark');
+                    localStorage.setItem('defaultTheme', 'dark');
+                    localStorage.setItem('darkMode', 'true');
+                } else {
+                    document.documentElement.classList.remove('dark');
+                    localStorage.setItem('defaultTheme', 'light');
+                    localStorage.setItem('darkMode', 'false');
+                }
+            }
         },
         
         // Debug Register Function
@@ -758,7 +783,21 @@ window.AuthUtils = {
             return this._userCache;
         }
         
-        // ตรวจสอบ Guest Mode ก่อน
+        // ตรวจสอบ Firebase Auth ก่อน (สำหรับ user ที่ login ด้วย email)
+        if (window.currentUser && window.currentUser.email && !window.currentUser.isGuest) {
+            const result = {
+                uid: window.currentUser.uid,
+                email: window.currentUser.email,
+                displayName: window.currentUser.displayName,
+                isGuest: false
+            };
+            console.log('🔍 AuthUtils: Firebase user found:', result);
+            this._userCache = result;
+            this._lastCheck = now;
+            return result;
+        }
+        
+        // ตรวจสอบ Guest Mode ถ้าไม่มี Firebase user
         const guestMode = localStorage.getItem('guestMode');
         const guestData = localStorage.getItem('guestData');
         
@@ -782,40 +821,21 @@ window.AuthUtils = {
                         sessionId: guestUser.sessionId
                     };
                     console.log('🔍 AuthUtils: Guest user is valid, returning:', result);
+                    this._userCache = result;
+                    this._lastCheck = now;
                     return result;
                 } else {
-                    console.log('🔍 AuthUtils: Guest session expired, cleaning up...');
-                    localStorage.removeItem('guestMode');
-                    localStorage.removeItem('guestData');
-                    localStorage.removeItem('guestLoginTime');
+                    console.log('🔍 AuthUtils: Guest session expired');
+                    this.clearGuestData();
                 }
             } catch (error) {
                 console.error('🔍 AuthUtils: Error parsing guest data:', error);
+                this.clearGuestData();
             }
         }
         
-        // Return Firebase user if available
-        if (auth.currentUser) {
-            const firebaseUser = auth.currentUser;
-            
-            // สำหรับผู้ใช้ Firebase ให้ใช้ email เป็น displayName เสมอ
-            const displayName = firebaseUser.email || 'User';
-            
-            const result = {
-                uid: firebaseUser.uid,
-                email: firebaseUser.email,
-                displayName: displayName,
-                isGuest: false
-            };
-            
-            // Update cache
-            this._userCache = result;
-            this._lastCheck = now;
-            
-            return result;
-        }
-        
-        // Update cache with null
+        // ไม่พบ user ใดๆ
+        console.log('🔍 AuthUtils: No user found');
         this._userCache = null;
         this._lastCheck = now;
         

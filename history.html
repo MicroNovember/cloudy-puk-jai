@@ -31,6 +31,9 @@
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -85,7 +88,8 @@
 
     <!-- Mobile Header -->
     <header class="sticky top-0 z-50 bg-white dark:bg-gray-800 shadow-md lg:hidden">
-        <div class="container mx-auto px-4 py-3">
+      <div class="max-w-7xl mx-auto px-4 py-3">
+         
             <div class="flex items-center justify-between">
                 <div class="flex items-center space-x-2">
                     <div class="logo logo-cloudy-puk-jai-small animate-pulse-slow"></div>
@@ -96,9 +100,13 @@
                 
                 <div class="flex items-center space-x-3">
                      
-                    <button @click="toggleDarkMode()" class="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700">
-                        <i :class="darkMode ? 'fas fa-sun' : 'fas fa-moon'" class="text-lg fas fa-sun"></i>
-                    </button>
+                    <button @click="toggleDarkMode()" 
+                          class="w-12 h-12 rounded-full bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm border-2 border-gray-200/50 dark:border-gray-600/50 shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center group hover:scale-110 ring-1 ring-white/20 dark:ring-white/10 pointer-events-auto">
+                      <i :class="darkMode ? 'fas fa-sun text-yellow-500' : 'fas fa-moon text-gray-700 dark:text-gray-300'" 
+                        class="text-lg group-hover:text-primary transition-colors"></i>
+                  </button>
+
+
                     <div class="relative" x-data="{ mobileMenuOpen: false }">
                         <button @click="mobileMenuOpen = !mobileMenuOpen" class="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700">
                             <i class="fas fa-user-circle text-lg text-primary"></i>
@@ -296,16 +304,20 @@
           
         <!-- Theme Selector -->
           <div class="pt-3 pb-1 border-t border-gray-100 dark:border-gray-800 mb-2">
-              <div class="flex bg-gray-100 dark:bg-gray-800/50 p-1 rounded-xl">
-                  <button onclick="ThemeManager.setTheme('light')" 
-                          class="flex-1 flex items-center justify-center py-1.5 text-[14px] font-medium rounded-lg transition-all text-gray-500 dark:text-gray-400 hover:bg-white dark:hover:bg-gray-700 hover:text-primary dark:hover:text-white hover:shadow-sm">
-                      <i class="fas fa-sun mr-1.5"></i> สว่าง
-                  </button>
+              <div class="bg-gray-100/80 dark:bg-gray-800/40 p-1 rounded-xl border border-gray-200/50 dark:border-gray-700/50">
                   
-                  <button onclick="ThemeManager.setTheme('dark')" 
-                          class="flex-1 flex items-center justify-center py-1.5 text-[14px] font-medium rounded-lg transition-all text-gray-500 dark:text-gray-400 hover:bg-white dark:hover:bg-gray-700 hover:text-primary dark:hover:text-white hover:shadow-sm">
-                      <i class="fas fa-moon mr-1.5"></i> มืด
+                  <button @click="toggleDarkMode()" 
+                          class="w-full flex items-center justify-center py-2.5 px-4 text-[14px] font-semibold rounded-lg transition-all duration-300 whitespace-nowrap shadow-sm group"
+                          :class="darkMode 
+                              ? 'bg-gray-700/60 text-yellow-400 ring-1 ring-white/10' 
+                              : 'bg-indigo-50/80 text-gray-700 ring-1 ring-indigo-100'">
+                      
+                      <i class="fas mr-2.5 text-lg transition-transform duration-500 group-hover:scale-110" 
+                        :class="darkMode ? 'fa-moon' : 'fa-sun text-yellow-500'"></i>
+                      
+                      <span x-text="darkMode ? 'โหมดมืด' : 'โหมดสว่าง'"></span>
                   </button>
+
               </div>
           </div>
           
@@ -370,8 +382,10 @@
 <!-- END Deskto Sidebar -->
     
     <!-- Main Content -->
-    <main class="container mx-auto px-2 sm:px-4 pt-4 pb-20 lg:pb-12 lg:ml-64">
-      <div class="max-w-7xl mx-auto">
+    <main class="flex-1 min-w-0 lg:pl-72 w-full transition-all duration-300">
+  <div class="max-w-[1400px] mx-auto p-4 md:p-6 lg:p-8">
+
+    
         <!-- Right Column: Main Content -->
         <div class="flex-1 mt-6">
         <div class="space-y-6">
@@ -530,7 +544,42 @@
                 </div>
             </div>
 
-            <!-- ส่วนที่ 2: รายการประวัติทั้งหมด -->
+            <!-- ส่วนที่ 2: กราฟแนวโน้มสภาพจิตใจ -->
+            <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl overflow-hidden mb-6">
+                <div class="p-4 sm:p-6 border-b border-gray-200 dark:border-gray-700">
+                    <h3 class="text-xl sm:text-2xl font-bold text-primary flex items-center">
+                        <i class="fas fa-chart-line mr-3 text-2xl sm:text-3xl"></i>
+                        แนวโน้มสภาพจิตใจ
+                    </h3>
+                    <p class="text-gray-600 dark:text-gray-400 text-sm mt-2">
+                        กราฟแสดงการเปลี่ยนแปลงของคะแนนการทดสอบตามเวลา
+                    </p>
+                </div>
+
+                <div class="p-4 sm:p-6">
+                    <div class="relative" style="height: 400px;">
+                        <canvas id="trendChart"></canvas>
+                    </div>
+                    
+                    <!-- ตัวกรองข้อมูล -->
+                    <div class="mt-4 flex flex-wrap gap-2 justify-center">
+                        <button onclick="updateTrendChart('all', this)" class="px-3 py-1.5 bg-gray-100 dark:bg-gray-700 hover:bg-primary hover:text-white rounded-lg text-sm transition-colors">
+                            ทั้งหมด
+                        </button>
+                        <button onclick="updateTrendChart('depression', this)" class="px-3 py-1.5 bg-gray-100 dark:bg-gray-700 hover:bg-primary hover:text-white rounded-lg text-sm transition-colors">
+                            ภาวะซึมเศร้า
+                        </button>
+                        <button onclick="updateTrendChart('anxiety', this)" class="px-3 py-1.5 bg-gray-100 dark:bg-gray-700 hover:bg-primary hover:text-white rounded-lg text-sm transition-colors">
+                            ความวิตกกังวล
+                        </button>
+                        <button onclick="updateTrendChart('stress', this)" class="px-3 py-1.5 bg-gray-100 dark:bg-gray-700 hover:bg-primary hover:text-white rounded-lg text-sm transition-colors">
+                            ความเครียด
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ส่วนที่ 3: รายการประวัติทั้งหมด -->
             <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl overflow-hidden">
                 <div class="p-4 sm:p-6 border-b border-gray-200 dark:border-gray-700">
                     <h3 class="text-xl sm:text-2xl font-bold text-primary flex items-center">
