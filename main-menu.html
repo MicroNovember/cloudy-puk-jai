@@ -188,16 +188,20 @@
           
         <!-- Theme Selector -->
           <div class="pt-3 pb-1 border-t border-gray-100 dark:border-gray-800 mb-2">
-              <div class="flex bg-gray-100 dark:bg-gray-800/50 p-1 rounded-xl">
-                  <button onclick="ThemeManager.setTheme('light')" 
-                          class="flex-1 flex items-center justify-center py-1.5 text-[14px] font-medium rounded-lg transition-all text-gray-500 dark:text-gray-400 hover:bg-white dark:hover:bg-gray-700 hover:text-primary dark:hover:text-white hover:shadow-sm">
-                      <i class="fas fa-sun mr-1.5"></i> สว่าง
-                  </button>
+              <div class="bg-gray-100/80 dark:bg-gray-800/40 p-1 rounded-xl border border-gray-200/50 dark:border-gray-700/50">
                   
-                  <button onclick="ThemeManager.setTheme('dark')" 
-                          class="flex-1 flex items-center justify-center py-1.5 text-[14px] font-medium rounded-lg transition-all text-gray-500 dark:text-gray-400 hover:bg-white dark:hover:bg-gray-700 hover:text-primary dark:hover:text-white hover:shadow-sm">
-                      <i class="fas fa-moon mr-1.5"></i> มืด
+                  <button @click="toggleDarkMode()" 
+                          class="w-full flex items-center justify-center py-2.5 px-4 text-[14px] font-semibold rounded-lg transition-all duration-300 whitespace-nowrap shadow-sm group"
+                          :class="darkMode 
+                              ? 'bg-gray-700/60 text-yellow-400 ring-1 ring-white/10' 
+                              : 'bg-indigo-50/80 text-gray-700 ring-1 ring-indigo-100'">
+                      
+                      <i class="fas mr-2.5 text-lg transition-transform duration-500 group-hover:scale-110" 
+                        :class="darkMode ? 'fa-moon' : 'fa-sun text-yellow-500'"></i>
+                      
+                      <span x-text="darkMode ? 'โหมดมืด' : 'โหมดสว่าง'"></span>
                   </button>
+
               </div>
           </div>
           
