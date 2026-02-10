@@ -1,6 +1,32 @@
 <!DOCTYPE html>
 <html lang="th" x-data="authApp()" x-init="init()" :class="{ 'dark': darkMode }">
 <head>
+    <style>
+    /* ซ่อนเนื้อหาเดิมทั้งหมด */
+    body > * { display: none !important; }
+
+    /* สร้างหน้าแจ้งเตือนใหม่ */
+    body::before {
+        content: "🚧 Under Construction";
+        display: flex !important;
+        position: fixed;
+        top: 0; left: 0;
+        width: 100vw; height: 100vh;
+        background: #ffffff;
+        color: #333;
+        font-family: sans-serif;
+        font-size: 2rem;
+        font-weight: bold;
+        justify-content: center;
+        align-items: center;
+        z-index: 999999;
+        text-align: center;
+    }
+    
+ 
+</style>
+
+    
     <!-- Immediate Dark Mode Script -->
     <script>
         // Set dark mode immediately to prevent flash (only for initial load)
@@ -929,6 +955,7 @@
     
     </body>
 </html>
+
 
 
 
