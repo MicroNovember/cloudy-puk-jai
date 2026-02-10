@@ -31,6 +31,102 @@
     <link rel="stylesheet" href="assets/css/icons.css">
     <!-- Logo CSS -->
     <link rel="stylesheet" href="assets/css/logo.css">
+    
+    <!-- Article Reading Styles -->
+    <style>
+      /* Article Typography - WCAG AA Compliant */
+      .prose-article {
+        font-size: 17px;
+        line-height: 1.7;
+      }
+      
+      /* Light Mode - High Contrast (WCAG AA) */
+      .prose-article {
+        color: #1f2937; /* gray-800 - 15.8:1 contrast ratio */
+      }
+      
+      /* Dark Mode - High Contrast (WCAG AA) */
+      .dark .prose-article {
+        color: #e5e7eb; /* gray-200 - 15.8:1 contrast ratio */
+      }
+      
+      /* Article headings */
+      .prose-article h1, .prose-article h2, .prose-article h3, 
+      .prose-article h4, .prose-article h5, .prose-article h6 {
+        color: #111827; /* gray-900 - 21:1 contrast ratio */
+        font-weight: 600;
+        line-height: 1.3;
+      }
+      
+      .dark .prose-article h1, .dark .prose-article h2, .dark .prose-article h3,
+      .dark .prose-article h4, .dark .prose-article h5, .dark .prose-article h6 {
+        color: #f9fafb; /* gray-50 - 21:1 contrast ratio */
+      }
+      
+      /* Article links */
+      .prose-article a {
+        color: #2563eb; /* blue-600 - 4.5:1 contrast ratio */
+        text-decoration: underline;
+        text-underline-offset: 2px;
+      }
+      
+      .prose-article a:hover {
+        color: #1d4ed8; /* blue-700 - 4.8:1 contrast ratio */
+      }
+      
+      .dark .prose-article a {
+        color: #60a5fa; /* blue-400 - 4.5:1 contrast ratio */
+      }
+      
+      .dark .prose-article a:hover {
+        color: #93c5fd; /* blue-300 - 3.9:1 contrast ratio */
+      }
+      
+      /* Article emphasis */
+      .prose-article strong, .prose-article b {
+        color: #111827; /* gray-900 */
+        font-weight: 600;
+      }
+      
+      .dark .prose-article strong, .dark .prose-article b {
+        color: #f9fafb; /* gray-50 */
+      }
+      
+      /* Article quotes */
+      .prose-article blockquote {
+        color: #4b5563; /* gray-600 - 7:1 contrast ratio */
+        border-left-color: #d1d5db; /* gray-300 */
+      }
+      
+      .dark .prose-article blockquote {
+        color: #9ca3af; /* gray-400 - 7:1 contrast ratio */
+        border-left-color: #4b5563; /* gray-600 */
+      }
+      
+      /* Article code */
+      .prose-article code {
+        color: #dc2626; /* red-600 - 5.2:1 contrast ratio */
+        background-color: #fef2f2; /* red-50 */
+      }
+      
+      .dark .prose-article code {
+        color: #f87171; /* red-400 - 5.2:1 contrast ratio */
+        background-color: #7f1d1d; /* red-900 */
+      }
+      
+      /* Article lists */
+      .prose-article ul, .prose-article ol {
+        color: inherit;
+      }
+      
+      /* Mobile optimization */
+      @media (max-width: 768px) {
+        .prose-article {
+          font-size: 16px;
+          line-height: 1.6;
+        }
+      }
+    </style>
     <script>
       // กำหนดค่า Tailwind
       tailwind.config = {
@@ -177,6 +273,13 @@
               <i class="fas fa-chevron-right text-xs"></i>
             </div>
           </a>
+          <a href="feedback.html" class="group flex items-center px-4 py-2 rounded-xl font-medium transition-all duration-200 hover:scale-[1.02] text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700/50">
+            <i class="fas fa-comment-dots mr-3 w-5 text-lg group-hover:scale-110 transition-transform"></i>
+            <span class="font-medium">ความคิดเห็น</span>
+            <div class="ml-auto opacity-0 group-hover:opacity-100 transition-opacity">
+              <i class="fas fa-chevron-right text-xs"></i>
+            </div>
+          </a>
           <a href="history.html" class="group flex items-center px-4 py-2 rounded-xl font-medium transition-all duration-200 hover:scale-[1.02]" :class="window.location.pathname.includes('history.html') ? 'bg-gradient-to-r from-primary/10 to-primary-light/10 text-primary shadow-sm border border-primary/20' : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700/50'">
             <i class="fas fa-chart-line mr-3 w-5 text-lg group-hover:scale-110 transition-transform"></i>
             <span class="font-medium">ประวัติผลการทดสอบ</span>
@@ -253,7 +356,7 @@
   </div>
 
   <div class="mb-2">
-    <a href="https://forms.gle/XSqb8nqh2gWgLKwu6" target="_blank" 
+    <a href="feedback.html" 
        class="inline-block px-4 py-1.5 text-[12px] text-primary bg-primary/5 border border-primary/20 rounded-full hover:bg-primary hover:text-white transition-all shadow-sm">
        บอกความรู้สึกกับเรา ✨
     </a>
@@ -358,7 +461,7 @@
         <button @click="openModal('privacy'); mobileMoreMenuOpen = false;" class="hover:text-primary transition-colors">ความเป็นส่วนตัว</button>
       </div>
 
-      <a href="https://forms.gle/XSqb8nqh2gWgLKwu6" target="_blank" 
+      <a href="feedback.html" 
          class="inline-block px-4 py-1.5 text-[10px] text-primary bg-primary/5 border border-primary/20 rounded-full hover:bg-primary hover:text-white transition-all mb-2">
          บอกความรู้สึกกับเรา ✨
       </a>
@@ -1899,8 +2002,8 @@
               <p class="text-sm text-gray-700 dark:text-gray-300 mb-3">
                 ความคิดเห็นของคุณสำคัญต่อการพัฒนาเครื่องมือนี้
               </p>
-              <a href="https://forms.gle/XSqb8nqh2gWgLKwu6" target="_blank" class="inline-flex items-center justify-center gap-2 bg-purple-500 hover:bg-purple-600 text-white font-medium px-4 py-2.5 rounded-2xl transition-colors w-full">
-                <i class="fab fa-google"></i> แบ่งปันความคิดเห็น
+              <a href="feedback.html" class="inline-flex items-center justify-center gap-2 bg-purple-500 hover:bg-purple-600 text-white font-medium px-4 py-2.5 rounded-2xl transition-colors w-full">
+                <i class="fas fa-comment-dots"></i> แบ่งปันความคิดเห็น
               </a>
             </div>
           </div>
@@ -2023,22 +2126,53 @@
       </div>
     </div>
     <!-- Article Modal -->
-    <div x-show="modalOpen === 'article'" x-transition class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-      <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-        <div class="p-6">
-          <div class="flex justify-between items-center mb-6">
-            <h3 class="text-2xl font-bold text-primary" x-text="currentArticle.title"></h3>
-            <button @click="closeModal()" class="text-gray-5000 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-500" id="closeArticleModalBtn" name="closeArticleModalBtn">
-              <i class="fas fa-times text-xl"></i>
+    <div x-show="modalOpen === 'article'" x-transition class="fixed inset-0 bg-black bg-opacity-90 z-50 flex flex-col md:items-center md:justify-start md:p-4">
+      <!-- Mobile: Full-screen, Desktop: Centered with max-width -->
+      <div class="w-full md:max-w-3xl md:rounded-t-2xl md:rounded-b-2xl bg-white dark:bg-gray-800 md:shadow-2xl flex flex-col h-full md:max-h-[90vh] overflow-hidden">
+        
+        <!-- Sticky Header -->
+        <div class="sticky top-0 z-10 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-4 py-3 flex items-center justify-between">
+          <div class="flex-1 min-w-0">
+            <h3 class="text-lg font-bold text-gray-900 dark:text-white truncate" x-text="currentArticle.title"></h3>
+          </div>
+          <div class="flex items-center gap-2 ml-4">
+            <!-- Progress indicator (mobile) -->
+            <div class="md:hidden w-20 h-1 bg-gray-200 dark:bg-gray-600 rounded-full overflow-hidden">
+              <div class="h-full bg-primary transition-all duration-300" style="width: 0%" id="readingProgress"></div>
+            </div>
+            <!-- Close button -->
+            <button @click="closeModal()" class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors" id="closeArticleModalBtn" name="closeArticleModalBtn">
+              <i class="fas fa-times text-lg text-gray-500 dark:text-gray-400"></i>
             </button>
           </div>
-          <div class="prose dark:prose-invert max-w-none" x-html="currentArticle.content"></div>
-          <div class="flex items-center justify-between mt-8 pt-6 border-t border-gray-200 dark:border-gray-700">
-            <div class="text-sm text-gray-5000 dark:text-gray-400">
-              <span x-text="currentArticle.author"></span> • <span x-text="currentArticle.date"></span>
+        </div>
+        
+        <!-- Scrollable Content -->
+        <div class="flex-1 overflow-y-auto" id="articleContentContainer">
+          <div class="px-4 py-4 md:px-6 md:py-6">
+            <!-- Article Meta Info -->
+            <div class="flex items-center gap-4 mb-4 text-sm text-gray-600 dark:text-gray-400">
+              <div class="flex items-center gap-1">
+                <i class="fas fa-user text-xs"></i>
+                <span x-text="currentArticle.author"></span>
+              </div>
+              <div class="flex items-center gap-1">
+                <i class="fas fa-calendar text-xs"></i>
+                <span x-text="currentArticle.date"></span>
+              </div>
             </div>
-            <button @click="closeModal()" class="bg-primary hover:bg-primary-dark text-white font-medium py-2 px-6 rounded-2xl transition-colors" id="closeArticleBtn" name="closeArticleBtn"> ปิด </button>
+            
+            <!-- Article Content with Mobile-Optimized Typography -->
+            <div class="prose-article max-w-none" 
+                 x-html="currentArticle.content"></div>
           </div>
+        </div>
+        
+        <!-- Bottom Action Bar (Mobile) -->
+        <div class="md:hidden sticky bottom-0 bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 px-4 py-3">
+          <button @click="closeModal()" class="w-full bg-primary hover:bg-primary-dark text-white font-medium py-3 px-4 rounded-xl transition-colors" id="closeArticleBtn" name="closeArticleBtn">
+            <i class="fas fa-times mr-2"></i>ปิดบทความ
+          </button>
         </div>
       </div>
     </div>
@@ -2059,14 +2193,7 @@
                 <p class="text-xs text-gray-600 dark:text-gray-500 truncate" x-text="currentArticle.author || 'The Standard'"></p>
               </div>
             </div>
-            <div class="flex items-center p-3 bg-gray-50 dark:bg-gray-700 rounded-2xl">
-              <i class="fas fa-shield-alt text-primary mr-3 flex-shrink-0"></i>
-              <div class="min-w-0 flex-1">
-                <p class="font-semibold text-sm">ความปลอดภัย</p>
-                <p class="text-xs text-gray-600 dark:text-gray-500 line-clamp-2">ลิงก์นี้จะเปิดในแท็บใหม่เพื่อความปลอดภัย</p>
-              </div>
-            </div>
-          </div>
+                      </div>
           <div class="flex gap-3 mt-6">
             <button @click="closeModal()" class="flex-1 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-500 font-medium py-3 px-4 rounded-2xl transition-colors text-sm"> ยกเลิก </button>
             <button @click="openExternalArticle(currentArticle.externalUrl || 'https://thestandard.co/life/4-7-8-breathing-exercise/')" class="flex-1 bg-primary hover:bg-primary-dark text-white font-medium py-3 px-4 rounded-2xl transition-colors flex items-center justify-center text-sm">

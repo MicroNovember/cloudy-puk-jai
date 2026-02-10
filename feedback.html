@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="th" x-data="feedbackApp()" x-init="init()" :class="{ 'dark': darkMode }">
+<head>
+    <!-- Theme Configuration -->
+    <script src="js/theme-config.js"></script>
+    
+    <!-- Theme Color -->
+    <meta name="theme-color" content="#6D9F71">
+    <meta name="msapplication-TileColor" content="#6D9F71">
+    
+    <!-- Mobile Viewport -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    
+    <title>แบบประเมินความพึงพอใจ - Cloudy・Puk・Jai</title>
+    
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Alpine.js -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Anuphan:wght@300;400;500;600;700&family=Noto+Sans+Thai:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Main Styles CSS -->
+    <link rel="stylesheet" href="./css/styles.css">
+    <!-- Icons CSS -->
+    <link rel="stylesheet" href="assets/css/icons.css">
+    <!-- Logo CSS -->
+    <link rel="stylesheet" href="assets/css/logo.css">
+    
+    <script>
+      tailwind.config = {
+        darkMode: 'class',
+        theme: {
+          extend: {
+            colors: {
+              primary: '#6D9F71',
+              'primary-light': '#8FBC8F',
+              'primary-dark': '#4A7C59',
+              secondary: '#FFB6C1',
+              accent: '#FFD166',
+            },
+            fontFamily: {
+              'sans': ['Anuphan', 'Noto Sans Thai', 'Leelawadee UI', 'Thonburi', 'Segoe UI', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+            },
+          }
+        }
+      }
+    </script>
+    
+    <style>
+        .rating-star {
+            @apply text-2xl cursor-pointer transition-all duration-200;
+        }
+        
+        .rating-star:hover {
+            transform: scale(1.1);
+        }
+        
+        .rating-star.selected {
+            color: #fbbf24;
+        }
+        
+        .rating-star.unselected {
+            color: #d1d5db;
+        }
+        
+        .dark .rating-star.unselected {
+            color: #4b5563;
+        }
+        
+        .feature-checkbox {
+            @apply w-5 h-5 text-primary rounded focus:ring-primary focus:ring-2;
+        }
+        
+        .feedback-section {
+            @apply bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700 p-6 mb-6;
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-gradient-to-br from-primary/10 to-primary-light/10">
+    <!-- Header -->
+    <header class="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <!-- Logo and Title -->
+                <div class="flex items-center">
+                    <div class="logo logo-cloudy-puk-jai-small mr-3"></div>
+                    <div>
+                        <h1 class="text-xl font-bold text-gray-900 dark:text-white">แบบประเมินความพึงพอใจ</h1>
+                        <p class="text-sm text-gray-600 dark:text-gray-400">Cloudy・Puk・Jai</p>
+                    </div>
+                </div>
+                
+                <!-- Actions -->
+                <div class="flex items-center gap-4">
+                    <button @click="toggleTheme()" class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                        <i x-show="darkMode" class="fas fa-sun text-yellow-500"></i>
+                        <i x-show="!darkMode" class="fas fa-moon text-gray-600"></i>
+                    </button>
+                    <button @click="goBack()" class="px-4 py-2 text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors">
+                        <i class="fas fa-arrow-left mr-2"></i>กลับ
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Progress Bar -->
+        <div class="mb-8">
+            <div class="flex justify-between items-center mb-2">
+                <span class="text-sm font-medium text-gray-600 dark:text-gray-400">ความคืบหน้า</span>
+                <span class="text-sm font-medium text-gray-600 dark:text-gray-400" x-text="`${currentStep}/${totalSteps}`"></span>
+            </div>
+            <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                <div class="bg-primary h-2 rounded-full transition-all duration-300" :style="`width: ${(currentStep / totalSteps) * 100}%`"></div>
+            </div>
+        </div>
+
+        <!-- Form Container -->
+        <div class="feedback-section">
+            <!-- Step 1: Atmosphere Rating -->
+            <div x-show="currentStep === 1" x-transition class="space-y-6">
+                <div class="text-center mb-6">
+                    <div class="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-spa text-2xl text-primary"></i>
+                    </div>
+                    <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-2">บรรยากาศของเว็บ</h2>
+                    <p class="text-gray-600 dark:text-gray-400">ช่วยให้คุณรู้สึกผ่อนคลายไหม?</p>
+                </div>
+                
+                <div class="flex justify-center items-center space-x-4">
+                    <span class="text-sm text-gray-500 dark:text-gray-400">เฉยๆ</span>
+                    <div class="flex space-x-2">
+                        <template x-for="star in 5" :key="star">
+                            <i @click="form.atmosphere = star" 
+                               :class="star <= form.atmosphere ? 'fas selected' : 'far unselected'"
+                               class="rating-star fa-star"></i>
+                        </template>
+                    </div>
+                    <span class="text-sm text-gray-500 dark:text-gray-400">สบายใจมาก</span>
+                </div>
+                
+                <div class="text-center">
+                    <span class="text-lg font-medium text-primary" x-text="getRatingText(form.atmosphere)"></span>
+                </div>
+            </div>
+
+            <!-- Step 2: Usability Rating -->
+            <div x-show="currentStep === 2" x-transition class="space-y-6">
+                <div class="text-center mb-6">
+                    <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-mouse-pointer text-2xl text-blue-500"></i>
+                    </div>
+                    <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-2">ความสะดวกในการใช้งาน</h2>
+                    <p class="text-gray-600 dark:text-gray-400">คุณใช้งานส่วนต่างๆ ได้สะดวกหรือไม่?</p>
+                </div>
+                
+                <div class="flex justify-center items-center space-x-4">
+                    <span class="text-sm text-gray-500 dark:text-gray-400">งง เล็กน้อย</span>
+                    <div class="flex space-x-2">
+                        <template x-for="star in 5" :key="star">
+                            <i @click="form.usability = star" 
+                               :class="star <= form.usability ? 'fas selected' : 'far unselected'"
+                               class="rating-star fa-star"></i>
+                        </template>
+                    </div>
+                    <span class="text-sm text-gray-500 dark:text-gray-400">ง่ายมาก</span>
+                </div>
+                
+                <div class="text-center">
+                    <span class="text-lg font-medium text-blue-500" x-text="getRatingText(form.usability)"></span>
+                </div>
+            </div>
+
+            <!-- Step 3: Favorite Features -->
+            <div x-show="currentStep === 3" x-transition class="space-y-6">
+                <div class="text-center mb-6">
+                    <div class="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-heart text-2xl text-purple-500"></i>
+                    </div>
+                    <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-2">ฟีเจอร์ที่โดนใจ</h2>
+                    <p class="text-gray-600 dark:text-gray-400">เลือกได้มากกว่า 1 ตัวเลือก</p>
+                </div>
+                
+                <div class="space-y-3">
+                    <template x-for="feature in features" :key="feature.id">
+                        <label class="flex items-center p-4 bg-gray-50 dark:bg-gray-700 rounded-lg cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors">
+                            <input type="checkbox" 
+                                   :value="feature.id" 
+                                   x-model="form.favoriteFeatures"
+                                   class="feature-checkbox">
+                            <div class="ml-3 flex-1">
+                                <div class="flex items-center">
+                                    <i :class="feature.icon" class="mr-2 text-lg"></i>
+                                    <span class="font-medium text-gray-900 dark:text-white" x-text="feature.name"></span>
+                                </div>
+                                <p class="text-sm text-gray-600 dark:text-gray-400 mt-1" x-text="feature.description"></p>
+                            </div>
+                        </label>
+                    </template>
+                </div>
+                
+                <div x-show="form.favoriteFeatures.length === 0" class="text-center text-gray-500 dark:text-gray-400">
+                    <i class="fas fa-info-circle mr-2"></i>กรุณาเลือกอย่างน้อย 1 ฟีเจอร์
+                </div>
+            </div>
+
+            <!-- Step 4: Improvement Suggestions -->
+            <div x-show="currentStep === 4" x-transition class="space-y-6">
+                <div class="text-center mb-6">
+                    <div class="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-lightbulb text-2xl text-orange-500"></i>
+                    </div>
+                    <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-2">ข้อเสนอแนะ</h2>
+                    <p class="text-gray-600 dark:text-gray-400">มีจุดไหนที่อยากให้เราปรับปรุงให้ดีขึ้นไหม?</p>
+                </div>
+                
+                <div class="space-y-4">
+                    <textarea x-model="form.improvements" 
+                              rows="6"
+                              placeholder="แบ่งปันความคิดเห็นของคุณ..."
+                              class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-primary focus:border-transparent resize-none"></textarea>
+                    
+                    <div class="text-right">
+                        <span class="text-sm text-gray-500 dark:text-gray-400" x-text="`${form.improvements.length}/500 ตัวอักษร`"></span>
+                    </div>
+                </div>
+                
+                <div class="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
+                    <div class="flex items-start">
+                        <i class="fas fa-info-circle text-blue-500 mt-1 mr-3"></i>
+                        <div class="text-sm text-blue-700 dark:text-blue-300">
+                            <p class="font-semibold mb-1">คำแนะนำ:</p>
+                            <ul class="space-y-1">
+                                <li>• บอกปัญหาที่พบเจอและวิธีแก้ไขที่ต้องการ</li>
+                                <li>• แนะนำฟีเจอร์ที่อยากให้เพิ่มหรือปรับปรุง</li>
+                                <li>• ความคิดเห็นของคุณมีคุณค่าต่อการพัฒนาแอป</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 5: Future Features -->
+            <div x-show="currentStep === 5" x-transition class="space-y-6">
+                <div class="text-center mb-6">
+                    <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-rocket text-2xl text-green-500"></i>
+                    </div>
+                    <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-2">ฟีเจอร์ในอนาคต</h2>
+                    <p class="text-gray-600 dark:text-gray-400">ฟีเจอร์อะไรที่คุณอยากให้มีในอนาคต?</p>
+                </div>
+                
+                <div class="space-y-4">
+                    <textarea x-model="form.futureFeatures" 
+                              rows="6"
+                              placeholder="อยากเห็นฟีเจอร์อะไรเพิ่มเติม..."
+                              class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-primary focus:border-transparent resize-none"></textarea>
+                    
+                    <div class="text-right">
+                        <span class="text-sm text-gray-500 dark:text-gray-400" x-text="`${form.futureFeatures.length}/500 ตัวอักษร`"></span>
+                    </div>
+                </div>
+                
+                <!-- Quick Suggestions -->
+                <div class="space-y-2">
+                    <p class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">คำแนะนำเพิ่มเติม:</p>
+                    <div class="flex flex-wrap gap-2">
+                        <template x-for="suggestion in quickSuggestions" :key="suggestion">
+                            <button @click="addSuggestion(suggestion)" 
+                                    class="px-3 py-1 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-full text-sm hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">
+                                <i class="fas fa-plus mr-1"></i>
+                                <span x-text="suggestion"></span>
+                            </button>
+                        </template>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 6: Review & Submit -->
+            <div x-show="currentStep === 6" x-transition class="space-y-6">
+                <div class="text-center mb-6">
+                    <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-check text-2xl text-green-500"></i>
+                    </div>
+                    <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-2">ตรวจสอบคำตอบ</h2>
+                    <p class="text-gray-600 dark:text-gray-400">กรุณาตรวจสอบคำตอบของคุณก่อนส่ง</p>
+                </div>
+                
+                <div class="space-y-4">
+                    <!-- Atmosphere Review -->
+                    <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
+                        <h3 class="font-semibold text-gray-900 dark:text-white mb-2">
+                            <i class="fas fa-spa mr-2 text-primary"></i>บรรยากาศของเว็บ
+                        </h3>
+                        <div class="flex items-center">
+                            <div class="flex space-x-1">
+                                <template x-for="star in 5" :key="star">
+                                    <i :class="star <= form.atmosphere ? 'fas text-yellow-400' : 'far text-gray-300'" 
+                                       class="fa-star text-sm"></i>
+                                </template>
+                            </div>
+                            <span class="ml-2 text-gray-700 dark:text-gray-300" x-text="getRatingText(form.atmosphere)"></span>
+                        </div>
+                    </div>
+                    
+                    <!-- Usability Review -->
+                    <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
+                        <h3 class="font-semibold text-gray-900 dark:text-white mb-2">
+                            <i class="fas fa-mouse-pointer mr-2 text-blue-500"></i>ความสะดวกในการใช้งาน
+                        </h3>
+                        <div class="flex items-center">
+                            <div class="flex space-x-1">
+                                <template x-for="star in 5" :key="star">
+                                    <i :class="star <= form.usability ? 'fas text-yellow-400' : 'far text-gray-300'" 
+                                       class="fa-star text-sm"></i>
+                                </template>
+                            </div>
+                            <span class="ml-2 text-gray-700 dark:text-gray-300" x-text="getRatingText(form.usability)"></span>
+                        </div>
+                    </div>
+                    
+                    <!-- Favorite Features Review -->
+                    <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
+                        <h3 class="font-semibold text-gray-900 dark:text-white mb-2">
+                            <i class="fas fa-heart mr-2 text-purple-500"></i>ฟีเจอร์ที่โดนใจ
+                        </h3>
+                        <div class="flex flex-wrap gap-2">
+                            <template x-for="featureId in form.favoriteFeatures" :key="featureId">
+                                <span class="px-3 py-1 bg-purple-100 dark:bg-purple-900 text-purple-700 dark:text-purple-300 rounded-full text-sm">
+                                    <span x-text="getFeatureName(featureId)"></span>
+                                </span>
+                            </template>
+                        </div>
+                    </div>
+                    
+                    <!-- Text Responses -->
+                    <template x-if="form.improvements">
+                        <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
+                            <h3 class="font-semibold text-gray-900 dark:text-white mb-2">
+                                <i class="fas fa-lightbulb mr-2 text-orange-500"></i>ข้อเสนอแนะ
+                            </h3>
+                            <p class="text-gray-700 dark:text-gray-300 whitespace-pre-wrap" x-text="form.improvements"></p>
+                        </div>
+                    </template>
+                    
+                    <template x-if="form.futureFeatures">
+                        <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
+                            <h3 class="font-semibold text-gray-900 dark:text-white mb-2">
+                                <i class="fas fa-rocket mr-2 text-green-500"></i>ฟีเจอร์ในอนาคต
+                            </h3>
+                            <p class="text-gray-700 dark:text-gray-300 whitespace-pre-wrap" x-text="form.futureFeatures"></p>
+                        </div>
+                    </template>
+                </div>
+                
+                <!-- Submit Confirmation -->
+                <div class="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg p-4">
+                    <div class="flex items-start">
+                        <i class="fas fa-check-circle text-green-500 mt-1 mr-3"></i>
+                        <div class="text-sm text-green-700 dark:text-green-300">
+                            <p class="font-semibold">ขอบคุณสำหรับความคิดเห็น!</p>
+                            <p>ข้อมูลของคุณจะช่วยให้เราพัฒนาแอปให้ดีขึ้น</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Navigation Buttons -->
+        <div class="flex justify-between items-center mt-8">
+            <button @click="previousStep()" 
+                    x-show="currentStep > 1"
+                    class="px-6 py-3 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors">
+                <i class="fas fa-arrow-left mr-2"></i>ก่อนหน้า
+            </button>
+            
+            <div x-show="currentStep === 1" class="flex-1"></div>
+            
+            <button @click="nextStep()" 
+                    x-show="currentStep < 6"
+                    :disabled="!canProceed()"
+                    class="px-6 py-3 bg-primary text-white rounded-lg hover:bg-primary-dark disabled:opacity-50 disabled:cursor-not-allowed transition-colors">
+                <span x-show="currentStep < 5">ถัดไป</span>
+                <span x-show="currentStep === 5">ตรวจสอบคำตอบ</span>
+                <i class="fas fa-arrow-right ml-2"></i>
+            </button>
+            
+            <button @click="submitFeedback()" 
+                    x-show="currentStep === 6"
+                    :disabled="submitting"
+                    class="px-6 py-3 bg-green-500 text-white rounded-lg hover:bg-green-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors">
+                <span x-show="!submitting">
+                    <i class="fas fa-paper-plane mr-2"></i>ส่งคำตอบ
+                </span>
+                <span x-show="submitting">
+                    <i class="fas fa-spinner fa-spin mr-2"></i>กำลังส่ง...
+                </span>
+            </button>
+        </div>
+    </main>
+
+    <!-- Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    
+    <!-- Feedback Script -->
+    <script src="js/feedback.js"></script>
+</body>
+</html>
