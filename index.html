@@ -2,202 +2,10 @@
 <html lang="th" x-data="authApp()" x-init="init()" :class="{ 'dark': darkMode }">
 <head>
 
-
-    
-    <!-- Immediate Dark Mode Script -->
-    <script>
-        // Set dark mode immediately to prevent flash (only for initial load)
-        (function() {
-            // Get theme values first
-            const savedDefaultTheme = localStorage.getItem('defaultTheme');
-            const savedDarkMode = localStorage.getItem('darkMode');
-            
-            // Function to apply theme
-            function applyTheme() {
-                // Use defaultTheme if available, otherwise default to dark
-                let isDark;
-                if (savedDefaultTheme) {
-                    isDark = savedDefaultTheme === 'dark';
-                } else if (savedDarkMode) {
-                    isDark = savedDarkMode === 'true';
-                } else {
-                    // Force dark mode for login page
-                    isDark = true;
-                    localStorage.setItem('defaultTheme', 'dark');
-                    localStorage.setItem('darkMode', 'true');
-                    console.log('Login page: Forcing dark mode as default');
-                }
-                
-                // Apply theme
-                if (isDark) {
-                    document.documentElement.classList.add('dark');
-                } else {
-                    document.documentElement.classList.remove('dark');
-                }
-                
-                console.log('Theme applied:', isDark ? 'dark' : 'light');
-            }
-            
-            // Apply immediately ONLY for initial page load
-            if (!window.themeManagerLoaded) {
-                applyTheme();
-                
-                // Log theme information
-                console.log('=== LOGIN PAGE THEME INFO ===');
-                console.log('savedDefaultTheme:', savedDefaultTheme);
-                console.log('savedDarkMode:', savedDarkMode);
-                console.log('Final isDark:', savedDefaultTheme ? savedDefaultTheme === 'dark' : (savedDarkMode ? savedDarkMode === 'true' : true));
-                console.log('localStorage defaultTheme:', localStorage.getItem('defaultTheme'));
-                console.log('localStorage darkMode:', localStorage.getItem('darkMode'));
-                console.log('Login page using mode:', (savedDefaultTheme === 'dark' || savedDarkMode === 'true' || (!savedDefaultTheme && !savedDarkMode)) ? 'DARK' : 'LIGHT');
-                console.log('==========================');
-            }
-            
-            // Also apply on DOM ready (only if not already handled by ThemeManager)
-            if (document.readyState === 'loading' && !window.themeManagerLoaded) {
-                document.addEventListener('DOMContentLoaded', applyTheme);
-            }
-        })();
-    </script>
     
     <!-- Theme Configuration -->
     <script src="js/theme-config.js"></script>
     
-    <!-- Override ThemeManager for login page -->
-    <script>
-        let retryCount = 0;
-        const MAX_RETRIES = 10;
-        
-        // Wait for ThemeManager to be available, then override
-        function setupThemeOverride() {
-            if (window.ThemeManager && window.ThemeManager.setTheme) {
-                console.log('ThemeManager found, setting up override...');
-                
-                // Store original function
-                const originalSetTheme = window.ThemeManager.setTheme;
-                
-                // Override global setTheme for our buttons
-                window.setTheme = function(theme) {
-                    console.log('=== LOGIN PAGE SET THEME ===');
-                    console.log('Setting theme to:', theme);
-                    
-                    // Call original ThemeManager.setTheme
-                    originalSetTheme.call(window.ThemeManager, theme);
-                    
-                    // Also update Alpine.js darkMode variable if available
-                    if (window.authApp && window.authApp.darkMode !== undefined) {
-                        window.authApp.darkMode = (theme === 'dark');
-                    }
-                    
-                    // Log final state
-                    console.log('Final theme state:');
-                    console.log('- localStorage defaultTheme:', localStorage.getItem('defaultTheme'));
-                    console.log('- localStorage darkMode:', localStorage.getItem('darkMode'));
-                    console.log('- Document has dark class:', document.documentElement.classList.contains('dark'));
-                    console.log('- Theme applied:', theme === 'dark' ? 'DARK MODE' : 'LIGHT MODE');
-                    console.log('============================');
-                };
-                
-                console.log('Theme override setup complete');
-                return true; // Success
-            } else {
-                retryCount++;
-                if (retryCount <= MAX_RETRIES) {
-                    console.log(`ThemeManager not ready, retrying... (${retryCount}/${MAX_RETRIES})`);
-                    // Retry after a short delay
-                    setTimeout(setupThemeOverride, 100);
-                } else {
-                    console.log('Max retries reached, using fallback theme system');
-                    // Fallback: Use our own theme system
-                    window.setTheme = function(theme) {
-                        console.log('=== FALLBACK SET THEME ===');
-                        console.log('Setting theme to:', theme);
-                        
-                        // Set both variables to ensure consistency
-                        localStorage.setItem('defaultTheme', theme);
-                        localStorage.setItem('darkMode', theme === 'dark' ? 'true' : 'false');
-                        
-                        // Apply theme immediately
-                        if (theme === 'dark') {
-                            document.documentElement.classList.add('dark');
-                        } else {
-                            document.documentElement.classList.remove('dark');
-                        }
-                        
-                        // Force Alpine.js reactivity update
-                        setTimeout(() => {
-                            // Method 1: Direct variable update
-                            if (window.authApp && window.authApp.darkMode !== undefined) {
-                                window.authApp.darkMode = (theme === 'dark');
-                                console.log('Updated authApp.darkMode to:', theme === 'dark');
-                            }
-                            
-                            // Method 2: Trigger Alpine reactivity on body
-                            if (window.Alpine && window.Alpine.version) {
-                                const bodyElement = document.body;
-                                if (bodyElement) {
-                                    // Force Alpine to re-evaluate all bindings
-                                    bodyElement._x_dataStack?.forEach(stack => {
-                                        if (stack[0] && stack[0].darkMode !== undefined) {
-                                            stack[0].darkMode = (theme === 'dark');
-                                        }
-                                    });
-                                    
-                                    // Alternative: Dispatch custom event
-                                    bodyElement.dispatchEvent(new CustomEvent('theme-change', { 
-                                        detail: { theme: theme, darkMode: (theme === 'dark') }
-                                    }));
-                                }
-                            }
-                            
-                            // Method 3: Direct DOM manipulation for immediate effect
-                            const htmlElement = document.documentElement;
-                            if (htmlElement) {
-                                // Force re-evaluation of Alpine binding
-                                const currentClass = htmlElement.getAttribute('x-bind:class');
-                                if (currentClass) {
-                                    htmlElement.setAttribute('x-bind:class', currentClass);
-                                    // Remove and re-add to trigger reactivity
-                                    htmlElement.removeAttribute('x-bind:class');
-                                    setTimeout(() => {
-                                        htmlElement.setAttribute('x-bind:class', currentClass);
-                                    }, 5);
-                                }
-                            }
-                        }, 10);
-                        
-                        // Log final state
-                        console.log('Fallback theme state:');
-                        console.log('- localStorage defaultTheme:', localStorage.getItem('defaultTheme'));
-                        console.log('- localStorage darkMode:', localStorage.getItem('darkMode'));
-                        console.log('- Document has dark class:', document.documentElement.classList.contains('dark'));
-                        console.log('- Theme applied:', theme === 'dark' ? 'DARK MODE' : 'LIGHT MODE');
-                        console.log('============================');
-                    };
-                    console.log('Fallback theme system activated');
-                }
-                return false;
-            }
-        }
-        
-        // Wait for Alpine.js to be ready as well
-        function waitForAlpine() {
-            if (window.Alpine && window.Alpine.version) {
-                console.log('Alpine.js is ready, setting up theme override...');
-                setupThemeOverride();
-            } else {
-                console.log('Alpine.js not ready, retrying...');
-                setTimeout(waitForAlpine, 100);
-            }
-        }
-        
-        // Start setup when DOM is ready
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', waitForAlpine);
-        } else {
-            waitForAlpine();
-        }
-    </script>
     <link rel="icon" type="image/png" href="image/favicon.png">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -254,7 +62,7 @@
               primary: '#6D9F71',
               'primary-light': '#8FBC8F',
               'primary-dark': '#4A7C59',
-              secondary: '#FFB6C1',
+              secondary: '#6B7280',
               accent: '#FFD166',
               happy: '#FFEAA7',
               calm: '#A7E6FF',
@@ -288,51 +96,6 @@
     <script src="js/app.js"></script>
     
     <style>
-        /* Custom animations for login page */
-        @keyframes float-slow {
-            0%, 100% { 
-                transform: translateY(0px); 
-            }
-            25% { 
-                transform: translateY(-8px); 
-            }
-            50% { 
-                transform: translateY(-4px); 
-            }
-            75% { 
-                transform: translateY(-10px); 
-            }
-        }
-        
-        @keyframes bgFade {
-            0%, 100% { 
-                background: linear-gradient(to bottom right, #030712, #111827, #030712);
-            }
-            25% { 
-                background: linear-gradient(to bottom right, #111827, #1f2937, #111827);
-            }
-            50% { 
-                background: linear-gradient(to bottom right, #030712, #111827, #030712);
-            }
-            75% { 
-                background: linear-gradient(to bottom right, #111827, #030712, #111827);
-            }
-        }
-        
-        .animate-float-slow {
-            animation: float-slow 4s ease-in-out infinite;
-        }
-        
-        .animate-bg-fade {
-            animation: bgFade 8s ease-in-out infinite;
-            background-size: 200% 200%;
-        }
-        
-        /* Light mode background */
-        body:not(.dark) .animate-bg-fade {
-            background: linear-gradient(to bottom right, #f8fafc, #f1f5f9, #f8fafc);
-        }
-        
         /* Greeting emoji animation */
         @keyframes greetingEmoji {
             0% { opacity: 1; transform: scale(1); }
@@ -394,12 +157,12 @@
         }, 60000); // Update every minute
     </script>
 </head>
-<body class="min-h-screen bg-gradient-to-br from-gray-950 via-gray-900 to-gray-950 animate-bg-fade" :class="{ 'dark': darkMode }">
+<body class="min-h-screen bg-gray-50 text-gray-800 dark:bg-gray-900 dark:text-gray-200 transition-colors duration-300">
     <!-- Theme Toggle Button - Fixed Top Right -->
     <div class="fixed top-4 right-4 z-50 pointer-events-none">
         <button 
-            @click="toggleTheme()"
-            class="w-12 h-12 rounded-full bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm border-2 border-gray-200/50 dark:border-gray-600/50 shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center group hover:scale-110 ring-1 ring-white/20 dark:ring-white/10 pointer-events-auto">
+            @click="toggleDarkMode()"
+            class="w-12 h-12 rounded-full bg-stone-50/90 dark:bg-gray-800/90 backdrop-blur-sm border-2 border-gray-200/50 dark:border-gray-600/50 shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center group hover:scale-110 ring-1 ring-amber-100/20 dark:ring-white/10 pointer-events-auto">
             <i x-show="darkMode" class="fas fa-sun text-yellow-500 text-lg group-hover:text-yellow-400 transition-colors"></i>
             <i x-show="!darkMode" class="fas fa-moon text-gray-700 text-lg group-hover:text-primary transition-colors"></i>
         </button>
@@ -410,25 +173,25 @@
             <!-- Logo & Welcome -->
             <div class="text-center mb-4">
                 
-                <div class="logo logo-cloudy-puk-jai-large animate-float-slow mx-auto mb-4"></div>
-                <h3 class="text-3xl sm:text-4xl font-bold tracking-tight text-white">Cloudy・Puk・Jai</h3>
+                <div class="logo logo-cloudy-puk-jai-large mx-auto mb-4"></div>
+                <h3 class="text-3xl sm:text-4xl font-bold tracking-tight text-gray-900 dark:text-stone-100">Cloudy・Puk・Jai</h3>
               
             </div>
             
             <!-- Combined Login/Register Card -->
-            <div class="rounded-2xl border border-white/20 glass-effect shadow-2xl backdrop-blur-xl ring-1 ring-white/10 p-6 sm:p-8">
+            <div class="rounded-2xl border border-gray-200/50 dark:border-amber-100/20 bg-stone-50/90 dark:bg-gray-800/90 shadow-2xl backdrop-blur-xl ring-1 ring-gray-200/50 dark:ring-amber-100/10 p-6 sm:p-8">
                 <!-- Tab Navigation -->
-                <div class="mb-6 rounded-2xl bg-gray-100/80 backdrop-blur-sm p-1 dark:bg-gray-900/60 ring-1 ring-white/5">
+                <div class="mb-6 rounded-2xl bg-gray-100/80 backdrop-blur-sm p-1 dark:bg-gray-900/60 ring-1 ring-amber-100/5">
                     <div class="flex flex-row gap-2">
                         <button 
                             @click="activeTab = 'login'"
-                            :class="activeTab === 'login' ? 'bg-white/90 text-primary shadow-lg ring-1 ring-white/20 dark:bg-gray-800/90 dark:text-white' : 'text-secondary hover:text-primary dark:text-tertiary dark:hover:text-white'"
+                            :class="activeTab === 'login' ? 'bg-stone-50/90 text-primary shadow-lg ring-1 ring-amber-100/20 dark:bg-gray-800/90 dark:text-stone-100' : 'text-secondary hover:text-primary dark:text-amber-200 dark:hover:text-amber-50'"
                             class="flex-1 rounded-xl px-6 py-3 text-base font-semibold transition-all duration-300 shadow-sm hover:shadow-md hover:scale-[1.02]">
                             เข้าสู่ระบบ
                         </button>
                         <button 
                             @click="activeTab = 'register'"
-                            :class="activeTab === 'register' ? 'bg-white/90 text-primary shadow-lg ring-1 ring-white/20 dark:bg-gray-800/90 dark:text-white' : 'text-secondary hover:text-primary dark:text-tertiary dark:hover:text-white'"
+                            :class="activeTab === 'register' ? 'bg-stone-50/90 text-primary shadow-lg ring-1 ring-amber-100/20 dark:bg-gray-800/90 dark:text-stone-100' : 'text-secondary hover:text-primary dark:text-amber-200 dark:hover:text-amber-50'"
                             class="flex-1 rounded-xl px-6 py-3 text-base font-semibold transition-all duration-300 shadow-sm hover:shadow-md hover:scale-[1.02]">
                             สมัครสมาชิก
                         </button>
@@ -454,7 +217,7 @@
                             type="email" 
                             autocomplete="email"
                             x-model="form.email"
-                            class="w-full rounded-xl border border-gray-200/50 bg-white/80 backdrop-blur-sm px-6 py-3 text-base text-gray-900 placeholder-gray-400 shadow-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 dark:border-gray-600/50 dark:bg-gray-700/80 dark:text-white dark:placeholder-gray-400 transition-all duration-300 hover:border-gray-300/70 hover:shadow-md"
+                            class="w-full rounded-xl border border-gray-200/50 bg-stone-50/80 backdrop-blur-sm px-6 py-3 text-base text-gray-900 placeholder-gray-400 shadow-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 dark:border-gray-600/50 dark:bg-gray-700/80 dark:text-stone-100 dark:placeholder-gray-400 transition-all duration-300 hover:border-gray-300/70 hover:shadow-md"
                             placeholder="your@email.com">
                     </div>
                     
@@ -468,7 +231,7 @@
                                 :type="showPassword ? 'text' : 'password'"
                                 autocomplete="current-password"
                                 x-model="form.password"
-                                class="w-full rounded-xl border border-gray-200/50 bg-white/80 backdrop-blur-sm px-6 py-4 pr-14 text-base text-gray-900 placeholder-gray-400 shadow-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 dark:border-gray-600/50 dark:bg-gray-700/80 dark:text-white dark:placeholder-gray-400 transition-all duration-300 hover:border-gray-300/70 hover:shadow-md"
+                                class="w-full rounded-xl border border-gray-200/50 bg-stone-50/80 backdrop-blur-sm px-6 py-4 pr-14 text-base text-gray-900 placeholder-gray-400 shadow-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 dark:border-gray-600/50 dark:bg-gray-700/80 dark:text-stone-100 dark:placeholder-gray-400 transition-all duration-300 hover:border-gray-300/70 hover:shadow-md"
                                 placeholder="••••••••">
                             <button 
                                 type="button"
@@ -526,7 +289,7 @@
                             type="email" 
                             autocomplete="email"
                             x-model="registerForm.email"
-                            class="w-full rounded-xl border border-gray-200/50 bg-white/80 backdrop-blur-sm px-6 py-4 text-base text-gray-900 placeholder-gray-400 shadow-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 dark:border-gray-600/50 dark:bg-gray-700/80 dark:text-white dark:placeholder-gray-400 transition-all duration-300 hover:border-gray-300/70 hover:shadow-md"
+                            class="w-full rounded-xl border border-gray-200/50 bg-stone-50/80 backdrop-blur-sm px-6 py-4 text-base text-gray-900 placeholder-gray-400 shadow-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 dark:border-gray-600/50 dark:bg-gray-700/80 dark:text-stone-100 dark:placeholder-gray-400 transition-all duration-300 hover:border-gray-300/70 hover:shadow-md"
                             placeholder="your@email.com">
                         <p class="text-sm text-tertiary mt-1">
                             ใช้อีเมลอะไรก็ได้ที่คุณจำได้ - ไม่ต้องเป็นอีเมลจริง
@@ -543,7 +306,7 @@
                                 :type="showRegisterPassword ? 'text' : 'password'"
                                 autocomplete="new-password"
                                 x-model="registerForm.password"
-                                class="w-full rounded-xl border border-gray-200/50 bg-white/80 backdrop-blur-sm px-6 py-4 pr-14 text-base text-gray-900 placeholder-gray-400 shadow-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 dark:border-gray-600/50 dark:bg-gray-700/80 dark:text-white dark:placeholder-gray-400 transition-all duration-300 hover:border-gray-300/70 hover:shadow-md"
+                                class="w-full rounded-xl border border-gray-200/50 bg-stone-50/80 backdrop-blur-sm px-6 py-4 pr-14 text-base text-gray-900 placeholder-gray-400 shadow-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 dark:border-gray-600/50 dark:bg-gray-700/80 dark:text-stone-100 dark:placeholder-gray-400 transition-all duration-300 hover:border-gray-300/70 hover:shadow-md"
                                 placeholder="••••••••">
                             <button 
                                 type="button"
@@ -567,7 +330,7 @@
                                 :type="showConfirmPassword ? 'text' : 'password'"
                                 autocomplete="new-password"
                                 x-model="registerForm.confirmPassword"
-                                class="w-full rounded-xl border border-gray-200/50 bg-white/80 backdrop-blur-sm px-6 py-4 pr-14 text-base text-gray-900 placeholder-gray-400 shadow-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 dark:border-gray-600/50 dark:bg-gray-700/80 dark:text-white dark:placeholder-gray-400 transition-all duration-300 hover:border-gray-300/70 hover:shadow-md"
+                                class="w-full rounded-xl border border-gray-200/50 bg-stone-50/80 backdrop-blur-sm px-6 py-4 pr-14 text-base text-gray-900 placeholder-gray-400 shadow-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 dark:border-gray-600/50 dark:bg-gray-700/80 dark:text-stone-100 dark:placeholder-gray-400 transition-all duration-300 hover:border-gray-300/70 hover:shadow-md"
                                 placeholder="••••••••">
                             <button 
                                 type="button"
@@ -666,7 +429,7 @@
                                 <i class="fas fa-file-contract text-primary"></i>
                             </div>
                             <div>
-                                <h3 class="text-lg sm:text-xl font-bold text-gray-900 dark:text-white">ข้อมูลทางกฎหมาย</h3>
+                                <h3 class="text-lg sm:text-xl font-bold text-gray-900 dark:text-stone-100">ข้อมูลทางกฎหมาย</h3>
                                 <p class="text-xs sm:text-sm text-gray-500 dark:text-gray-400">เงื่อนไขการใช้งาน และ นโยบายความเป็นส่วนตัว</p>
                             </div>
                         </div>
@@ -679,12 +442,12 @@
                     <div class="px-5 pt-4">
                         <div class="flex gap-2 bg-gray-100 dark:bg-gray-900/60 p-1 rounded-2xl">
                             <button type="button" @click="legalTab = 'terms'"
-                                :class="legalTab === 'terms' ? 'bg-white text-gray-900 shadow-md dark:bg-gray-800 dark:text-white' : 'text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white'"
+                                :class="legalTab === 'terms' ? 'bg-white text-gray-900 shadow-md dark:bg-gray-800 dark:text-stone-100' : 'text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white'"
                                 class="flex-1 rounded-full px-4 py-2 font-semibold transition">
                                 เงื่อนไขการใช้งาน
                             </button>
                             <button type="button" @click="legalTab = 'privacy'"
-                                :class="legalTab === 'privacy' ? 'bg-white text-gray-900 shadow-md dark:bg-gray-800 dark:text-white' : 'text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white'"
+                                :class="legalTab === 'privacy' ? 'bg-white text-gray-900 shadow-md dark:bg-gray-800 dark:text-stone-100' : 'text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white'"
                                 class="flex-1 rounded-full px-4 py-2 font-semibold transition">
                                 นโยบายความเป็นส่วนตัว
                             </button>
@@ -713,13 +476,13 @@
 
                                 <div class="space-y-4">
                                     <div class="bg-white/60 dark:bg-gray-900/30 rounded-2xl border border-gray-200/60 dark:border-gray-700/60 p-5">
-                                        <h4 class="font-bold text-gray-900 dark:text-white mb-2">1) การยอมรับเงื่อนไข</h4>
+                                        <h4 class="font-bold text-gray-900 dark:text-stone-100 mb-2">1) การยอมรับเงื่อนไข</h4>
                                         <p class="text-sm leading-relaxed">การเข้าถึงและใช้งาน Cloudy・Puk・Jai ถือว่าคุณยอมรับเงื่อนไขเหล่านี้ หากคุณไม่ยอมรับ กรุณางดใช้งานแอปพลิเคชัน</p>
                                         <p class="text-sm leading-relaxed mt-2">เราอาจแก้ไขเงื่อนไขเหล่านี้เป็นครั้งคราว การใช้งานต่อเนื่องถือว่าคุณยอมรับการเปลี่ยนแปลง</p>
                                     </div>
 
                                     <div class="bg-white/60 dark:bg-gray-900/30 rounded-2xl border border-gray-200/60 dark:border-gray-700/60 p-5">
-                                        <h4 class="font-bold text-gray-900 dark:text-white mb-2">2) ลักษณะของบริการ</h4>
+                                        <h4 class="font-bold text-gray-900 dark:text-stone-100 mb-2">2) ลักษณะของบริการ</h4>
                                         <ul class="list-disc list-inside space-y-1 text-sm">
                                             <li>บันทึกและติดตามความรู้สึกประจำวัน</li>
                                             <li>ทำแบบประเมินสุขภาพจิต</li>
@@ -731,7 +494,7 @@
                                     </div>
 
                                     <div class="bg-white/60 dark:bg-gray-900/30 rounded-2xl border border-gray-200/60 dark:border-gray-700/60 p-5">
-                                        <h4 class="font-bold text-gray-900 dark:text-white mb-2">3) การลงทะเบียนและบัญชีผู้ใช้</h4>
+                                        <h4 class="font-bold text-gray-900 dark:text-stone-100 mb-2">3) การลงทะเบียนและบัญชีผู้ใช้</h4>
                                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                             <div class="bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-900/20 dark:to-orange-900/20 border border-amber-200/50 dark:border-amber-700/50 rounded-2xl p-4">
                                                 <p class="font-semibold text-amber-900 dark:text-amber-100 mb-2">Guest Mode</p>
@@ -754,7 +517,7 @@
                                     </div>
 
                                     <div class="bg-white/60 dark:bg-gray-900/30 rounded-2xl border border-gray-200/60 dark:border-gray-700/60 p-5">
-                                        <h4 class="font-bold text-gray-900 dark:text-white mb-2">4) ข้อจำกัดความรับผิดชอบ</h4>
+                                        <h4 class="font-bold text-gray-900 dark:text-stone-100 mb-2">4) ข้อจำกัดความรับผิดชอบ</h4>
                                         <div class="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-2xl p-4 text-sm">
                                             <p class="font-semibold mb-2">ข้อควรทราบ</p>
                                             <ul class="space-y-1">
@@ -788,7 +551,7 @@
                                 </div>
 
                                 <div class="bg-white/60 dark:bg-gray-900/30 rounded-2xl border border-gray-200/60 dark:border-gray-700/60 p-5">
-                                    <h4 class="font-bold text-gray-900 dark:text-white mb-2">1) ข้อมูลที่เราเก็บ</h4>
+                                    <h4 class="font-bold text-gray-900 dark:text-stone-100 mb-2">1) ข้อมูลที่เราเก็บ</h4>
                                     <div class="space-y-3 text-sm">
                                         <div class="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-2xl p-4">
                                             <p class="font-semibold text-blue-800 dark:text-blue-200 mb-2">ข้อมูลที่จำเป็นต้องเก็บ</p>
@@ -810,14 +573,14 @@
                                 </div>
 
                                 <div class="bg-white/60 dark:bg-gray-900/30 rounded-2xl border border-gray-200/60 dark:border-gray-700/60 p-5">
-                                    <h4 class="font-bold text-gray-900 dark:text-white mb-2">2) ข้อมูลที่เราไม่เก็บ</h4>
+                                    <h4 class="font-bold text-gray-900 dark:text-stone-100 mb-2">2) ข้อมูลที่เราไม่เก็บ</h4>
                                     <div class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-2xl p-4 text-sm">
                                         <p>เราไม่เก็บข้อมูลส่วนตัวอื่นๆ เช่น ชื่อ-นามสกุล เบอร์โทรศัพท์ ที่อยู่ ข้อมูลบัตรเครดิต เลขบัตรประชาชน ตำแหน่ง GPS รายชื่อผู้ติดต่อ และรูปภาพส่วนตัว</p>
                                     </div>
                                 </div>
 
                                 <div class="bg-white/60 dark:bg-gray-900/30 rounded-2xl border border-gray-200/60 dark:border-gray-700/60 p-5">
-                                    <h4 class="font-bold text-gray-900 dark:text-white mb-2">3) การปกป้องข้อมูล</h4>
+                                    <h4 class="font-bold text-gray-900 dark:text-stone-100 mb-2">3) การปกป้องข้อมูล</h4>
                                     <div class="bg-purple-50 dark:bg-purple-900/20 border border-purple-200 dark:border-purple-800 rounded-2xl p-4 text-sm">
                                         <ul class="space-y-1">
                                             <li>• ใช้การเข้ารหัส SSL/TLS</li>
@@ -852,7 +615,7 @@
                     <div class="w-12 h-12 bg-blue-100 dark:bg-blue-900/30 rounded-full flex items-center justify-center mx-auto mb-4">
                         <i class="fas fa-shield-alt text-blue-600 dark:text-blue-400 text-xl"></i>
                     </div>
-                    <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-2">
+                    <h2 class="text-2xl font-bold text-gray-900 dark:text-stone-100 mb-2">
                         ยินดีต้อนรับสู่จิตใจเบิกบาน <span class="animate-greeting-emoji text-lg ml-1">💖</span>
                     </h2>
                     <p class="text-gray-600 dark:text-gray-400">
@@ -932,8 +695,4 @@
     
     </body>
 </html>
-
-
-
-
 
